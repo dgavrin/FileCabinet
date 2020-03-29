@@ -2,25 +2,27 @@
 using System.Collections.Generic;
 using System.Text;
 
-public class FileCabinetService
+namespace FileCabinetApp
 {
-    private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
-
-    public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth)
+    public class FileCabinetService
     {
-        // TODO: добавьте реализацию метода
-        return 0;
-    }
+        private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
 
-    public FileCabinetRecord[] GetRecords()
-    {
-        // TODO: добавьте реализацию метода
-        return Array.Empty<FileCabinetRecord>();
-    }
+        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth)
+        {
+            // TODO: добавьте реализацию метода
+            return 0;
+        }
 
-    public int GetStat()
-    {
-        // TODO: добавьте реализацию метода
-        return 0;
+        public FileCabinetRecord[] GetRecords()
+        {
+            // TODO: добавьте реализацию метода
+            return Array.Empty<FileCabinetRecord>();
+        }
+
+        public int GetStat()
+        {
+            return this.list.Count;
+        }
     }
 }
