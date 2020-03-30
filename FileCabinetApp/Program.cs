@@ -123,7 +123,16 @@ namespace FileCabinetApp
             Console.Write("Date of birth: ");
             var dateOfBirth = DateTime.Parse(Console.ReadLine(), new CultureInfo("en-US"));
 
-            var recordId = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
+            Console.WriteLine("Wallet: ");
+            var wallet = decimal.Parse(Console.ReadLine());
+
+            Console.WriteLine("Marital status (m - married, u - unmarried): ");
+            var maritalStatus = Console.ReadLine();
+
+            Console.WriteLine("Height: ");
+            var height = short.Parse(Console.ReadLine());
+
+            var recordId = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, wallet, maritalStatus[0], height);
             Console.WriteLine($"Record #{recordId} is created.");
             Console.WriteLine();
         }
@@ -135,7 +144,7 @@ namespace FileCabinetApp
             foreach (var item in listOfRecords)
             {
                 var dateOfBirth = item.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
-                Console.WriteLine($"#{item.Id}, {item.FirstName}, {item.LastName}, {dateOfBirth}");
+                Console.WriteLine($"#{item.Id}, {item.FirstName}, {item.LastName}, {dateOfBirth}, {item.Wallet}, {item.MaritalStatus}, {item.Height}");
             }
 
             Console.WriteLine();
