@@ -11,13 +11,13 @@ namespace FileCabinetApp
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
         {
-            _ = firstName ?? throw new ArgumentNullException(nameof(firstName));
+            _ = firstName ?? throw new ArgumentNullException(nameof(firstName), $"The {nameof(firstName)} cannot be null.");
             if (firstName.Length < 2 || firstName.Length > 60 || string.IsNullOrWhiteSpace(firstName))
             {
                 throw new ArgumentException("The minimum length of the first name is 2, the maximum is 60.", nameof(firstName));
             }
 
-            _ = lastName ?? throw new ArgumentNullException(nameof(lastName));
+            _ = lastName ?? throw new ArgumentNullException(nameof(lastName), $"The {nameof(lastName)} cannot be null.");
             if (lastName.Length < 2 || lastName.Length > 60 || string.IsNullOrWhiteSpace(lastName))
             {
                 throw new ArgumentException("The minimum length of the last name is 2, the maximum is 60.", nameof(lastName));
@@ -25,7 +25,7 @@ namespace FileCabinetApp
 
             if (dateOfBirth == null)
             {
-                throw new ArgumentNullException(nameof(dateOfBirth));
+                throw new ArgumentNullException(nameof(dateOfBirth), $"The {nameof(dateOfBirth)} cannot be null.");
             }
 
             if (dateOfBirth < MinimalDateOfBirth || dateOfBirth > DateTime.Now)
@@ -38,7 +38,7 @@ namespace FileCabinetApp
                 throw new ArgumentException("Money in the wallet cannot be less than zero.", nameof(wallet));
             }
 
-            if (maritalStatus != 'M' || maritalStatus != 'U')
+            if (maritalStatus != 'M' && maritalStatus != 'U')
             {
                 throw new ArgumentException("Marital status may be M - married, or U - unmarried.", nameof(maritalStatus));
             }

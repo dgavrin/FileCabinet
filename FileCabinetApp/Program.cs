@@ -13,6 +13,7 @@ namespace FileCabinetApp
 
         private static bool isRunning = true;
         private static FileCabinetService fileCabinetService = new FileCabinetService();
+        private static CultureInfo cultureEnUS = new CultureInfo("en-US");
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -114,27 +115,58 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            Console.Write("First Name: ");
-            var firstName = Console.ReadLine();
+            bool invalidValues = true;
 
-            Console.Write("Last Name: ");
-            var lastName = Console.ReadLine();
+            do
+            {
+                try
+                {
+                    Console.Write("First Name: ");
+                    var firstName = Console.ReadLine();
 
-            Console.Write("Date of birth: ");
-            var dateOfBirth = DateTime.Parse(Console.ReadLine(), new CultureInfo("en-US"));
+                    Console.Write("Last Name: ");
+                    var lastName = Console.ReadLine();
 
-            Console.WriteLine("Wallet: ");
-            var wallet = decimal.Parse(Console.ReadLine());
+                    Console.Write("Date of birth (MM/DD/YYYY): ");
+                    var dateOfBirth = DateTime.Parse(Console.ReadLine(), cultureEnUS);
 
-            Console.WriteLine("Marital status (m - married, u - unmarried): ");
-            var maritalStatus = Console.ReadLine();
+                    Console.WriteLine("Wallet (from 0): ");
+                    var wallet = decimal.Parse(Console.ReadLine(), cultureEnUS);
 
-            Console.WriteLine("Height: ");
-            var height = short.Parse(Console.ReadLine());
+                    Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
+                    char maritalStatus = char.MinValue;
+                    var married = Console.ReadLine();
+                    if (married.Length > 0)
+                    {
+                        maritalStatus = married[0];
+                    }
 
-            var recordId = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, wallet, maritalStatus[0], height);
-            Console.WriteLine($"Record #{recordId} is created.");
-            Console.WriteLine();
+                    Console.WriteLine("Height (more than 0): ");
+                    var height = short.Parse(Console.ReadLine(), cultureEnUS);
+
+                    var recordId = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+                    Console.WriteLine($"Record #{recordId} is created.");
+                    Console.WriteLine();
+
+                    invalidValues = false;
+                }
+                catch (ArgumentNullException ex)
+                {
+                    Console.WriteLine($"Please try again. {ex.Message}");
+                    Console.WriteLine();
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine($"Please try again. {ex.Message}");
+                    Console.WriteLine();
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Please enter valid data.");
+                    Console.WriteLine();
+                }
+            }
+            while (invalidValues);
         }
 
         private static void List(string parameters)
@@ -144,7 +176,14 @@ namespace FileCabinetApp
             foreach (var item in listOfRecords)
             {
                 var dateOfBirth = item.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
-                Console.WriteLine($"#{item.Id}, {item.FirstName}, {item.LastName}, {dateOfBirth}, {item.Wallet}, {item.MaritalStatus}, {item.Height}");
+
+                string maritalStatus = "unmarried";
+                if (item.MaritalStatus == 'M')
+                {
+                    maritalStatus = "married";
+                }
+
+                Console.WriteLine($"#{item.Id}, {item.FirstName}, {item.LastName}, {dateOfBirth}, {item.Wallet}$, {maritalStatus}, {item.Height}cm");
             }
 
             Console.WriteLine();
