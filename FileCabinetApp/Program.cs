@@ -22,6 +22,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("edit", Edit),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -30,7 +31,8 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "prints the statistics by records", "The 'stat' command prints the statistics by records." },
             new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
-            new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service" },
+            new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service." },
+            new string[] { "edit", "edits a record", "The 'edit' command edits a record." },
         };
 
         public static void Main(string[] args)
@@ -128,10 +130,10 @@ namespace FileCabinetApp
                     var lastName = Console.ReadLine();
 
                     Console.Write("Date of birth (MM/DD/YYYY): ");
-                    var dateOfBirth = DateTime.Parse(Console.ReadLine(), cultureEnUS);
+                    var dateOfBirth = DateTime.Parse(Console.ReadLine(), Program.cultureEnUS);
 
                     Console.WriteLine("Wallet (from 0): ");
-                    var wallet = decimal.Parse(Console.ReadLine(), cultureEnUS);
+                    var wallet = decimal.Parse(Console.ReadLine(), Program.cultureEnUS);
 
                     Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
                     char maritalStatus = char.MinValue;
@@ -142,9 +144,9 @@ namespace FileCabinetApp
                     }
 
                     Console.WriteLine("Height (more than 0): ");
-                    var height = short.Parse(Console.ReadLine(), cultureEnUS);
+                    var height = short.Parse(Console.ReadLine(), Program.cultureEnUS);
 
-                    var recordId = fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+                    var recordId = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
                     Console.WriteLine($"Record #{recordId} is created.");
                     Console.WriteLine();
 
@@ -171,7 +173,7 @@ namespace FileCabinetApp
 
         private static void List(string parameters)
         {
-            var listOfRecords = fileCabinetService.GetRecords();
+            var listOfRecords = Program.fileCabinetService.GetRecords();
 
             foreach (var item in listOfRecords)
             {
@@ -187,6 +189,73 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine();
+        }
+
+        private static void Edit(string parameters)
+        {
+            if (parameters.Length == 0)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            int id = Convert.ToInt32(parameters, CultureInfo.InvariantCulture);
+            var listOfRecords = Program.fileCabinetService.GetRecords();
+
+            foreach (var record in listOfRecords)
+            {
+                if (record.Id == id)
+                {
+                    try
+                    {
+                        Console.Write("First Name: ");
+                        var firstName = Console.ReadLine();
+
+                        Console.Write("Last Name: ");
+                        var lastName = Console.ReadLine();
+
+                        Console.Write("Date of birth (MM/DD/YYYY): ");
+                        var dateOfBirth = DateTime.Parse(Console.ReadLine(), Program.cultureEnUS);
+
+                        Console.WriteLine("Wallet (from 0): ");
+                        var wallet = decimal.Parse(Console.ReadLine(), Program.cultureEnUS);
+
+                        Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
+                        char maritalStatus = char.MinValue;
+                        var married = Console.ReadLine();
+                        if (married.Length > 0)
+                        {
+                            maritalStatus = married[0];
+                        }
+
+                        Console.WriteLine("Height (more than 0): ");
+                        var height = short.Parse(Console.ReadLine(), Program.cultureEnUS);
+
+                        Program.fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+                        Console.WriteLine($"Record #{id} is updated.");
+                        return;
+                    }
+                    catch (ArgumentNullException ex)
+                    {
+                        Console.WriteLine($"Please try again. {ex.Message}");
+                        Console.WriteLine();
+                        return;
+                    }
+                    catch (ArgumentException ex)
+                    {
+                        Console.WriteLine($"Please try again. {ex.Message}");
+                        Console.WriteLine();
+                        return;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Please try again and enter valid data.");
+                        Console.WriteLine();
+                        return;
+                    }
+                }
+            }
+
+            Console.WriteLine($"#{id} record is not found.");
         }
     }
 }

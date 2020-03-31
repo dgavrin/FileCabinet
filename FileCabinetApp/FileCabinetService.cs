@@ -11,6 +11,61 @@ namespace FileCabinetApp
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
         {
+            this.ValidationCheck(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+            var record = new FileCabinetRecord
+            {
+                Id = this.list.Count + 1,
+                FirstName = firstName,
+                LastName = lastName,
+                DateOfBirth = dateOfBirth,
+                Wallet = wallet,
+                MaritalStatus = maritalStatus,
+                Height = height,
+            };
+
+            this.list.Add(record);
+
+            return record.Id;
+        }
+
+        public FileCabinetRecord[] GetRecords()
+        {
+            return new List<FileCabinetRecord>(this.list).ToArray();
+        }
+
+        public int GetStat()
+        {
+            return this.list.Count;
+        }
+
+        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
+        {
+            if (id < 0)
+            {
+                throw new ArgumentException($"The {nameof(id)} cannot be less than zero.");
+            }
+
+            this.ValidationCheck(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+
+            foreach (var item in this.list)
+            {
+                if (item.Id == id)
+                {
+                    item.FirstName = firstName;
+                    item.LastName = lastName;
+                    item.DateOfBirth = dateOfBirth;
+                    item.Wallet = wallet;
+                    item.MaritalStatus = maritalStatus;
+                    item.Height = height;
+                    return;
+                }
+            }
+
+            throw new ArgumentException($"#{id} record is not found.", nameof(id));
+        }
+
+        private void ValidationCheck(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
+        {
             _ = firstName ?? throw new ArgumentNullException(nameof(firstName), $"The {nameof(firstName)} cannot be null.");
             if (firstName.Length < 2 || firstName.Length > 60 || string.IsNullOrWhiteSpace(firstName))
             {
@@ -47,31 +102,6 @@ namespace FileCabinetApp
             {
                 throw new ArgumentException("Growth cannot be less than zero.", nameof(height));
             }
-
-            var record = new FileCabinetRecord
-            {
-                Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                Wallet = wallet,
-                MaritalStatus = maritalStatus,
-                Height = height,
-            };
-
-            this.list.Add(record);
-
-            return record.Id;
-        }
-
-        public FileCabinetRecord[] GetRecords()
-        {
-            return new List<FileCabinetRecord>(this.list).ToArray();
-        }
-
-        public int GetStat()
-        {
-            return this.list.Count;
         }
     }
 }
