@@ -11,7 +11,7 @@ namespace FileCabinetApp
 
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
         {
-            this.ValidationCheck(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+            ValidationCheck(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -45,7 +45,7 @@ namespace FileCabinetApp
                 throw new ArgumentException($"The {nameof(id)} cannot be less than zero.");
             }
 
-            this.ValidationCheck(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+            ValidationCheck(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
 
             foreach (var item in this.list)
             {
@@ -98,7 +98,24 @@ namespace FileCabinetApp
             return foundRecords.ToArray();
         }
 
-        private void ValidationCheck(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
+        public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        {
+            if (dateOfBirth == null)
+            {
+                throw new ArgumentNullException(nameof(dateOfBirth));
+            }
+
+            if (dateOfBirth < MinimalDateOfBirth || dateOfBirth > DateTime.Now)
+            {
+                return Array.Empty<FileCabinetRecord>();
+            }
+
+            var foundRecords = this.list.FindAll((FileCabinetRecord record) => record.DateOfBirth.Equals(dateOfBirth));
+
+            return foundRecords.ToArray();
+        }
+
+        private static void ValidationCheck(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
         {
             _ = firstName ?? throw new ArgumentNullException(nameof(firstName), $"The {nameof(firstName)} cannot be null.");
             if (firstName.Length < 2 || firstName.Length > 60 || string.IsNullOrWhiteSpace(firstName))

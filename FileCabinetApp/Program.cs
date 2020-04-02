@@ -317,6 +317,28 @@ namespace FileCabinetApp
                     Console.WriteLine();
                     return;
                 }
+                else if (searchBy.Equals("DateOfBirth", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    DateTime dateOfBirth = DateTime.MinValue;
+                    if (!DateTime.TryParse(key, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth))
+                    {
+                        Console.WriteLine("Please try again. Perhaps you messed up the month and day, swap them.");
+                        Console.WriteLine();
+                    }
+
+                    var foundRecords = fileCabinetService.FindByDateOfBirth(dateOfBirth);
+
+                    if (foundRecords.Length == 0)
+                    {
+                        Console.WriteLine($"No entries with the date of birth '{key}'.");
+                        Console.WriteLine();
+                        return;
+                    }
+
+                    DisplayRecords(foundRecords);
+                    Console.WriteLine();
+                    return;
+                }
                 else
                 {
                     Console.WriteLine($"Search by {searchBy} is not possible.");
