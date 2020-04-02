@@ -23,6 +23,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -33,6 +34,7 @@ namespace FileCabinetApp
             new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
             new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service." },
             new string[] { "edit", "edits a record", "The 'edit' command edits a record." },
+            new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
         };
 
         public static void Main(string[] args)
@@ -175,17 +177,25 @@ namespace FileCabinetApp
         {
             var listOfRecords = Program.fileCabinetService.GetRecords();
 
-            foreach (var item in listOfRecords)
+            foreach (var record in listOfRecords)
             {
-                var dateOfBirth = item.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
+                var dateOfBirth = record.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
 
                 string maritalStatus = "unmarried";
-                if (item.MaritalStatus == 'M')
+                if (record.MaritalStatus == 'M')
                 {
                     maritalStatus = "married";
                 }
 
-                Console.WriteLine($"#{item.Id}, {item.FirstName}, {item.LastName}, {dateOfBirth}, {item.Wallet}$, {maritalStatus}, {item.Height}cm");
+                Console.WriteLine(
+                            "#{0}, {1}, {2}, {3}, {4}$, {5}, {6}cm",
+                            record.Id,
+                            record.FirstName,
+                            record.LastName,
+                            dateOfBirth,
+                            record.Wallet,
+                            maritalStatus,
+                            record.Height);
             }
 
             Console.WriteLine();
@@ -256,6 +266,67 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine($"#{id} record is not found.");
+        }
+
+        private static void Find(string parameters)
+        {
+            if (!string.IsNullOrEmpty(parameters))
+            {
+                string[] command = parameters.Split(' ', 2);
+
+                if (command.Length < 2)
+                {
+                    Console.WriteLine("Please try again. Enter the key. The syntax for the 'find' command is \"find <search by> <key> \".");
+                    Console.WriteLine();
+                    return;
+                }
+
+                string searchBy = command[0];
+                string key = command[1].Trim('"');
+
+                if (searchBy.Equals("FirstName", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var foundRecords = fileCabinetService.FindByFirstName(key);
+
+                    if (foundRecords.Length == 0)
+                    {
+                        Console.WriteLine($"No entries with the first name '{key}'.");
+                        Console.WriteLine();
+                    }
+
+                    foreach (var record in foundRecords)
+                    {
+                        var dateOfBirth = record.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
+
+                        string maritalStatus = "unmarried";
+                        if (record.MaritalStatus == 'M')
+                        {
+                            maritalStatus = "married";
+                        }
+
+                        Console.WriteLine(
+                            "#{0}, {1}, {2}, {3}, {4}$, {5}, {6}cm",
+                            record.Id,
+                            record.FirstName,
+                            record.LastName,
+                            dateOfBirth,
+                            record.Wallet,
+                            maritalStatus,
+                            record.Height);
+                    }
+
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine($"Search by {searchBy} is not possible.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error entering parameters. The syntax for the 'find' command is \"find <search by> <key> \".");
+                Console.WriteLine();
+            }
         }
     }
 }
