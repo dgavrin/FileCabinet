@@ -173,11 +173,9 @@ namespace FileCabinetApp
             while (invalidValues);
         }
 
-        private static void List(string parameters)
+        private static void DisplayRecords(FileCabinetRecord[] records)
         {
-            var listOfRecords = Program.fileCabinetService.GetRecords();
-
-            foreach (var record in listOfRecords)
+            foreach (var record in records)
             {
                 var dateOfBirth = record.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
 
@@ -197,7 +195,13 @@ namespace FileCabinetApp
                             maritalStatus,
                             record.Height);
             }
+        }
 
+        private static void List(string parameters)
+        {
+            var listOfRecords = Program.fileCabinetService.GetRecords();
+
+            DisplayRecords(listOfRecords);
             Console.WriteLine();
         }
 
@@ -292,30 +296,26 @@ namespace FileCabinetApp
                     {
                         Console.WriteLine($"No entries with the first name '{key}'.");
                         Console.WriteLine();
+                        return;
                     }
 
-                    foreach (var record in foundRecords)
-                    {
-                        var dateOfBirth = record.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
-
-                        string maritalStatus = "unmarried";
-                        if (record.MaritalStatus == 'M')
-                        {
-                            maritalStatus = "married";
-                        }
-
-                        Console.WriteLine(
-                            "#{0}, {1}, {2}, {3}, {4}$, {5}, {6}cm",
-                            record.Id,
-                            record.FirstName,
-                            record.LastName,
-                            dateOfBirth,
-                            record.Wallet,
-                            maritalStatus,
-                            record.Height);
-                    }
-
+                    DisplayRecords(foundRecords);
                     Console.WriteLine();
+                }
+                else if (searchBy.Equals("LastName", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    var foundRecords = fileCabinetService.FindByLastName(key);
+
+                    if (foundRecords.Length == 0)
+                    {
+                        Console.WriteLine($"No entries with the last name '{key}'.");
+                        Console.WriteLine();
+                        return;
+                    }
+
+                    DisplayRecords(foundRecords);
+                    Console.WriteLine();
+                    return;
                 }
                 else
                 {

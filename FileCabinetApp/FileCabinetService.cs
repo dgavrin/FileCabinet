@@ -81,6 +81,23 @@ namespace FileCabinetApp
             return foundRecords.ToArray();
         }
 
+        public FileCabinetRecord[] FindByLastName(string lastName)
+        {
+            if (lastName == null)
+            {
+                throw new ArgumentNullException(nameof(lastName));
+            }
+
+            if (lastName.Length == 0)
+            {
+                throw new ArgumentException($"The {nameof(lastName)} cannot be null.", nameof(lastName));
+            }
+
+            var foundRecords = this.list.FindAll((FileCabinetRecord record) => record.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase));
+
+            return foundRecords.ToArray();
+        }
+
         private void ValidationCheck(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
         {
             _ = firstName ?? throw new ArgumentNullException(nameof(firstName), $"The {nameof(firstName)} cannot be null.");
