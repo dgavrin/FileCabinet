@@ -37,6 +37,13 @@ namespace FileCabinetApp
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
         };
 
+        private static Tuple<string, Func<string, FileCabinetRecord[]>>[] searchBy = new Tuple<string, Func<string, FileCabinetRecord[]>>[]
+        {
+            new Tuple<string, Func<string, FileCabinetRecord[]>>("firstname", fileCabinetService.FindByFirstName),
+            new Tuple<string, Func<string, FileCabinetRecord[]>>("lastname", fileCabinetService.FindByLastName),
+            new Tuple<string, Func<string, FileCabinetRecord[]>>("dateofbirth", fileCabinetService.FindByDateOfBirth),
+        };
+
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
@@ -276,72 +283,45 @@ namespace FileCabinetApp
         {
             if (!string.IsNullOrEmpty(parameters))
             {
-                string[] command = parameters.Split(' ', 2);
+                string[] inputArguments = parameters.Split(' ', 2);
 
-                if (command.Length < 2)
+                if (inputArguments.Length < 2)
                 {
                     Console.WriteLine("Please try again. Enter the key. The syntax for the 'find' command is \"find <search by> <key> \".");
                     Console.WriteLine();
                     return;
                 }
 
-                string searchBy = command[0];
-                string key = command[1].Trim('"');
+                const int commandIndex = 0;
+                const int argumentIndex = 1;
+                var command = inputArguments[commandIndex];
+                var argument = inputArguments[argumentIndex];
 
-                if (searchBy.Equals("FirstName", StringComparison.InvariantCultureIgnoreCase))
+                if (string.IsNullOrEmpty(command))
                 {
-                    var foundRecords = fileCabinetService.FindByFirstName(key);
-
-                    if (foundRecords.Length == 0)
-                    {
-                        Console.WriteLine($"No entries with the first name '{key}'.");
-                        Console.WriteLine();
-                        return;
-                    }
-
-                    DisplayRecords(foundRecords);
-                    Console.WriteLine();
-                }
-                else if (searchBy.Equals("LastName", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var foundRecords = fileCabinetService.FindByLastName(key);
-
-                    if (foundRecords.Length == 0)
-                    {
-                        Console.WriteLine($"No entries with the last name '{key}'.");
-                        Console.WriteLine();
-                        return;
-                    }
-
-                    DisplayRecords(foundRecords);
+                    Console.WriteLine($"Please try again. The '{command}' is invalid parameter.");
                     Console.WriteLine();
                     return;
                 }
-                else if (searchBy.Equals("DateOfBirth", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    DateTime dateOfBirth = DateTime.MinValue;
-                    if (!DateTime.TryParse(key, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth))
-                    {
-                        Console.WriteLine("Please try again. Perhaps you messed up the month and day, swap them.");
-                        Console.WriteLine();
-                    }
 
-                    var foundRecords = fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                var index = Array.FindIndex(searchBy, 0, searchBy.Length, i => i.Item1.Equals(command, StringComparison.InvariantCultureIgnoreCase));
+                if (index >= 0)
+                {
+                    var foundRecords = searchBy[index].Item2(argument);
 
                     if (foundRecords.Length == 0)
                     {
-                        Console.WriteLine($"No entries with the date of birth '{key}'.");
-                        Console.WriteLine();
-                        return;
+                        Console.WriteLine($"There are no entries with parameter '{argument}'.");
                     }
-
-                    DisplayRecords(foundRecords);
-                    Console.WriteLine();
-                    return;
+                    else
+                    {
+                        DisplayRecords(foundRecords);
+                        Console.WriteLine();
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"Search by {searchBy} is not possible.");
+                    Console.WriteLine($"Search by {command} is not possible.");
                 }
             }
             else
