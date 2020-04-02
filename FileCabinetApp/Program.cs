@@ -23,6 +23,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -33,6 +34,14 @@ namespace FileCabinetApp
             new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
             new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service." },
             new string[] { "edit", "edits a record", "The 'edit' command edits a record." },
+            new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
+        };
+
+        private static Tuple<string, Func<string, FileCabinetRecord[]>>[] searchBy = new Tuple<string, Func<string, FileCabinetRecord[]>>[]
+        {
+            new Tuple<string, Func<string, FileCabinetRecord[]>>("firstname", fileCabinetService.FindByFirstName),
+            new Tuple<string, Func<string, FileCabinetRecord[]>>("lastname", fileCabinetService.FindByLastName),
+            new Tuple<string, Func<string, FileCabinetRecord[]>>("dateofbirth", fileCabinetService.FindByDateOfBirth),
         };
 
         public static void Main(string[] args)
@@ -171,23 +180,35 @@ namespace FileCabinetApp
             while (invalidValues);
         }
 
-        private static void List(string parameters)
+        private static void DisplayRecords(FileCabinetRecord[] records)
         {
-            var listOfRecords = Program.fileCabinetService.GetRecords();
-
-            foreach (var item in listOfRecords)
+            foreach (var record in records)
             {
-                var dateOfBirth = item.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
+                var dateOfBirth = record.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
 
                 string maritalStatus = "unmarried";
-                if (item.MaritalStatus == 'M')
+                if (record.MaritalStatus == 'M')
                 {
                     maritalStatus = "married";
                 }
 
-                Console.WriteLine($"#{item.Id}, {item.FirstName}, {item.LastName}, {dateOfBirth}, {item.Wallet}$, {maritalStatus}, {item.Height}cm");
+                Console.WriteLine(
+                            "#{0}, {1}, {2}, {3}, {4}$, {5}, {6}cm",
+                            record.Id,
+                            record.FirstName,
+                            record.LastName,
+                            dateOfBirth,
+                            record.Wallet,
+                            maritalStatus,
+                            record.Height);
             }
+        }
 
+        private static void List(string parameters)
+        {
+            var listOfRecords = Program.fileCabinetService.GetRecords();
+
+            DisplayRecords(listOfRecords);
             Console.WriteLine();
         }
 
@@ -256,6 +277,58 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine($"#{id} record is not found.");
+        }
+
+        private static void Find(string parameters)
+        {
+            if (!string.IsNullOrEmpty(parameters))
+            {
+                string[] inputArguments = parameters.Split(' ', 2);
+
+                if (inputArguments.Length < 2)
+                {
+                    Console.WriteLine("Please try again. Enter the key. The syntax for the 'find' command is \"find <search by> <key> \".");
+                    Console.WriteLine();
+                    return;
+                }
+
+                const int commandIndex = 0;
+                const int argumentIndex = 1;
+                var command = inputArguments[commandIndex];
+                var argument = inputArguments[argumentIndex];
+
+                if (string.IsNullOrEmpty(command))
+                {
+                    Console.WriteLine($"Please try again. The '{command}' is invalid parameter.");
+                    Console.WriteLine();
+                    return;
+                }
+
+                var index = Array.FindIndex(searchBy, 0, searchBy.Length, i => i.Item1.Equals(command, StringComparison.InvariantCultureIgnoreCase));
+                if (index >= 0)
+                {
+                    var foundRecords = searchBy[index].Item2(argument);
+
+                    if (foundRecords.Length == 0)
+                    {
+                        Console.WriteLine($"There are no entries with parameter '{argument}'.");
+                    }
+                    else
+                    {
+                        DisplayRecords(foundRecords);
+                        Console.WriteLine();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Search by {command} is not possible.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error entering parameters. The syntax for the 'find' command is \"find <search by> <key> \".");
+                Console.WriteLine();
+            }
         }
     }
 }
