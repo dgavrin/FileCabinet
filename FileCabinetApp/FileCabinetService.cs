@@ -12,6 +12,27 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
+        public static void DisplayRecords(FileCabinetRecord[] records)
+        {
+            if (records == null)
+            {
+                throw new ArgumentNullException(nameof(records));
+            }
+
+            foreach (var record in records)
+            {
+                var dateOfBirth = record.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
+
+                var maritalStatus = "unmarried";
+                if (record.MaritalStatus == 'M')
+                {
+                    maritalStatus = "married";
+                }
+
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {dateOfBirth}, {record.Wallet}$, {maritalStatus}, {record.Height}cm");
+            }
+        }
+
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
         {
             ValidationCheck(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
@@ -182,7 +203,7 @@ namespace FileCabinetApp
                 throw new ArgumentException("Money in the wallet cannot be less than zero.", nameof(wallet));
             }
 
-            if (maritalStatus != 'M' && maritalStatus != 'U')
+            if (maritalStatus != 'M' && maritalStatus != 'm' && maritalStatus != 'U' && maritalStatus != 'u')
             {
                 throw new ArgumentException("Marital status may be M - married, or U - unmarried.", nameof(maritalStatus));
             }
