@@ -139,30 +139,8 @@ namespace FileCabinetApp
             {
                 try
                 {
-                    Console.Write("First Name: ");
-                    var firstName = Console.ReadLine();
-
-                    Console.Write("Last Name: ");
-                    var lastName = Console.ReadLine();
-
-                    Console.Write("Date of birth (MM/DD/YYYY): ");
-                    var dateOfBirth = DateTime.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                    Console.WriteLine("Wallet (from 0): ");
-                    var wallet = decimal.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                    Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
-                    var maritalStatus = char.MinValue;
-                    var married = Console.ReadLine();
-                    if (married.Length > 0)
-                    {
-                        maritalStatus = married[0];
-                    }
-
-                    Console.WriteLine("Height (more than 0): ");
-                    var height = short.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                    var recordId = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+                    var newRecord = SetInformationToRecord();
+                    var recordId = Program.fileCabinetService.CreateRecord(newRecord);
                     Console.WriteLine($"Record #{recordId} is created.");
                     Console.WriteLine();
 
@@ -211,30 +189,8 @@ namespace FileCabinetApp
                 {
                     try
                     {
-                        Console.Write("First Name: ");
-                        var firstName = Console.ReadLine();
-
-                        Console.Write("Last Name: ");
-                        var lastName = Console.ReadLine();
-
-                        Console.Write("Date of birth (MM/DD/YYYY): ");
-                        var dateOfBirth = DateTime.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                        Console.WriteLine("Wallet (from 0): ");
-                        var wallet = decimal.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                        Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
-                        char maritalStatus = char.MinValue;
-                        var married = Console.ReadLine();
-                        if (married.Length > 0)
-                        {
-                            maritalStatus = married[0];
-                        }
-
-                        Console.WriteLine("Height (more than 0): ");
-                        var height = short.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                        Program.fileCabinetService.EditRecord(recordIdForEdit, firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+                        var editRecord = SetInformationToRecord();
+                        Program.fileCabinetService.EditRecord(recordIdForEdit, editRecord);
                         Console.WriteLine($"Record #{recordIdForEdit} is updated.");
                         return;
                     }
@@ -312,6 +268,36 @@ namespace FileCabinetApp
                 Console.WriteLine("Error entering parameters. The syntax for the 'find' command is \"find <search by> <key> \".");
                 Console.WriteLine();
             }
+        }
+
+        private static RecordParameters SetInformationToRecord()
+        {
+            const int informationAboutMaritalStatus = 0;
+
+            Console.Write("First Name: ");
+            var firstName = Console.ReadLine();
+
+            Console.Write("Last Name: ");
+            var lastName = Console.ReadLine();
+
+            Console.Write("Date of birth (MM/DD/YYYY): ");
+            var dateOfBirth = DateTime.Parse(Console.ReadLine(), Program.cultureEnUS);
+
+            Console.WriteLine("Wallet (from 0): ");
+            var wallet = decimal.Parse(Console.ReadLine(), Program.cultureEnUS);
+
+            Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
+            var maritalStatus = char.MinValue;
+            var married = Console.ReadLine();
+            if (married.Length > 0)
+            {
+                maritalStatus = married[informationAboutMaritalStatus];
+            }
+
+            Console.WriteLine("Height (more than 0): ");
+            var height = short.Parse(Console.ReadLine(), Program.cultureEnUS);
+
+            return new RecordParameters(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
         }
     }
 }
