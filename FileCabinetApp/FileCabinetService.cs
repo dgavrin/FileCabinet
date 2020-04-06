@@ -4,6 +4,9 @@ using System.Globalization;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// Represents an abstract service that stores records with personal information about a person.
+    /// </summary>
     public class FileCabinetService
     {
         private static readonly DateTime MinimalDateOfBirth = new DateTime(1950, 1, 1);
@@ -12,6 +15,10 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
+        /// <summary>
+        /// Displays a list of entries.
+        /// </summary>
+        /// <param name="records"> List of entries. </param>
         public static void DisplayRecords(FileCabinetRecord[] records)
         {
             if (records == null)
@@ -33,6 +40,16 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Creates a record with personal information about a person and adds it to the list.
+        /// </summary>
+        /// <param name="firstName"> The first name. </param>
+        /// <param name="lastName"> The last name. </param>
+        /// <param name="dateOfBirth"> The date of birth. </param>
+        /// <param name="wallet"> The wallet. </param>
+        /// <param name="maritalStatus"> The marital status. </param>
+        /// <param name="height"> the height. </param>
+        /// <returns> Record id. </returns>
         public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
         {
             ValidationCheck(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
@@ -54,16 +71,34 @@ namespace FileCabinetApp
             return record.Id;
         }
 
+        /// <summary>
+        /// Gets a list of entries.
+        /// </summary>
+        /// <returns> List of entries. </returns>
         public FileCabinetRecord[] GetRecords()
         {
             return new List<FileCabinetRecord>(this.list).ToArray();
         }
 
+        /// <summary>
+        /// Get statistics about records.
+        /// </summary>
+        /// <returns> Number of records. </returns>
         public int GetStat()
         {
             return this.list.Count;
         }
 
+        /// <summary>
+        /// Edits a record by ID.
+        /// </summary>
+        /// <param name="id"> The identifier. </param>
+        /// <param name="firstName"> The new first name. </param>
+        /// <param name="lastName"> The new last name. </param>
+        /// <param name="dateOfBirth"> The new date of birth. </param>
+        /// <param name="wallet"> The new wallet. </param>
+        /// <param name="maritalStatus"> The new marital status. </param>
+        /// <param name="height"> The new height. </param>
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
         {
             if (id < 0)
@@ -97,6 +132,11 @@ namespace FileCabinetApp
             throw new ArgumentException($"#{id} record is not found.", nameof(id));
         }
 
+        /// <summary>
+        /// Gets a list of entries by first name.
+        /// </summary>
+        /// <param name="firstName"> The first name. </param>
+        /// <returns> List of entries. </returns>
         public FileCabinetRecord[] FindByFirstName(string firstName)
         {
             if (firstName == null)
@@ -119,6 +159,11 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Gets a list of entries by last name.
+        /// </summary>
+        /// <param name="lastName"> The last name. </param>
+        /// <returns> List of entries. </returns>
         public FileCabinetRecord[] FindByLastName(string lastName)
         {
             if (lastName == null)
@@ -141,6 +186,11 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Gets a list of entries by date of birth.
+        /// </summary>
+        /// <param name="dateOfBirth"> The date of birth. </param>
+        /// <returns> List of entries. </returns>
         public FileCabinetRecord[] FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)
@@ -174,6 +224,15 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>
+        /// Throws an exception if the parameters are not correct.
+        /// </summary>
+        /// <param name="firstName"> The first name. </param>
+        /// <param name="lastName"> The last name. </param>
+        /// <param name="dateOfBirth"> The date of birth. </param>
+        /// <param name="wallet"> The wallet. </param>
+        /// <param name="maritalStatus"> The marital status. </param>
+        /// <param name="height"> The height. </param>
         private static void ValidationCheck(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
         {
             _ = firstName ?? throw new ArgumentNullException(nameof(firstName), $"The {nameof(firstName)} cannot be null.");

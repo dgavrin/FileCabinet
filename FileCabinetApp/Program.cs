@@ -3,6 +3,9 @@ using System.Globalization;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// The main program class.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Denis Gavrin";
@@ -44,6 +47,10 @@ namespace FileCabinetApp
             new Tuple<string, Func<string, FileCabinetRecord[]>>("dateofbirth", Program.fileCabinetService.FindByDateOfBirth),
         };
 
+        /// <summary>
+        /// The main method.
+        /// </summary>
+        /// <param name="args"> Command line arguments. </param>
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
