@@ -9,7 +9,11 @@ namespace FileCabinetApp
     /// </summary>
     public class FileCabinetService
     {
-        private static readonly DateTime MinimalDateOfBirth = new DateTime(1950, 1, 1);
+        /// <summary>
+        /// Culture.
+        /// </summary>
+        protected static readonly CultureInfo CultureEnUS = new CultureInfo("en-US");
+
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
@@ -51,6 +55,8 @@ namespace FileCabinetApp
             {
                 throw new ArgumentNullException(nameof(recordParameters));
             }
+
+            this.ValidateParameters(recordParameters);
 
             var record = new FileCabinetRecord
             {
@@ -104,6 +110,8 @@ namespace FileCabinetApp
             {
                 throw new ArgumentNullException(nameof(recordParameters));
             }
+
+            this.ValidateParameters(recordParameters);
 
             foreach (var record in this.list)
             {
@@ -206,11 +214,6 @@ namespace FileCabinetApp
                 throw new ArgumentException("Wrong date format.", nameof(dateOfBirth));
             }
 
-            if (date < MinimalDateOfBirth || date > DateTime.Now)
-            {
-                return Array.Empty<FileCabinetRecord>();
-            }
-
             if (this.dateOfBirthDictionary.ContainsKey(date))
             {
                 return this.dateOfBirthDictionary[date].ToArray();
@@ -219,6 +222,48 @@ namespace FileCabinetApp
             {
                 return Array.Empty<FileCabinetRecord>();
             }
+        }
+
+        /// <summary>
+        /// Enter personal information about the person to record.
+        /// </summary>
+        /// <returns> RecordParameters. </returns>
+        public virtual RecordParameters SetInformationToRecord()
+        {
+            const int informationAboutMaritalStatus = 0;
+
+            Console.Write("First Name: ");
+            var firstName = Console.ReadLine();
+
+            Console.Write("Last Name: ");
+            var lastName = Console.ReadLine();
+
+            Console.Write("Date of birth (MM/DD/YYYY): ");
+            var dateOfBirth = DateTime.Parse(Console.ReadLine(), CultureEnUS);
+
+            Console.WriteLine("Wallet (from 0): ");
+            var wallet = decimal.Parse(Console.ReadLine(), CultureEnUS);
+
+            Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
+            var maritalStatus = char.MinValue;
+            var married = Console.ReadLine();
+            if (married.Length > 0)
+            {
+                maritalStatus = married[informationAboutMaritalStatus];
+            }
+
+            Console.WriteLine("Height (more than 0): ");
+            var height = short.Parse(Console.ReadLine(), CultureEnUS);
+
+            return new RecordParameters(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+        }
+
+        /// <summary>
+        /// Throws an exception if the record parameters are incorrect.
+        /// </summary>
+        /// <param name="recordParameters"> Record fields. </param>
+        protected virtual void ValidateParameters(RecordParameters recordParameters)
+        {
         }
 
         private void AddEntryToDictionaries(FileCabinetRecord record)

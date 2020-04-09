@@ -1,5 +1,4 @@
 ﻿using System;
-using FileCabinetApp.Validators;
 
 namespace FileCabinetApp
 {
@@ -27,13 +26,6 @@ namespace FileCabinetApp
         public RecordParameters(string firstName, string lastName, DateTime dateOfBirth, decimal wallet, char maritalStatus, short height)
             : base()
         {
-            RecordValidator.FirstAndLastNameVallidator(firstName);
-            RecordValidator.FirstAndLastNameVallidator(lastName);
-            RecordValidator.DateOfBirthValidator(dateOfBirth);
-            RecordValidator.WalletValidator(wallet);
-            RecordValidator.MaritalStatusValidator(maritalStatus);
-            RecordValidator.HeightValidator(height);
-
             this.Id = 0;
             this.FirstName = firstName;
             this.LastName = lastName;
