@@ -83,6 +83,13 @@
             Culture.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateFileCabinetService(System.String)">
+            <summary>
+            Creates an instance of a file cabinet service with the specified validation rules.
+            </summary>
+            <param name="validationType"> Validation type. </param>
+            <returns> Instance of a file cabinet service. </returns>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetService.DisplayRecords(FileCabinetApp.FileCabinetRecord[])">
             <summary>
             Displays a list of entries.
@@ -153,11 +160,10 @@
             The main program class.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+        <member name="M:FileCabinetApp.Program.Main">
             <summary>
             The main method.
             </summary>
-            <param name="args"> Command line arguments. </param>
         </member>
         <member name="T:FileCabinetApp.RecordParameters">
             <summary>

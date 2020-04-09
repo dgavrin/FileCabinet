@@ -20,6 +20,26 @@ namespace FileCabinetApp
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         /// <summary>
+        /// Creates an instance of a file cabinet service with the specified validation rules.
+        /// </summary>
+        /// <param name="validationType"> Validation type. </param>
+        /// <returns> Instance of a file cabinet service. </returns>
+        public static FileCabinetService CreateFileCabinetService(string validationType)
+        {
+            if (validationType == null)
+            {
+                throw new ArgumentNullException(nameof(validationType));
+            }
+
+            if (validationType.Equals("custom", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return new FileCabinetCustomService();
+            }
+
+            return new FileCabinetDefaultService();
+        }
+
+        /// <summary>
         /// Displays a list of entries.
         /// </summary>
         /// <param name="records"> List of entries. </param>

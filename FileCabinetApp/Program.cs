@@ -15,7 +15,8 @@ namespace FileCabinetApp
         private const int ExplanationHelpIndex = 2;
 
         private static bool isRunning = true;
-        private static FileCabinetService fileCabinetService = new FileCabinetCustomService();
+        private static string validationRules = Program.GetValidationRules();
+        private static FileCabinetService fileCabinetService = FileCabinetService.CreateFileCabinetService(validationRules);
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -49,10 +50,12 @@ namespace FileCabinetApp
         /// <summary>
         /// The main method.
         /// </summary>
-        /// <param name="args"> Command line arguments. </param>
-        public static void Main(string[] args)
+        public static void Main()
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            #pragma warning disable CA1308
+            Console.WriteLine($"Using {validationRules.ToLowerInvariant()} validation rules.");
+            #pragma warning restore CA1308
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
 
@@ -267,6 +270,36 @@ namespace FileCabinetApp
                 Console.WriteLine("Error entering parameters. The syntax for the 'find' command is \"find <search by> <key> \".");
                 Console.WriteLine();
             }
+        }
+
+        private static string GetValidationRules()
+        {
+            const int commandIndex = 1;
+            const int validateTypeIndex = 2;
+            var validationRules = "default";
+            var args = Environment.GetCommandLineArgs();
+
+            if (args.Length > 1)
+            {
+                if (args[commandIndex].Contains('-', StringComparison.InvariantCulture))
+                {
+                    if (args[commandIndex].Equals("-v", StringComparison.InvariantCulture))
+                    {
+                        validationRules = args[validateTypeIndex];
+                    }
+                    else if (args[commandIndex].Contains("--validation-rules=", StringComparison.InvariantCulture))
+                    {
+                        validationRules = args[commandIndex].Split('=')[validateTypeIndex - 1];
+                    }
+                }
+            }
+
+            if (!validationRules.Equals("default", StringComparison.InvariantCultureIgnoreCase) && !validationRules.Equals("custom", StringComparison.InvariantCultureIgnoreCase))
+            {
+                validationRules = "default";
+            }
+
+            return validationRules.ToUpperInvariant();
         }
     }
 }
