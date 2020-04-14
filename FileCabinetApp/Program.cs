@@ -16,7 +16,7 @@ namespace FileCabinetApp
 
         private static bool isRunning = true;
         private static string validationRules = Program.GetValidationRules();
-        private static FileCabinetService fileCabinetService = FileCabinetService.CreateFileCabinetService(validationRules);
+        private static FileCabinetService fileCabinetService = new FileCabinetService(validationRules);
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -141,7 +141,7 @@ namespace FileCabinetApp
             {
                 try
                 {
-                    var newRecord = fileCabinetService.SetInformationToRecord();
+                    var newRecord = FileCabinetService.SetInformationToRecord();
                     var recordId = Program.fileCabinetService.CreateRecord(newRecord);
                     Console.WriteLine($"Record #{recordId} is created.");
                     Console.WriteLine();
@@ -193,7 +193,7 @@ namespace FileCabinetApp
                 {
                     try
                     {
-                        var editRecord = fileCabinetService.SetInformationToRecord();
+                        var editRecord = FileCabinetService.SetInformationToRecord();
                         Program.fileCabinetService.EditRecord(recordIdForEdit, editRecord);
                         Console.WriteLine($"Record #{recordIdForEdit} is updated.");
                         return;

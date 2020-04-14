@@ -20,12 +20,13 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
+        private IRecordValidator validator;
+
         /// <summary>
-        /// Creates an instance of a file cabinet service with the specified validation rules.
+        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
         /// </summary>
-        /// <param name="validationType"> Validation type. </param>
-        /// <returns> Instance of a file cabinet service. </returns>
-        public static FileCabinetService CreateFileCabinetService(string validationType)
+        /// <param name="validationType"> The validation type. </param>
+        public FileCabinetService(string validationType)
         {
             if (validationType == null)
             {
@@ -34,10 +35,46 @@ namespace FileCabinetApp
 
             if (validationType.Equals("custom", StringComparison.InvariantCultureIgnoreCase))
             {
-                return new FileCabinetCustomService();
+                this.validator = new CustomValidator();
+            }
+            else
+            {
+                this.validator = new DefaulValidator();
+            }
+        }
+
+        /// <summary>
+        /// Enter personal information about the person to record.
+        /// </summary>
+        /// <returns> RecordParameters. </returns>
+        public static RecordParameters SetInformationToRecord()
+        {
+            const int informationAboutMaritalStatus = 0;
+
+            Console.Write("First Name: ");
+            var firstName = Console.ReadLine();
+
+            Console.Write("Last Name: ");
+            var lastName = Console.ReadLine();
+
+            Console.Write("Date of birth (MM/DD/YYYY): ");
+            var dateOfBirth = DateTime.Parse(Console.ReadLine(), CultureEnUS);
+
+            Console.WriteLine("Wallet: ");
+            var wallet = decimal.Parse(Console.ReadLine(), CultureEnUS);
+
+            Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
+            var maritalStatus = char.MinValue;
+            var married = Console.ReadLine();
+            if (married.Length > 0)
+            {
+                maritalStatus = married[informationAboutMaritalStatus];
             }
 
-            return new FileCabinetDefaultService();
+            Console.WriteLine("Height: ");
+            var height = short.Parse(Console.ReadLine(), CultureEnUS);
+
+            return new RecordParameters(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
         }
 
         /// <summary>
@@ -77,7 +114,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            this.CreateValidator().ValidateParameters(recordParameters);
+            this.validator.ValidateParameters(recordParameters);
 
             var record = new FileCabinetRecord
             {
@@ -132,7 +169,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            this.CreateValidator().ValidateParameters(recordParameters);
+            this.validator.ValidateParameters(recordParameters);
 
             foreach (var record in this.list)
             {
@@ -243,49 +280,6 @@ namespace FileCabinetApp
             {
                 return Array.Empty<FileCabinetRecord>();
             }
-        }
-
-        /// <summary>
-        /// Enter personal information about the person to record.
-        /// </summary>
-        /// <returns> RecordParameters. </returns>
-        public virtual RecordParameters SetInformationToRecord()
-        {
-            const int informationAboutMaritalStatus = 0;
-
-            Console.Write("First Name: ");
-            var firstName = Console.ReadLine();
-
-            Console.Write("Last Name: ");
-            var lastName = Console.ReadLine();
-
-            Console.Write("Date of birth (MM/DD/YYYY): ");
-            var dateOfBirth = DateTime.Parse(Console.ReadLine(), CultureEnUS);
-
-            Console.WriteLine("Wallet (from 0): ");
-            var wallet = decimal.Parse(Console.ReadLine(), CultureEnUS);
-
-            Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
-            var maritalStatus = char.MinValue;
-            var married = Console.ReadLine();
-            if (married.Length > 0)
-            {
-                maritalStatus = married[informationAboutMaritalStatus];
-            }
-
-            Console.WriteLine("Height (more than 0): ");
-            var height = short.Parse(Console.ReadLine(), CultureEnUS);
-
-            return new RecordParameters(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
-        }
-
-        /// <summary>
-        /// Creates a validator.
-        /// </summary>
-        /// <returns> New validator. </returns>
-        protected virtual IRecordValidator CreateValidator()
-        {
-            return new DefaulValidator();
         }
 
         private void AddEntryToDictionaries(FileCabinetRecord record)

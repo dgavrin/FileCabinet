@@ -4,28 +4,6 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
-        <member name="T:FileCabinetApp.FileCabinetCustomService">
-            <summary>
-            Represents the custom service, which stores records with personal information about a person.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.SetInformationToRecord">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetDefaultService">
-            <summary>
-            Represents the default service, which stores records with personal information about a person.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.SetInformationToRecord">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>
             Presentation of a record in a file cabinet.
@@ -83,12 +61,17 @@
             Culture.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateFileCabinetService(System.String)">
+        <member name="M:FileCabinetApp.FileCabinetService.#ctor(System.String)">
             <summary>
-            Creates an instance of a file cabinet service with the specified validation rules.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetService"/> class.
             </summary>
-            <param name="validationType"> Validation type. </param>
-            <returns> Instance of a file cabinet service. </returns>
+            <param name="validationType"> The validation type. </param>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.SetInformationToRecord">
+            <summary>
+            Enter personal information about the person to record.
+            </summary>
+            <returns> RecordParameters. </returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.DisplayRecords(FileCabinetApp.FileCabinetRecord[])">
             <summary>
@@ -142,18 +125,6 @@
             </summary>
             <param name="dateOfBirth"> The date of birth. </param>
             <returns> List of entries. </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.SetInformationToRecord">
-            <summary>
-            Enter personal information about the person to record.
-            </summary>
-            <returns> RecordParameters. </returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
-            <summary>
-            Creates a validator.
-            </summary>
-            <returns> New validator. </returns>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
