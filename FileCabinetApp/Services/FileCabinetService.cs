@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using FileCabinetApp.Services;
 using FileCabinetApp.Validators;
 
 namespace FileCabinetApp.Services
@@ -46,40 +45,6 @@ namespace FileCabinetApp.Services
         }
 
         /// <summary>
-        /// Enter personal information about the person to record.
-        /// </summary>
-        /// <returns> RecordParameters. </returns>
-        public static RecordParameters SetInformationToRecord()
-        {
-            const int informationAboutMaritalStatus = 0;
-
-            Console.Write("First Name: ");
-            var firstName = Console.ReadLine();
-
-            Console.Write("Last Name: ");
-            var lastName = Console.ReadLine();
-
-            Console.Write("Date of birth (MM/DD/YYYY): ");
-            var dateOfBirth = DateTime.Parse(Console.ReadLine(), CultureEnUS);
-
-            Console.WriteLine("Wallet: ");
-            var wallet = decimal.Parse(Console.ReadLine(), CultureEnUS);
-
-            Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
-            var maritalStatus = char.MinValue;
-            var married = Console.ReadLine();
-            if (married.Length > 0)
-            {
-                maritalStatus = married[informationAboutMaritalStatus];
-            }
-
-            Console.WriteLine("Height: ");
-            var height = short.Parse(Console.ReadLine(), CultureEnUS);
-
-            return new RecordParameters(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
-        }
-
-        /// <summary>
         /// Displays a list of entries.
         /// </summary>
         /// <param name="records"> Collection of entries. </param>
@@ -102,6 +67,33 @@ namespace FileCabinetApp.Services
 
                 Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {dateOfBirth}, {record.Wallet}$, {maritalStatus}, {record.Height}cm");
             }
+        }
+
+        /// <summary>
+        /// Enter personal information about the person to record.
+        /// </summary>
+        /// <returns> RecordParameters. </returns>
+        public RecordParameters SetInformationToRecord()
+        {
+            Console.Write("First Name: ");
+            var firstName = ReadInput(InputConverters.StringConverter, this.validator.FirstNameValidator);
+
+            Console.Write("Last Name: ");
+            var lastName = ReadInput(InputConverters.StringConverter, this.validator.LastNameValidator);
+
+            Console.Write("Date of birth (MM/DD/YYYY): ");
+            var dateOfBirth = ReadInput(InputConverters.DateConverter, this.validator.DateOfBirthValidator);
+
+            Console.WriteLine("Wallet: ");
+            var wallet = ReadInput(InputConverters.WalletConverter, this.validator.WalletValidator);
+
+            Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
+            var maritalStatus = ReadInput(InputConverters.MaritalStatusConverter, this.validator.MaritalStatusValidator);
+
+            Console.WriteLine("Height: ");
+            var height = ReadInput(InputConverters.HeightConverter, this.validator.HeightValidator);
+
+            return new RecordParameters(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
         }
 
         /// <inheritdoc/>
@@ -256,6 +248,35 @@ namespace FileCabinetApp.Services
             {
                 return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
+        }
+
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (true);
         }
 
         private void AddEntryToDictionaries(FileCabinetRecord record)

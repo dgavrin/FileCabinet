@@ -143,7 +143,7 @@ namespace FileCabinetApp
             {
                 try
                 {
-                    var newRecord = FileCabinetService.SetInformationToRecord();
+                    var newRecord = fileCabinetService.SetInformationToRecord();
                     var recordId = Program.fileCabinetService.CreateRecord(newRecord);
                     Console.WriteLine($"Record #{recordId} is created.");
                     Console.WriteLine();
@@ -195,7 +195,7 @@ namespace FileCabinetApp
                 {
                     try
                     {
-                        var editRecord = FileCabinetService.SetInformationToRecord();
+                        var editRecord = fileCabinetService.SetInformationToRecord();
                         Program.fileCabinetService.EditRecord(recordIdForEdit, editRecord);
                         Console.WriteLine($"Record #{recordIdForEdit} is updated.");
                         return;

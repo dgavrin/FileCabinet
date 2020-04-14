@@ -53,5 +53,11 @@ namespace FileCabinetApp.Services
         /// <param name="dateOfBirth"> The date of birth. </param>
         /// <returns> List of entries. </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
+
+        /// <summary>
+        /// Enter personal information about the person to record.
+        /// </summary>
+        /// <returns> RecordParameters. </returns>
+        public RecordParameters SetInformationToRecord();
     }
 }

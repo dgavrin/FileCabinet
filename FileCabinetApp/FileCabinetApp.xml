@@ -51,6 +51,46 @@
             </summary>
             <value> The height. </value>
         </member>
+        <member name="T:FileCabinetApp.InputConverters">
+            <summary>
+            Provides methods for converting input.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.InputConverters.StringConverter(System.String)">
+            <summary>
+            Convert string to string.
+            </summary>
+            <param name="value"> String to convert. </param>
+            <returns> True if it is possible to convert and the resulting string. </returns>
+        </member>
+        <member name="M:FileCabinetApp.InputConverters.DateConverter(System.String)">
+            <summary>
+            Convert string to DateTime.
+            </summary>
+            <param name="value"> String to convert. </param>
+            <returns> True if it is possible to convert and resulting DateTime. </returns>
+        </member>
+        <member name="M:FileCabinetApp.InputConverters.WalletConverter(System.String)">
+            <summary>
+            Convert string to decimal.
+            </summary>
+            <param name="value"> String to convert. </param>
+            <returns> True if it is possible to convert and resulting decimal. </returns>
+        </member>
+        <member name="M:FileCabinetApp.InputConverters.MaritalStatusConverter(System.String)">
+            <summary>
+            Convert string to char.
+            </summary>
+            <param name="value"> String to convert. </param>
+            <returns> True if it is possible to convert and resulting char. </returns>
+        </member>
+        <member name="M:FileCabinetApp.InputConverters.HeightConverter(System.String)">
+            <summary>
+            Convert string to short.
+            </summary>
+            <param name="value"> String to convert. </param>
+            <returns> True if it is possible to convert and resulting short. </returns>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
             The main program class.
@@ -98,17 +138,17 @@
             </summary>
             <param name="validationType"> The validation type. </param>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.SetInformationToRecord">
-            <summary>
-            Enter personal information about the person to record.
-            </summary>
-            <returns> RecordParameters. </returns>
-        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.DisplayRecords(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.FileCabinetRecord})">
             <summary>
             Displays a list of entries.
             </summary>
             <param name="records"> Collection of entries. </param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.SetInformationToRecord">
+            <summary>
+            Enter personal information about the person to record.
+            </summary>
+            <returns> RecordParameters. </returns>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.RecordParameters)">
             <inheritdoc/>
@@ -183,10 +223,34 @@
             <param name="dateOfBirth"> The date of birth. </param>
             <returns> List of entries. </returns>
         </member>
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.SetInformationToRecord">
+            <summary>
+            Enter personal information about the person to record.
+            </summary>
+            <returns> RecordParameters. </returns>
+        </member>
         <member name="T:FileCabinetApp.Validators.CustomValidator">
             <summary>
             Represents custom validator for file cabinet service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomValidator.FirstNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomValidator.LastNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomValidator.DateOfBirthValidator(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomValidator.WalletValidator(System.Decimal)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomValidator.MaritalStatusValidator(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomValidator.HeightValidator(System.Int16)">
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Validators.CustomValidator.ValidateParameters(FileCabinetApp.RecordParameters)">
             <inheritdoc/>
@@ -195,6 +259,24 @@
             <summary>
             Represents defualt validator for file cabinet service.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaulValidator.FirstNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaulValidator.LastNameValidator(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaulValidator.DateOfBirthValidator(System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaulValidator.WalletValidator(System.Decimal)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaulValidator.MaritalStatusValidator(System.Char)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaulValidator.HeightValidator(System.Int16)">
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Validators.DefaulValidator.ValidateParameters(FileCabinetApp.RecordParameters)">
             <inheritdoc/>
@@ -209,6 +291,48 @@
             Validates the parameters.
             </summary>
             <param name="recordParameters"> Record fileds. </param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.IRecordValidator.FirstNameValidator(System.String)">
+            <summary>
+            Checks the validity of the first name.
+            </summary>
+            <param name="firstName"> The first name. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.IRecordValidator.LastNameValidator(System.String)">
+            <summary>
+            Checks the validity of the last name.
+            </summary>
+            <param name="lastName"> The last name. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.IRecordValidator.DateOfBirthValidator(System.DateTime)">
+            <summary>
+            Checks the validity of the date of birth.
+            </summary>
+            <param name="dateOfBirth"> The date of birth. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.IRecordValidator.WalletValidator(System.Decimal)">
+            <summary>
+            Checks wallet validity.
+            </summary>
+            <param name="wallet"> The wallet. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.IRecordValidator.MaritalStatusValidator(System.Char)">
+            <summary>
+            Checks the validity of marital status.
+            </summary>
+            <param name="maritalStatus"> The marital status. </param>
+            <returns> Validation result. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.IRecordValidator.HeightValidator(System.Int16)">
+            <summary>
+            Checks the validity of height.
+            </summary>
+            <param name="height"> The height. </param>
+            <returns> Validation result. </returns>
         </member>
     </members>
 </doc>

@@ -15,6 +15,99 @@ namespace FileCabinetApp.Validators
         private static readonly DateTime MinimalDateOfBirth = new DateTime(1950, 1, 1);
 
         /// <inheritdoc/>
+        public Tuple<bool, string> FirstNameValidator(string firstName)
+        {
+            if (string.IsNullOrEmpty(firstName))
+            {
+                throw new ArgumentNullException(nameof(firstName));
+            }
+
+            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length < MinimumLengthOfFirstAndLastName || firstName.Length > MaximumLengthOfFirstAndLastName)
+            {
+                return new Tuple<bool, string>(false, "first name");
+            }
+            else
+            {
+                return new Tuple<bool, string>(true, "first name");
+            }
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> LastNameValidator(string lastName)
+        {
+            if (string.IsNullOrEmpty(lastName))
+            {
+                throw new ArgumentNullException(nameof(lastName));
+            }
+
+            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length < MinimumLengthOfFirstAndLastName || lastName.Length > MaximumLengthOfFirstAndLastName)
+            {
+                return new Tuple<bool, string>(false, "last name");
+            }
+            else
+            {
+                return new Tuple<bool, string>(true, "last name");
+            }
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> DateOfBirthValidator(DateTime dateOfBirth)
+        {
+            if (dateOfBirth == null)
+            {
+                throw new ArgumentNullException(nameof(dateOfBirth), $"The date of birth cannot be null.");
+            }
+
+            if (dateOfBirth < MinimalDateOfBirth || dateOfBirth > DateTime.Now)
+            {
+                return new Tuple<bool, string>(false, "date of birth");
+            }
+            else
+            {
+                return new Tuple<bool, string>(true, "date of birth");
+            }
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> WalletValidator(decimal wallet)
+        {
+            if (wallet < MinimumAmountOfMoney)
+            {
+                return new Tuple<bool, string>(false, "wallet");
+            }
+            else
+            {
+                return new Tuple<bool, string>(true, "wallet");
+            }
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> MaritalStatusValidator(char maritalStatus)
+        {
+            if (maritalStatus != 'M' && maritalStatus != 'm' && maritalStatus != 'U' && maritalStatus != 'u')
+            {
+                return new Tuple<bool, string>(false, "marital status");
+            }
+            else
+            {
+                return new Tuple<bool, string>(true, "marital status");
+            }
+        }
+
+        /// <inheritdoc/>
+        public Tuple<bool, string> HeightValidator(short height)
+        {
+            if (height < MinimumHeight)
+            {
+                return new Tuple<bool, string>(false, "height");
+            }
+            else
+            {
+                return new Tuple<bool, string>(true, "height");
+            }
+        }
+
+        /// <inheritdoc/>
         public void ValidateParameters(RecordParameters recordParameters)
         {
             if (recordParameters == null)
@@ -22,50 +115,12 @@ namespace FileCabinetApp.Validators
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            if (recordParameters.FirstName == null)
-            {
-                throw new ArgumentNullException(nameof(recordParameters), "The first name cannot be null.");
-            }
-
-            if (recordParameters.FirstName.Length < MinimumLengthOfFirstAndLastName || recordParameters.FirstName.Length > MaximumLengthOfFirstAndLastName || string.IsNullOrWhiteSpace(recordParameters.FirstName))
-            {
-                throw new ArgumentException($"The minimum length of the first name is {MinimumLengthOfFirstAndLastName}, the maximum is {MaximumLengthOfFirstAndLastName}.", nameof(recordParameters));
-            }
-
-            if (recordParameters.LastName == null)
-            {
-                throw new ArgumentNullException(nameof(recordParameters), "The last name cannot be null.");
-            }
-
-            if (recordParameters.LastName.Length < MinimumLengthOfFirstAndLastName || recordParameters.LastName.Length > MaximumLengthOfFirstAndLastName || string.IsNullOrWhiteSpace(recordParameters.LastName))
-            {
-                throw new ArgumentException($"The minimum length of the last name is {MinimumLengthOfFirstAndLastName}, the maximum is {MaximumLengthOfFirstAndLastName}.", nameof(recordParameters));
-            }
-
-            if (recordParameters.DateOfBirth == null)
-            {
-                throw new ArgumentNullException(nameof(recordParameters), $"The {nameof(recordParameters)} cannot be null.");
-            }
-
-            if (recordParameters.DateOfBirth < MinimalDateOfBirth || recordParameters.DateOfBirth > DateTime.Now)
-            {
-                throw new ArgumentException($"Date of birth should be later than {MinimalDateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}, but earlier than now.", nameof(recordParameters));
-            }
-
-            if (recordParameters.Wallet < MinimumAmountOfMoney)
-            {
-                throw new ArgumentException($"Money in the wallet cannot be less than {MinimumAmountOfMoney}.", nameof(recordParameters));
-            }
-
-            if (recordParameters.MaritalStatus != 'M' && recordParameters.MaritalStatus != 'm' && recordParameters.MaritalStatus != 'U' && recordParameters.MaritalStatus != 'u')
-            {
-                throw new ArgumentException("Marital status may be M - married, or U - unmarried.", nameof(recordParameters));
-            }
-
-            if (recordParameters.Height < MinimumHeight)
-            {
-                throw new ArgumentException($"Growth cannot be less than {MinimumHeight}.", nameof(recordParameters));
-            }
+            this.FirstNameValidator(recordParameters.FirstName);
+            this.LastNameValidator(recordParameters.LastName);
+            this.DateOfBirthValidator(recordParameters.DateOfBirth);
+            this.WalletValidator(recordParameters.Wallet);
+            this.MaritalStatusValidator(recordParameters.MaritalStatus);
+            this.HeightValidator(recordParameters.Height);
         }
     }
 }
