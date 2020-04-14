@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
 
 namespace FileCabinetApp
@@ -40,11 +41,11 @@ namespace FileCabinetApp
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
         };
 
-        private static Tuple<string, Func<string, FileCabinetRecord[]>>[] searchCommands = new Tuple<string, Func<string, FileCabinetRecord[]>>[]
+        private static Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[]
         {
-            new Tuple<string, Func<string, FileCabinetRecord[]>>("firstname", Program.fileCabinetService.FindByFirstName),
-            new Tuple<string, Func<string, FileCabinetRecord[]>>("lastname", Program.fileCabinetService.FindByLastName),
-            new Tuple<string, Func<string, FileCabinetRecord[]>>("dateofbirth", Program.fileCabinetService.FindByDateOfBirth),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("firstname", Program.fileCabinetService.FindByFirstName),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("lastname", Program.fileCabinetService.FindByLastName),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("dateofbirth", Program.fileCabinetService.FindByDateOfBirth),
         };
 
         /// <summary>
@@ -252,7 +253,7 @@ namespace FileCabinetApp
                 {
                     var foundRecords = searchCommands[index].Item2(argument);
 
-                    if (foundRecords.Length == 0)
+                    if (foundRecords.Count == 0)
                     {
                         Console.WriteLine($"There are no entries with parameter '{argument}'.");
                     }

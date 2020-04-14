@@ -73,11 +73,11 @@
             </summary>
             <returns> RecordParameters. </returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.DisplayRecords(FileCabinetApp.FileCabinetRecord[])">
+        <member name="M:FileCabinetApp.FileCabinetService.DisplayRecords(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.FileCabinetRecord})">
             <summary>
             Displays a list of entries.
             </summary>
-            <param name="records"> List of entries. </param>
+            <param name="records"> Collection of entries. </param>
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.RecordParameters)">
             <summary>

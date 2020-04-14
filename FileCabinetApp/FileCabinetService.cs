@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using FileCabinetApp.Validators;
 
@@ -80,8 +81,8 @@ namespace FileCabinetApp
         /// <summary>
         /// Displays a list of entries.
         /// </summary>
-        /// <param name="records"> List of entries. </param>
-        public static void DisplayRecords(FileCabinetRecord[] records)
+        /// <param name="records"> Collection of entries. </param>
+        public static void DisplayRecords(ReadOnlyCollection<FileCabinetRecord> records)
         {
             if (records == null)
             {
@@ -138,9 +139,9 @@ namespace FileCabinetApp
         /// Gets a list of entries.
         /// </summary>
         /// <returns> List of entries. </returns>
-        public FileCabinetRecord[] GetRecords()
+        public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            return new List<FileCabinetRecord>(this.list).ToArray();
+            return new ReadOnlyCollection<FileCabinetRecord>(this.list);
         }
 
         /// <summary>
@@ -200,7 +201,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="firstName"> The first name. </param>
         /// <returns> List of entries. </returns>
-        public FileCabinetRecord[] FindByFirstName(string firstName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -214,11 +215,11 @@ namespace FileCabinetApp
 
             if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
-                return this.firstNameDictionary[firstName.ToUpperInvariant()].ToArray();
+                return new ReadOnlyCollection<FileCabinetRecord>(this.firstNameDictionary[firstName.ToUpperInvariant()]);
             }
             else
             {
-                return Array.Empty<FileCabinetRecord>();
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
         }
 
@@ -227,7 +228,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="lastName"> The last name. </param>
         /// <returns> List of entries. </returns>
-        public FileCabinetRecord[] FindByLastName(string lastName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -241,11 +242,11 @@ namespace FileCabinetApp
 
             if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
             {
-                return this.lastNameDictionary[lastName.ToUpperInvariant()].ToArray();
+                return new ReadOnlyCollection<FileCabinetRecord>(this.lastNameDictionary[lastName.ToUpperInvariant()]);
             }
             else
             {
-                return Array.Empty<FileCabinetRecord>();
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
         }
 
@@ -254,7 +255,7 @@ namespace FileCabinetApp
         /// </summary>
         /// <param name="dateOfBirth"> The date of birth. </param>
         /// <returns> List of entries. </returns>
-        public FileCabinetRecord[] FindByDateOfBirth(string dateOfBirth)
+        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)
             {
@@ -274,11 +275,11 @@ namespace FileCabinetApp
 
             if (this.dateOfBirthDictionary.ContainsKey(date))
             {
-                return this.dateOfBirthDictionary[date].ToArray();
+                return new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[date]);
             }
             else
             {
-                return Array.Empty<FileCabinetRecord>();
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
             }
         }
 
