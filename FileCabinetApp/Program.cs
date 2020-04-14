@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Globalization;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp
 {
+    /// <summary>
+    /// The main program class.
+    /// </summary>
     public static class Program
     {
         private const string DeveloperName = "Denis Gavrin";
@@ -12,8 +17,8 @@ namespace FileCabinetApp
         private const int ExplanationHelpIndex = 2;
 
         private static bool isRunning = true;
-        private static FileCabinetService fileCabinetService = new FileCabinetService();
-        private static CultureInfo cultureEnUS = new CultureInfo("en-US");
+        private static string validationRules = Program.GetValidationRules();
+        private static IFileCabinetService fileCabinetService = new FileCabinetService(validationRules);
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -37,16 +42,22 @@ namespace FileCabinetApp
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
         };
 
-        private static Tuple<string, Func<string, FileCabinetRecord[]>>[] searchBy = new Tuple<string, Func<string, FileCabinetRecord[]>>[]
+        private static Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[]
         {
-            new Tuple<string, Func<string, FileCabinetRecord[]>>("firstname", fileCabinetService.FindByFirstName),
-            new Tuple<string, Func<string, FileCabinetRecord[]>>("lastname", fileCabinetService.FindByLastName),
-            new Tuple<string, Func<string, FileCabinetRecord[]>>("dateofbirth", fileCabinetService.FindByDateOfBirth),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("firstname", Program.fileCabinetService.FindByFirstName),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("lastname", Program.fileCabinetService.FindByLastName),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("dateofbirth", Program.fileCabinetService.FindByDateOfBirth),
         };
 
-        public static void Main(string[] args)
+        /// <summary>
+        /// The main method.
+        /// </summary>
+        public static void Main()
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            #pragma warning disable CA1308
+            Console.WriteLine($"Using {validationRules.ToLowerInvariant()} validation rules.");
+            #pragma warning restore CA1308
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
 
@@ -132,30 +143,8 @@ namespace FileCabinetApp
             {
                 try
                 {
-                    Console.Write("First Name: ");
-                    var firstName = Console.ReadLine();
-
-                    Console.Write("Last Name: ");
-                    var lastName = Console.ReadLine();
-
-                    Console.Write("Date of birth (MM/DD/YYYY): ");
-                    var dateOfBirth = DateTime.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                    Console.WriteLine("Wallet (from 0): ");
-                    var wallet = decimal.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                    Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
-                    char maritalStatus = char.MinValue;
-                    var married = Console.ReadLine();
-                    if (married.Length > 0)
-                    {
-                        maritalStatus = married[0];
-                    }
-
-                    Console.WriteLine("Height (more than 0): ");
-                    var height = short.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                    var recordId = Program.fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+                    var newRecord = fileCabinetService.SetInformationToRecord();
+                    var recordId = Program.fileCabinetService.CreateRecord(newRecord);
                     Console.WriteLine($"Record #{recordId} is created.");
                     Console.WriteLine();
 
@@ -173,42 +162,18 @@ namespace FileCabinetApp
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("Please enter valid data.");
+                    Console.WriteLine("Please try again and enter valid data.");
                     Console.WriteLine();
                 }
             }
             while (invalidValues);
         }
 
-        private static void DisplayRecords(FileCabinetRecord[] records)
-        {
-            foreach (var record in records)
-            {
-                var dateOfBirth = record.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
-
-                string maritalStatus = "unmarried";
-                if (record.MaritalStatus == 'M')
-                {
-                    maritalStatus = "married";
-                }
-
-                Console.WriteLine(
-                            "#{0}, {1}, {2}, {3}, {4}$, {5}, {6}cm",
-                            record.Id,
-                            record.FirstName,
-                            record.LastName,
-                            dateOfBirth,
-                            record.Wallet,
-                            maritalStatus,
-                            record.Height);
-            }
-        }
-
         private static void List(string parameters)
         {
             var listOfRecords = Program.fileCabinetService.GetRecords();
 
-            DisplayRecords(listOfRecords);
+            FileCabinetService.DisplayRecords(listOfRecords);
             Console.WriteLine();
         }
 
@@ -216,43 +181,23 @@ namespace FileCabinetApp
         {
             if (parameters.Length == 0)
             {
-                throw new ArgumentNullException(nameof(parameters));
+                Console.WriteLine("Please try again. Enter record ID. 'edit <ID>'.");
+                Console.WriteLine();
+                return;
             }
 
-            int id = Convert.ToInt32(parameters, CultureInfo.InvariantCulture);
+            var recordIdForEdit = Convert.ToInt32(parameters, CultureInfo.InvariantCulture);
             var listOfRecords = Program.fileCabinetService.GetRecords();
 
             foreach (var record in listOfRecords)
             {
-                if (record.Id == id)
+                if (record.Id == recordIdForEdit)
                 {
                     try
                     {
-                        Console.Write("First Name: ");
-                        var firstName = Console.ReadLine();
-
-                        Console.Write("Last Name: ");
-                        var lastName = Console.ReadLine();
-
-                        Console.Write("Date of birth (MM/DD/YYYY): ");
-                        var dateOfBirth = DateTime.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                        Console.WriteLine("Wallet (from 0): ");
-                        var wallet = decimal.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                        Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
-                        char maritalStatus = char.MinValue;
-                        var married = Console.ReadLine();
-                        if (married.Length > 0)
-                        {
-                            maritalStatus = married[0];
-                        }
-
-                        Console.WriteLine("Height (more than 0): ");
-                        var height = short.Parse(Console.ReadLine(), Program.cultureEnUS);
-
-                        Program.fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
-                        Console.WriteLine($"Record #{id} is updated.");
+                        var editRecord = fileCabinetService.SetInformationToRecord();
+                        Program.fileCabinetService.EditRecord(recordIdForEdit, editRecord);
+                        Console.WriteLine($"Record #{recordIdForEdit} is updated.");
                         return;
                     }
                     catch (ArgumentNullException ex)
@@ -276,16 +221,16 @@ namespace FileCabinetApp
                 }
             }
 
-            Console.WriteLine($"#{id} record is not found.");
+            Console.WriteLine($"#{recordIdForEdit} record is not found.");
         }
 
         private static void Find(string parameters)
         {
             if (!string.IsNullOrEmpty(parameters))
             {
-                string[] inputArguments = parameters.Split(' ', 2);
+                string[] inputParameters = parameters.Split(' ', 2);
 
-                if (inputArguments.Length < 2)
+                if (inputParameters.Length < 2)
                 {
                     Console.WriteLine("Please try again. Enter the key. The syntax for the 'find' command is \"find <search by> <key> \".");
                     Console.WriteLine();
@@ -294,8 +239,8 @@ namespace FileCabinetApp
 
                 const int commandIndex = 0;
                 const int argumentIndex = 1;
-                var command = inputArguments[commandIndex];
-                var argument = inputArguments[argumentIndex];
+                var command = inputParameters[commandIndex];
+                var argument = inputParameters[argumentIndex];
 
                 if (string.IsNullOrEmpty(command))
                 {
@@ -304,18 +249,18 @@ namespace FileCabinetApp
                     return;
                 }
 
-                var index = Array.FindIndex(searchBy, 0, searchBy.Length, i => i.Item1.Equals(command, StringComparison.InvariantCultureIgnoreCase));
+                var index = Array.FindIndex(searchCommands, 0, searchCommands.Length, i => i.Item1.Equals(command, StringComparison.InvariantCultureIgnoreCase));
                 if (index >= 0)
                 {
-                    var foundRecords = searchBy[index].Item2(argument);
+                    var foundRecords = searchCommands[index].Item2(argument);
 
-                    if (foundRecords.Length == 0)
+                    if (foundRecords.Count == 0)
                     {
                         Console.WriteLine($"There are no entries with parameter '{argument}'.");
                     }
                     else
                     {
-                        DisplayRecords(foundRecords);
+                        FileCabinetService.DisplayRecords(foundRecords);
                         Console.WriteLine();
                     }
                 }
@@ -329,6 +274,36 @@ namespace FileCabinetApp
                 Console.WriteLine("Error entering parameters. The syntax for the 'find' command is \"find <search by> <key> \".");
                 Console.WriteLine();
             }
+        }
+
+        private static string GetValidationRules()
+        {
+            const int commandIndex = 1;
+            const int validateTypeIndex = 2;
+            var validationRules = "default";
+            var args = Environment.GetCommandLineArgs();
+
+            if (args.Length > 1)
+            {
+                if (args[commandIndex].Contains('-', StringComparison.InvariantCulture))
+                {
+                    if (args[commandIndex].Equals("-v", StringComparison.InvariantCulture))
+                    {
+                        validationRules = args[validateTypeIndex];
+                    }
+                    else if (args[commandIndex].Contains("--validation-rules=", StringComparison.InvariantCulture))
+                    {
+                        validationRules = args[commandIndex].Split('=')[validateTypeIndex - 1];
+                    }
+                }
+            }
+
+            if (!validationRules.Equals("default", StringComparison.InvariantCultureIgnoreCase) && !validationRules.Equals("custom", StringComparison.InvariantCultureIgnoreCase))
+            {
+                validationRules = "default";
+            }
+
+            return validationRules.ToUpperInvariant();
         }
     }
 }
