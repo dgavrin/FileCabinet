@@ -12,7 +12,7 @@
         <member name="M:FileCabinetApp.FileCabinetCustomService.SetInformationToRecord">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.FileCabinetDefaultService">
@@ -23,7 +23,7 @@
         <member name="M:FileCabinetApp.FileCabinetDefaultService.SetInformationToRecord">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
@@ -149,11 +149,11 @@
             </summary>
             <returns> RecordParameters. </returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
             <summary>
-            Throws an exception if the record parameters are incorrect.
+            Creates a validator.
             </summary>
-            <param name="recordParameters"> Record fields. </param>
+            <returns> New validator. </returns>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
@@ -185,6 +185,33 @@
             <param name="wallet"> The wallet. </param>
             <param name="maritalStatus"> The marital status. </param>
             <param name="height"> The height. </param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.CustomValidator">
+            <summary>
+            Represents custom validator for file cabinet service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.CustomValidator.ValidateParameters(FileCabinetApp.RecordParameters)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Validators.DefaulValidator">
+            <summary>
+            Represents defualt validator for file cabinet service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.DefaulValidator.ValidateParameters(FileCabinetApp.RecordParameters)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Validators.IRecordValidator">
+            <summary>
+            Record validator.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.IRecordValidator.ValidateParameters(FileCabinetApp.RecordParameters)">
+            <summary>
+            Validates the parameters.
+            </summary>
+            <param name="recordParameters"> Record fileds. </param>
         </member>
     </members>
 </doc>

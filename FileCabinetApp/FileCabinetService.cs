@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using FileCabinetApp.Validators;
 
 namespace FileCabinetApp
 {
@@ -76,7 +77,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            this.ValidateParameters(recordParameters);
+            this.CreateValidator().ValidateParameters(recordParameters);
 
             var record = new FileCabinetRecord
             {
@@ -131,7 +132,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            this.ValidateParameters(recordParameters);
+            this.CreateValidator().ValidateParameters(recordParameters);
 
             foreach (var record in this.list)
             {
@@ -279,11 +280,12 @@ namespace FileCabinetApp
         }
 
         /// <summary>
-        /// Throws an exception if the record parameters are incorrect.
+        /// Creates a validator.
         /// </summary>
-        /// <param name="recordParameters"> Record fields. </param>
-        protected virtual void ValidateParameters(RecordParameters recordParameters)
+        /// <returns> New validator. </returns>
+        protected virtual IRecordValidator CreateValidator()
         {
+            return new DefaulValidator();
         }
 
         private void AddEntryToDictionaries(FileCabinetRecord record)

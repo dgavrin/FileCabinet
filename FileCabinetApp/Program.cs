@@ -179,7 +179,9 @@ namespace FileCabinetApp
         {
             if (parameters.Length == 0)
             {
-                throw new ArgumentNullException(nameof(parameters));
+                Console.WriteLine("Please try again. Enter record ID. 'edit <ID>'.");
+                Console.WriteLine();
+                return;
             }
 
             var recordIdForEdit = Convert.ToInt32(parameters, CultureInfo.InvariantCulture);
