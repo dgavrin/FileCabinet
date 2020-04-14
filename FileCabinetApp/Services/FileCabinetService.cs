@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using FileCabinetApp.Services;
 using FileCabinetApp.Validators;
 
-namespace FileCabinetApp
+namespace FileCabinetApp.Services
 {
     /// <summary>
     /// Represents an abstract service that stores records with personal information about a person.
     /// </summary>
-    public class FileCabinetService
+    public class FileCabinetService : IFileCabinetService
     {
         /// <summary>
         /// Culture.
@@ -103,11 +104,7 @@ namespace FileCabinetApp
             }
         }
 
-        /// <summary>
-        /// Creates a record with personal information about a person and adds it to the list.
-        /// </summary>
-        /// <param name="recordParameters"> FileCabinetRecord fields. </param>
-        /// <returns> Identifier of the new record. </returns>
+        /// <inheritdoc/>
         public int CreateRecord(RecordParameters recordParameters)
         {
             if (recordParameters == null)
@@ -135,29 +132,19 @@ namespace FileCabinetApp
             return record.Id;
         }
 
-        /// <summary>
-        /// Gets a list of entries.
-        /// </summary>
-        /// <returns> List of entries. </returns>
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             return new ReadOnlyCollection<FileCabinetRecord>(this.list);
         }
 
-        /// <summary>
-        /// Get statistics about records.
-        /// </summary>
-        /// <returns> Number of records. </returns>
+        /// <inheritdoc/>
         public int GetStat()
         {
             return this.list.Count;
         }
 
-        /// <summary>
-        /// Edits a record by ID.
-        /// </summary>
-        /// <param name="id"> The identifier. </param>
-        /// <param name="recordParameters"> FileCabinetRecord fields. </param>
+        /// <inheritdoc/>
         public void EditRecord(int id, RecordParameters recordParameters)
         {
             if (id < 0)
@@ -196,11 +183,7 @@ namespace FileCabinetApp
             throw new ArgumentException($"#{id} record is not found.", nameof(id));
         }
 
-        /// <summary>
-        /// Gets a list of entries by first name.
-        /// </summary>
-        /// <param name="firstName"> The first name. </param>
-        /// <returns> List of entries. </returns>
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
@@ -223,11 +206,7 @@ namespace FileCabinetApp
             }
         }
 
-        /// <summary>
-        /// Gets a list of entries by last name.
-        /// </summary>
-        /// <param name="lastName"> The last name. </param>
-        /// <returns> List of entries. </returns>
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
@@ -250,11 +229,7 @@ namespace FileCabinetApp
             }
         }
 
-        /// <summary>
-        /// Gets a list of entries by date of birth.
-        /// </summary>
-        /// <param name="dateOfBirth"> The date of birth. </param>
-        /// <returns> List of entries. </returns>
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp
 {
@@ -17,7 +18,7 @@ namespace FileCabinetApp
 
         private static bool isRunning = true;
         private static string validationRules = Program.GetValidationRules();
-        private static FileCabinetService fileCabinetService = new FileCabinetService(validationRules);
+        private static IFileCabinetService fileCabinetService = new FileCabinetService(validationRules);
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
