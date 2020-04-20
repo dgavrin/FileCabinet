@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
+using FileCabinetApp.Writers;
 
 namespace FileCabinetApp.Services
 {
@@ -95,6 +97,12 @@ namespace FileCabinetApp.Services
             var height = ReadInput(InputConverters.HeightConverter, this.validator.HeightValidator);
 
             return new RecordParameters(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+        }
+
+        /// <inheritdoc/>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            return new FileCabinetServiceSnapshot(this.list);
         }
 
         /// <inheritdoc/>

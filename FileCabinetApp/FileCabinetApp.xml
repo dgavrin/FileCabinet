@@ -150,6 +150,9 @@
             </summary>
             <returns> RecordParameters. </returns>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetService.MakeSnapshot">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
@@ -170,6 +173,23 @@
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.FindByDateOfBirth(System.String)">
             <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Services.FileCabinetServiceSnapshot">
+            <summary>
+            Represents a snapshot of a file cabinet service.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.#ctor(System.Collections.Generic.List{FileCabinetApp.Records.FileCabinetRecord})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetServiceSnapshot"/> class.
+            </summary>
+            <param name="list"> List of records. </param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
+            <summary>
+            Saves a list of entries to a csv file.
+            </summary>
+            <param name="streamWriter"> Stream for recording. </param>
         </member>
         <member name="T:FileCabinetApp.Services.IFileCabinetService">
             <summary>
@@ -228,6 +248,12 @@
             Enter personal information about the person to record.
             </summary>
             <returns> RecordParameters. </returns>
+        </member>
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.MakeSnapshot">
+            <summary>
+            Creates a snapshot of a file cabinet service.
+            </summary>
+            <returns> A snapshot of the file cabinet service. </returns>
         </member>
         <member name="T:FileCabinetApp.Validators.CustomValidator">
             <summary>
@@ -333,6 +359,23 @@
             </summary>
             <param name="height"> The height. </param>
             <returns> Validation result. </returns>
+        </member>
+        <member name="T:FileCabinetApp.Writers.FileCabinetRecordCsvWriter">
+            <summary>
+            File cabinet record csv writer.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Writers.FileCabinetRecordCsvWriter.#ctor(System.IO.TextWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Writers.FileCabinetRecordCsvWriter"/> class.
+            </summary>
+            <param name="textWriter"> The textWriter. </param>
+        </member>
+        <member name="M:FileCabinetApp.Writers.FileCabinetRecordCsvWriter.Write(FileCabinetApp.Records.FileCabinetRecord)">
+            <summary>
+            Writes a record to a csv file.
+            </summary>
+            <param name="record"> The record. </param>
         </member>
     </members>
 </doc>

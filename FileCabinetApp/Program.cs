@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.IO;
 using FileCabinetApp.Records;
 using FileCabinetApp.Services;
 
@@ -30,6 +31,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
+            new Tuple<string, Action<string>>("export", Export),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -41,6 +43,7 @@ namespace FileCabinetApp
             new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service." },
             new string[] { "edit", "edits a record", "The 'edit' command edits a record." },
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
+            new string[] { "export", "exports the list of records to a csv file at the specified path", "The 'export' command exports the list of records to a csv file at the specified path" },
         };
 
         private static Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[]
@@ -305,6 +308,80 @@ namespace FileCabinetApp
             }
 
             return validationRules.ToUpperInvariant();
+        }
+
+        private static void Export(string parameters)
+        {
+            if (!string.IsNullOrEmpty(parameters))
+            {
+                string[] inputParameters = parameters.Split(' ', 2);
+
+                if (inputParameters.Length < 2)
+                {
+                    Console.WriteLine("Please try again. Enter the key. The syntax for the 'export' command is \"export csv <fileName> \".");
+                    Console.WriteLine();
+                    return;
+                }
+
+                const int commandIndex = 0;
+                const int fileNameIndex = 1;
+                var command = inputParameters[commandIndex];
+                var fileName = inputParameters[fileNameIndex];
+
+                if (string.IsNullOrEmpty(command))
+                {
+                    Console.WriteLine($"Please try again. The '{command}' is invalid parameter.");
+                    Console.WriteLine();
+                    return;
+                }
+
+                if (File.Exists(fileName))
+                {
+                    Console.Write($"File is exist - rewrite {fileName}? [Y/n]: ");
+                    char userResponse;
+                    do
+                    {
+                        userResponse = Console.ReadKey().KeyChar;
+                        Console.WriteLine();
+                    }
+                    while (userResponse != 'Y' && userResponse != 'y' && userResponse != 'N' && userResponse != 'n');
+
+                    if (userResponse == 'n')
+                    {
+                        return;
+                    }
+                }
+
+                try
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(fileName))
+                    {
+                        var snapshot = fileCabinetService.MakeSnapshot();
+                        snapshot.SaveToCsv(streamWriter);
+                        Console.WriteLine($"All records are exported to file {fileName}.");
+                        Console.WriteLine();
+                    }
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    ExportFailedErrorMessage(fileName);
+                }
+                catch (IOException)
+                {
+                    ExportFailedErrorMessage(fileName);
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error entering parameters. The syntax for the 'export' command is \"export csv <fileName> \".");
+                Console.WriteLine();
+            }
+
+            void ExportFailedErrorMessage(string path)
+            {
+                Console.WriteLine($"Export failed: can't open file {path}.");
+                Console.WriteLine();
+            }
         }
     }
 }

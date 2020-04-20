@@ -60,5 +60,11 @@ namespace FileCabinetApp.Services
         /// </summary>
         /// <returns> RecordParameters. </returns>
         public RecordParameters SetInformationToRecord();
+
+        /// <summary>
+        /// Creates a snapshot of a file cabinet service.
+        /// </summary>
+        /// <returns> A snapshot of the file cabinet service. </returns>
+        public FileCabinetServiceSnapshot MakeSnapshot();
     }
 }
