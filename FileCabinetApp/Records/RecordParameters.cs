@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileCabinetApp
+namespace FileCabinetApp.Records
 {
     /// <summary>
     /// Represents an object that stores parameters for creating and editing records in a file cabinet.

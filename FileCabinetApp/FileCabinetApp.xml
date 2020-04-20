@@ -4,53 +4,6 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
-        <member name="T:FileCabinetApp.FileCabinetRecord">
-            <summary>
-            Presentation of a record in a file cabinet.
-            </summary>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
-            <summary>
-            Gets or sets the identifier of the record in the file cabinet.
-            </summary>
-            <value> The indentifier. </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
-            <summary>
-            Gets or sets the first name of the record in the file cabinet.
-            </summary>
-            <value> The first name. </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
-            <summary>
-            Gets or sets the last name of the record in the file cabinet.
-            </summary>
-            <value> The last name. </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
-            <summary>
-            Gets or sets the date of birht of the record in the file cabinet.
-            </summary>
-            <value> The date of birth. </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Wallet">
-            <summary>
-            Gets or sets the wallet of the record in the file cabinet.
-            </summary>
-            <value> The wallet. </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.MaritalStatus">
-            <summary>
-            Gets or sets the marital status of the record in the file cabinet.
-            </summary>
-            <value> The marital status. </value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.Height">
-            <summary>
-            Gets or sets the height of the record in the file cabinet.
-            </summary>
-            <value> The height. </value>
-        </member>
         <member name="T:FileCabinetApp.InputConverters">
             <summary>
             Provides methods for converting input.
@@ -101,19 +54,66 @@
             The main method.
             </summary>
         </member>
-        <member name="T:FileCabinetApp.RecordParameters">
+        <member name="T:FileCabinetApp.Records.FileCabinetRecord">
+            <summary>
+            Presentation of a record in a file cabinet.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Records.FileCabinetRecord.Id">
+            <summary>
+            Gets or sets the identifier of the record in the file cabinet.
+            </summary>
+            <value> The indentifier. </value>
+        </member>
+        <member name="P:FileCabinetApp.Records.FileCabinetRecord.FirstName">
+            <summary>
+            Gets or sets the first name of the record in the file cabinet.
+            </summary>
+            <value> The first name. </value>
+        </member>
+        <member name="P:FileCabinetApp.Records.FileCabinetRecord.LastName">
+            <summary>
+            Gets or sets the last name of the record in the file cabinet.
+            </summary>
+            <value> The last name. </value>
+        </member>
+        <member name="P:FileCabinetApp.Records.FileCabinetRecord.DateOfBirth">
+            <summary>
+            Gets or sets the date of birht of the record in the file cabinet.
+            </summary>
+            <value> The date of birth. </value>
+        </member>
+        <member name="P:FileCabinetApp.Records.FileCabinetRecord.Wallet">
+            <summary>
+            Gets or sets the wallet of the record in the file cabinet.
+            </summary>
+            <value> The wallet. </value>
+        </member>
+        <member name="P:FileCabinetApp.Records.FileCabinetRecord.MaritalStatus">
+            <summary>
+            Gets or sets the marital status of the record in the file cabinet.
+            </summary>
+            <value> The marital status. </value>
+        </member>
+        <member name="P:FileCabinetApp.Records.FileCabinetRecord.Height">
+            <summary>
+            Gets or sets the height of the record in the file cabinet.
+            </summary>
+            <value> The height. </value>
+        </member>
+        <member name="T:FileCabinetApp.Records.RecordParameters">
             <summary>
             Represents an object that stores parameters for creating and editing records in a file cabinet.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.RecordParameters.#ctor">
+        <member name="M:FileCabinetApp.Records.RecordParameters.#ctor">
             <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.RecordParameters"/> class.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Records.RecordParameters"/> class.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.RecordParameters.#ctor(System.String,System.String,System.DateTime,System.Decimal,System.Char,System.Int16)">
+        <member name="M:FileCabinetApp.Records.RecordParameters.#ctor(System.String,System.String,System.DateTime,System.Decimal,System.Char,System.Int16)">
             <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.RecordParameters"/> class.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Records.RecordParameters"/> class.
             </summary>
             <param name="firstName"> The first name. </param>
             <param name="lastName"> The last name. </param>
@@ -138,7 +138,7 @@
             </summary>
             <param name="validationType"> The validation type. </param>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.DisplayRecords(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.FileCabinetRecord})">
+        <member name="M:FileCabinetApp.Services.FileCabinetService.DisplayRecords(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.Records.FileCabinetRecord})">
             <summary>
             Displays a list of entries.
             </summary>
@@ -150,7 +150,7 @@
             </summary>
             <returns> RecordParameters. </returns>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.GetRecords">
@@ -159,7 +159,7 @@
         <member name="M:FileCabinetApp.Services.FileCabinetService.GetStat">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.Services.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetService.FindByFirstName(System.String)">
@@ -176,7 +176,7 @@
             Interface for file cabinet services.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.CreateRecord(FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.CreateRecord(FileCabinetApp.Records.RecordParameters)">
             <summary>
             Creates a record with personal information about a person and adds it to the list.
             </summary>
@@ -195,7 +195,7 @@
             </summary>
             <returns> Number of records. </returns>
         </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
             <summary>
             Edits a record by ID.
             </summary>
@@ -252,7 +252,7 @@
         <member name="M:FileCabinetApp.Validators.CustomValidator.HeightValidator(System.Int16)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.CustomValidator.ValidateParameters(FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.Validators.CustomValidator.ValidateParameters(FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validators.DefaulValidator">
@@ -278,7 +278,7 @@
         <member name="M:FileCabinetApp.Validators.DefaulValidator.HeightValidator(System.Int16)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.DefaulValidator.ValidateParameters(FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.Validators.DefaulValidator.ValidateParameters(FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validators.IRecordValidator">
@@ -286,7 +286,7 @@
             Record validator.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.IRecordValidator.ValidateParameters(FileCabinetApp.RecordParameters)">
+        <member name="M:FileCabinetApp.Validators.IRecordValidator.ValidateParameters(FileCabinetApp.Records.RecordParameters)">
             <summary>
             Validates the parameters.
             </summary>

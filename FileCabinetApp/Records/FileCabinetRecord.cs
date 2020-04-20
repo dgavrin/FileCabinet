@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace FileCabinetApp
+namespace FileCabinetApp.Records
 {
     /// <summary>
     /// Presentation of a record in a file cabinet.

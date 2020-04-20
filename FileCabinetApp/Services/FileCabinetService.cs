@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
 
 namespace FileCabinetApp.Services
@@ -84,13 +85,13 @@ namespace FileCabinetApp.Services
             Console.Write("Date of birth (MM/DD/YYYY): ");
             var dateOfBirth = ReadInput(InputConverters.DateConverter, this.validator.DateOfBirthValidator);
 
-            Console.WriteLine("Wallet: ");
+            Console.Write("Wallet: ");
             var wallet = ReadInput(InputConverters.WalletConverter, this.validator.WalletValidator);
 
-            Console.WriteLine("Marital status ('M' - married, 'U' - unmarried): ");
+            Console.Write("Marital status ('M' - married, 'U' - unmarried): ");
             var maritalStatus = ReadInput(InputConverters.MaritalStatusConverter, this.validator.MaritalStatusValidator);
 
-            Console.WriteLine("Height: ");
+            Console.Write("Height: ");
             var height = ReadInput(InputConverters.HeightConverter, this.validator.HeightValidator);
 
             return new RecordParameters(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
