@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Text;
+using System.Xml;
 using FileCabinetApp.Records;
 using FileCabinetApp.Services;
 
@@ -354,21 +356,51 @@ namespace FileCabinetApp
 
                 try
                 {
-                    using (StreamWriter streamWriter = new StreamWriter(fileName))
+                    if (command.ToUpperInvariant() == "CSV")
                     {
-                        var snapshot = fileCabinetService.MakeSnapshot();
-                        snapshot.SaveToCsv(streamWriter);
-                        Console.WriteLine($"All records are exported to file {fileName}.");
-                        Console.WriteLine();
+                        if (fileName.EndsWith(".csv", StringComparison.InvariantCulture))
+                        {
+                            using (StreamWriter streamWriter = new StreamWriter(fileName))
+                            {
+                                var snapshot = fileCabinetService.MakeSnapshot();
+                                snapshot.SaveToCsv(streamWriter);
+                                ReportExportSuccess(fileName);
+                            }
+                        }
+                        else
+                        {
+                            ReportAFileExtensionError();
+                        }
+                    }
+                    else if (command.ToUpperInvariant() == "XML")
+                    {
+                        if (fileName.EndsWith(".xml", StringComparison.InvariantCulture))
+                        {
+                            XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+                            xmlWriterSettings.Encoding = Encoding.UTF8;
+                            xmlWriterSettings.Indent = true;
+                            xmlWriterSettings.IndentChars = "\t";
+
+                            using (XmlWriter xmlWriter = XmlWriter.Create(fileName, xmlWriterSettings))
+                            {
+                                var snapshot = fileCabinetService.MakeSnapshot();
+                                snapshot.SaveToXml(xmlWriter);
+                                ReportExportSuccess(fileName);
+                            }
+                        }
+                        else
+                        {
+                            ReportAFileExtensionError();
+                        }
                     }
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    ExportFailedErrorMessage(fileName);
+                    ReportAnExportError(fileName);
                 }
                 catch (IOException)
                 {
-                    ExportFailedErrorMessage(fileName);
+                    ReportAnExportError(fileName);
                 }
             }
             else
@@ -377,9 +409,21 @@ namespace FileCabinetApp
                 Console.WriteLine();
             }
 
-            void ExportFailedErrorMessage(string path)
+            void ReportAnExportError(string path)
             {
                 Console.WriteLine($"Export failed: can't open file {path}.");
+                Console.WriteLine();
+            }
+
+            void ReportExportSuccess(string path)
+            {
+                Console.WriteLine($"All records are exported to file {path}.");
+                Console.WriteLine();
+            }
+
+            void ReportAFileExtensionError()
+            {
+                Console.WriteLine("When using \"export\", the type of the <csv/xml> command and the file extension must match.");
                 Console.WriteLine();
             }
         }

@@ -191,6 +191,12 @@
             </summary>
             <param name="streamWriter"> Stream for recording. </param>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.SaveToXml(System.Xml.XmlWriter)">
+            <summary>
+            Saves a list of entries to a xml file.
+            </summary>
+            <param name="xmlWriter"> Stream fo recording.</param>
+        </member>
         <member name="T:FileCabinetApp.Services.IFileCabinetService">
             <summary>
             Interface for file cabinet services.
@@ -376,6 +382,24 @@
             Writes a record to a csv file.
             </summary>
             <param name="record"> The record. </param>
+        </member>
+        <member name="T:FileCabinetApp.Writers.FileCabinetRecordXmlWriter">
+            <summary>
+            File cabinet record xml writer.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Writers.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Writers.FileCabinetRecordXmlWriter"/> class.
+            </summary>
+            <param name="xmlWriter"> The xmlWriter. </param>
+        </member>
+        <member name="M:FileCabinetApp.Writers.FileCabinetRecordXmlWriter.Write(FileCabinetApp.Records.FileCabinetRecord,System.Xml.Linq.XDocument)">
+            <summary>
+            Writes a record to a xml file.
+            </summary>
+            <param name="record"> The record. </param>
+            <param name="xmlDoc"> Xml document. </param>
         </member>
     </members>
 </doc>
