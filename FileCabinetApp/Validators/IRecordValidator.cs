@@ -1,4 +1,5 @@
 ﻿using System;
+using FileCabinetApp.Records;
 
 namespace FileCabinetApp.Validators
 {
