@@ -45,7 +45,7 @@ namespace FileCabinetApp
             new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service." },
             new string[] { "edit", "edits a record", "The 'edit' command edits a record." },
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
-            new string[] { "export", "exports the list of records to a csv file at the specified path", "The 'export' command exports the list of records to a csv file at the specified path" },
+            new string[] { "export", "exports the list of records to a <csv/xml> file at the specified path", "The 'export' command exports the list of records to a <csv/xml> file at the specified path" },
         };
 
         private static Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[]
@@ -393,6 +393,10 @@ namespace FileCabinetApp
                             ReportAFileExtensionError();
                         }
                     }
+                    else
+                    {
+                        ReportAnErrorWhileEnteringParameters();
+                    }
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -405,8 +409,7 @@ namespace FileCabinetApp
             }
             else
             {
-                Console.WriteLine("Error entering parameters. The syntax for the 'export' command is \"export csv <fileName> \".");
-                Console.WriteLine();
+                ReportAnErrorWhileEnteringParameters();
             }
 
             void ReportAnExportError(string path)
@@ -424,6 +427,12 @@ namespace FileCabinetApp
             void ReportAFileExtensionError()
             {
                 Console.WriteLine("When using \"export\", the type of the <csv/xml> command and the file extension must match.");
+                Console.WriteLine();
+            }
+
+            void ReportAnErrorWhileEnteringParameters()
+            {
+                Console.WriteLine("Error entering parameters. The syntax for the 'export' command is \"export <csv/xml> <fileName>\".");
                 Console.WriteLine();
             }
         }
