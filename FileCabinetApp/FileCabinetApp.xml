@@ -122,56 +122,94 @@
             <param name="maritalStatus"> The marital status. </param>
             <param name="height"> The height. </param>
         </member>
-        <member name="T:FileCabinetApp.Services.FileCabinetService">
+        <member name="T:FileCabinetApp.Services.FileCabinetFileSystemService">
             <summary>
-            Represents an abstract service that stores records with personal information about a person.
+            It is an abstract service in which records with personal information about a person in the file system are stored.
             </summary>
         </member>
-        <member name="F:FileCabinetApp.Services.FileCabinetService.CultureEnUS">
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.#ctor(System.IO.FileStream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetFileSystemService"/> class.
+            </summary>
+            <param name="fileStream"> File stream. </param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.Records.RecordParameters)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.FindByDateOfBirth(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.FindByFirstName(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.FindByLastName(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.GetRecords">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.GetStat">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.MakeSnapshot">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.SetInformationToRecord">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Services.FileCabinetMemoryService">
+            <summary>
+            It is an abstract service in which records with personal information about a person are stored in memory.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.Services.FileCabinetMemoryService.CultureEnUS">
             <summary>
             Culture.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.#ctor(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.#ctor(System.String)">
             <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetService"/> class.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetMemoryService"/> class.
             </summary>
             <param name="validationType"> The validation type. </param>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.DisplayRecords(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.Records.FileCabinetRecord})">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.DisplayRecords(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.Records.FileCabinetRecord})">
             <summary>
             Displays a list of entries.
             </summary>
             <param name="records"> Collection of entries. </param>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.SetInformationToRecord">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.SetInformationToRecord">
             <summary>
             Enter personal information about the person to record.
             </summary>
             <returns> RecordParameters. </returns>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.MakeSnapshot">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.MakeSnapshot">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.CreateRecord(FileCabinetApp.Records.RecordParameters)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.CreateRecord(FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.GetRecords">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.GetRecords">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.GetStat">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.GetStat">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByFirstName(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByFirstName(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByLastName(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByLastName(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetService.FindByDateOfBirth(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByDateOfBirth(System.String)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Services.FileCabinetServiceSnapshot">

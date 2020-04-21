@@ -8,9 +8,9 @@ using FileCabinetApp.Validators;
 namespace FileCabinetApp.Services
 {
     /// <summary>
-    /// Represents an abstract service that stores records with personal information about a person.
+    /// It is an abstract service in which records with personal information about a person are stored in memory.
     /// </summary>
-    public class FileCabinetService : IFileCabinetService
+    public class FileCabinetMemoryService : IFileCabinetService
     {
         /// <summary>
         /// Culture.
@@ -25,10 +25,10 @@ namespace FileCabinetApp.Services
         private IRecordValidator validator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FileCabinetService"/> class.
+        /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
         /// </summary>
         /// <param name="validationType"> The validation type. </param>
-        public FileCabinetService(string validationType)
+        public FileCabinetMemoryService(string validationType)
         {
             if (validationType == null)
             {

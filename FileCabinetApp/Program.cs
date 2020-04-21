@@ -22,7 +22,7 @@ namespace FileCabinetApp
 
         private static bool isRunning = true;
         private static string validationRules = Program.GetValidationRules();
-        private static IFileCabinetService fileCabinetService = new FileCabinetService(validationRules);
+        private static IFileCabinetService fileCabinetService = new FileCabinetMemoryService(validationRules);
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -179,7 +179,7 @@ namespace FileCabinetApp
         {
             var listOfRecords = Program.fileCabinetService.GetRecords();
 
-            FileCabinetService.DisplayRecords(listOfRecords);
+            FileCabinetMemoryService.DisplayRecords(listOfRecords);
             Console.WriteLine();
         }
 
@@ -266,7 +266,7 @@ namespace FileCabinetApp
                     }
                     else
                     {
-                        FileCabinetService.DisplayRecords(foundRecords);
+                        FileCabinetMemoryService.DisplayRecords(foundRecords);
                         Console.WriteLine();
                     }
                 }
