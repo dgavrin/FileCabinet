@@ -66,5 +66,11 @@ namespace FileCabinetApp.Services
         /// </summary>
         /// <returns> A snapshot of the file cabinet service. </returns>
         public FileCabinetServiceSnapshot MakeSnapshot();
+
+        /// <summary>
+        /// Displays a list of entries.
+        /// </summary>
+        /// <param name="records"> Collection of entries. </param>
+        public void DisplayRecords(ReadOnlyCollection<FileCabinetRecord> records);
     }
 }

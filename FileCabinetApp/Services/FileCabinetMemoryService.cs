@@ -45,11 +45,8 @@ namespace FileCabinetApp.Services
             }
         }
 
-        /// <summary>
-        /// Displays a list of entries.
-        /// </summary>
-        /// <param name="records"> Collection of entries. </param>
-        public static void DisplayRecords(ReadOnlyCollection<FileCabinetRecord> records)
+        /// <inheritdoc/>
+        public void DisplayRecords(ReadOnlyCollection<FileCabinetRecord> records)
         {
             if (records == null)
             {

@@ -131,6 +131,11 @@ namespace FileCabinetApp
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
+
+            if (Program.fileCabinetService is FileCabinetFileSystemService service)
+            {
+                service.Dispose();
+            }
         }
 
         private static void Stat(string parameters)
@@ -178,7 +183,7 @@ namespace FileCabinetApp
         {
             var listOfRecords = Program.fileCabinetService.GetRecords();
 
-            FileCabinetMemoryService.DisplayRecords(listOfRecords);
+            fileCabinetService.DisplayRecords(listOfRecords);
             Console.WriteLine();
         }
 
@@ -272,7 +277,7 @@ namespace FileCabinetApp
                     }
                     else
                     {
-                        FileCabinetMemoryService.DisplayRecords(foundRecords);
+                        fileCabinetService.DisplayRecords(foundRecords);
                         Console.WriteLine();
                     }
                 }
@@ -337,7 +342,7 @@ namespace FileCabinetApp
             switch (Program.storage)
             {
                 case "file":
-                    Program.fileCabinetService = new FileCabinetFileSystemService(new FileStream(Program.FileName, FileMode.OpenOrCreate, FileAccess.ReadWrite));
+                    Program.fileCabinetService = new FileCabinetFileSystemService(new FileStream(Program.FileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite), validationRules);
                     break;
                 default:
                     Program.fileCabinetService = new FileCabinetMemoryService(Program.validationRules);
