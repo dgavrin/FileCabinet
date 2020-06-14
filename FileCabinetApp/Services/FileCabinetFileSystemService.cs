@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
 
@@ -160,19 +161,67 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
-            throw new NotImplementedException();
+            if (dateOfBirth == null)
+            {
+                throw new ArgumentNullException(nameof(dateOfBirth));
+            }
+
+            if (dateOfBirth.Length == 0)
+            {
+                throw new ArgumentException("There are no entries with an empty date of birth.", nameof(dateOfBirth));
+            }
+
+            var date = DateTime.MinValue;
+            if (!DateTime.TryParse(dateOfBirth, CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+            {
+                throw new ArgumentException("Wrong date format.", nameof(dateOfBirth));
+            }
+
+            var foundRecords = from record in this.GetRecords()
+                               where record.DateOfBirth.Equals(date)
+                               select record;
+
+            return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>(foundRecords));
         }
 
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            throw new NotImplementedException();
+            if (firstName == null)
+            {
+                throw new ArgumentNullException(nameof(firstName));
+            }
+
+            if (firstName.Length == 0)
+            {
+                throw new ArgumentException($"There are no entries with an empty first name.", nameof(firstName));
+            }
+
+            var foundRecords = from record in this.GetRecords()
+                               where record.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase)
+                               select record;
+
+            return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>(foundRecords));
         }
 
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
-            throw new NotImplementedException();
+            if (lastName == null)
+            {
+                throw new ArgumentNullException(nameof(lastName));
+            }
+
+            if (lastName.Length == 0)
+            {
+                throw new ArgumentException($"There are no entries with an empty last name.", nameof(lastName));
+            }
+
+            var foundRecords = from record in this.GetRecords()
+                               where record.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase)
+                               select record;
+
+            return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>(foundRecords));
         }
 
         /// <inheritdoc/>
