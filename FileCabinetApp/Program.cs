@@ -19,10 +19,12 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
+        private const string FileName = "cabinet-records.db";
 
         private static bool isRunning = true;
-        private static string validationRules = Program.GetValidationRules();
-        private static IFileCabinetService fileCabinetService = new FileCabinetService(validationRules);
+        private static string validationRules;
+        private static string storage;
+        private static IFileCabinetService fileCabinetService;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -45,14 +47,7 @@ namespace FileCabinetApp
             new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service." },
             new string[] { "edit", "edits a record", "The 'edit' command edits a record." },
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
-            new string[] { "export", "exports the list of records to a csv file at the specified path", "The 'export' command exports the list of records to a csv file at the specified path" },
-        };
-
-        private static Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[]
-        {
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("firstname", Program.fileCabinetService.FindByFirstName),
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("lastname", Program.fileCabinetService.FindByLastName),
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("dateofbirth", Program.fileCabinetService.FindByDateOfBirth),
+            new string[] { "export", "exports the list of records to a <csv/xml> file at the specified path", "The 'export' command exports the list of records to a <csv/xml> file at the specified path" },
         };
 
         /// <summary>
@@ -60,12 +55,16 @@ namespace FileCabinetApp
         /// </summary>
         public static void Main()
         {
+            GetApplicationSettings();
+            CreateFileCabinetService();
+
+#pragma warning disable CA1308
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            #pragma warning disable CA1308
             Console.WriteLine($"Using {validationRules.ToLowerInvariant()} validation rules.");
-            #pragma warning restore CA1308
+            Console.WriteLine($"Using {storage.ToLowerInvariant()} as data store.");
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
+#pragma warning restore CA1308
 
             do
             {
@@ -132,6 +131,11 @@ namespace FileCabinetApp
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
+
+            if (Program.fileCabinetService is FileCabinetFileSystemService service)
+            {
+                service.Dispose();
+            }
         }
 
         private static void Stat(string parameters)
@@ -179,7 +183,7 @@ namespace FileCabinetApp
         {
             var listOfRecords = Program.fileCabinetService.GetRecords();
 
-            FileCabinetService.DisplayRecords(listOfRecords);
+            fileCabinetService.DisplayRecords(listOfRecords);
             Console.WriteLine();
         }
 
@@ -204,6 +208,7 @@ namespace FileCabinetApp
                         var editRecord = fileCabinetService.SetInformationToRecord();
                         Program.fileCabinetService.EditRecord(recordIdForEdit, editRecord);
                         Console.WriteLine($"Record #{recordIdForEdit} is updated.");
+                        Console.WriteLine();
                         return;
                     }
                     catch (ArgumentNullException ex)
@@ -228,10 +233,18 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine($"#{recordIdForEdit} record is not found.");
+            Console.WriteLine();
         }
 
         private static void Find(string parameters)
         {
+            Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[]
+            {
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("firstname", Program.fileCabinetService.FindByFirstName),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("lastname", Program.fileCabinetService.FindByLastName),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("dateofbirth", Program.fileCabinetService.FindByDateOfBirth),
+            };
+
             if (!string.IsNullOrEmpty(parameters))
             {
                 string[] inputParameters = parameters.Split(' ', 2);
@@ -266,7 +279,7 @@ namespace FileCabinetApp
                     }
                     else
                     {
-                        FileCabinetService.DisplayRecords(foundRecords);
+                        fileCabinetService.DisplayRecords(foundRecords);
                         Console.WriteLine();
                     }
                 }
@@ -282,34 +295,61 @@ namespace FileCabinetApp
             }
         }
 
-        private static string GetValidationRules()
+        private static void GetApplicationSettings()
         {
-            const int commandIndex = 1;
-            const int validateTypeIndex = 2;
-            var validationRules = "default";
-            var args = Environment.GetCommandLineArgs();
+            const int parameter = 1;
+            Program.validationRules = "default";
+            Program.storage = "memory";
+            var args = Environment.GetCommandLineArgs()[1..];
 
-            if (args.Length > 1)
+            if (args.Length > 0)
             {
-                if (args[commandIndex].Contains('-', StringComparison.InvariantCulture))
+                for (int commandIndex = 0; commandIndex < args.Length; commandIndex++)
                 {
-                    if (args[commandIndex].Equals("-v", StringComparison.InvariantCulture))
+                    if (args[commandIndex].Contains('-', StringComparison.InvariantCulture))
                     {
-                        validationRules = args[validateTypeIndex];
-                    }
-                    else if (args[commandIndex].Contains("--validation-rules=", StringComparison.InvariantCulture))
-                    {
-                        validationRules = args[commandIndex].Split('=')[validateTypeIndex - 1];
+                        if (args[commandIndex].Equals("-v", StringComparison.InvariantCulture) && commandIndex + 1 < args.Length)
+                        {
+                            Program.validationRules = args[commandIndex + 1];
+                        }
+                        else if (args[commandIndex].Contains("--validation-rules=", StringComparison.InvariantCulture))
+                        {
+                            Program.validationRules = args[commandIndex].Split('=')[parameter];
+                        }
+                        else if (args[commandIndex].Equals("-s", StringComparison.InvariantCulture) && commandIndex + 1 < args.Length)
+                        {
+                            Program.storage = args[commandIndex + 1];
+                        }
+                        else if (args[commandIndex].Contains("--storage=", StringComparison.InvariantCulture))
+                        {
+                            Program.storage = args[commandIndex].Split('=')[parameter];
+                        }
                     }
                 }
             }
 
-            if (!validationRules.Equals("default", StringComparison.InvariantCultureIgnoreCase) && !validationRules.Equals("custom", StringComparison.InvariantCultureIgnoreCase))
+            if (!Program.validationRules.Equals("default", StringComparison.InvariantCultureIgnoreCase) && !Program.validationRules.Equals("custom", StringComparison.InvariantCultureIgnoreCase))
             {
-                validationRules = "default";
+                Program.validationRules = "default";
             }
 
-            return validationRules.ToUpperInvariant();
+            if (!Program.storage.Equals("memory", StringComparison.InvariantCultureIgnoreCase) && !Program.storage.Equals("file", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Program.storage = "memory";
+            }
+        }
+
+        private static void CreateFileCabinetService()
+        {
+            switch (Program.storage)
+            {
+                case "file":
+                    Program.fileCabinetService = new FileCabinetFileSystemService(new FileStream(Program.FileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite), validationRules);
+                    break;
+                default:
+                    Program.fileCabinetService = new FileCabinetMemoryService(Program.validationRules);
+                    break;
+            }
         }
 
         private static void Export(string parameters)
@@ -393,6 +433,10 @@ namespace FileCabinetApp
                             ReportAFileExtensionError();
                         }
                     }
+                    else
+                    {
+                        ReportAnErrorWhileEnteringParameters();
+                    }
                 }
                 catch (UnauthorizedAccessException)
                 {
@@ -405,8 +449,7 @@ namespace FileCabinetApp
             }
             else
             {
-                Console.WriteLine("Error entering parameters. The syntax for the 'export' command is \"export csv <fileName> \".");
-                Console.WriteLine();
+                ReportAnErrorWhileEnteringParameters();
             }
 
             void ReportAnExportError(string path)
@@ -424,6 +467,12 @@ namespace FileCabinetApp
             void ReportAFileExtensionError()
             {
                 Console.WriteLine("When using \"export\", the type of the <csv/xml> command and the file extension must match.");
+                Console.WriteLine();
+            }
+
+            void ReportAnErrorWhileEnteringParameters()
+            {
+                Console.WriteLine("Error entering parameters. The syntax for the 'export' command is \"export <csv/xml> <fileName>\".");
                 Console.WriteLine();
             }
         }
