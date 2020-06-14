@@ -208,6 +208,7 @@ namespace FileCabinetApp
                         var editRecord = fileCabinetService.SetInformationToRecord();
                         Program.fileCabinetService.EditRecord(recordIdForEdit, editRecord);
                         Console.WriteLine($"Record #{recordIdForEdit} is updated.");
+                        Console.WriteLine();
                         return;
                     }
                     catch (ArgumentNullException ex)
@@ -232,6 +233,7 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine($"#{recordIdForEdit} record is not found.");
+            Console.WriteLine();
         }
 
         private static void Find(string parameters)

@@ -104,9 +104,9 @@ namespace FileCabinetApp.Services
                 MaritalStatus = recordParameters.MaritalStatus,
                 Height = recordParameters.Height,
             };
-            var record = FileCabinetRecordToBytes(newRecord);
+            var bytesOfNewRecord = FileCabinetRecordToBytes(newRecord);
             this.fileStream.Seek(0, SeekOrigin.End);
-            this.fileStream.Write(record, 0, record.Length);
+            this.fileStream.Write(bytesOfNewRecord, 0, bytesOfNewRecord.Length);
             this.fileStream.Flush();
 
             return newRecord.Id;
@@ -115,7 +115,46 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public void EditRecord(int id, RecordParameters recordParameters)
         {
-            throw new NotImplementedException();
+            if (id < 0)
+            {
+                throw new ArgumentException($"The {nameof(id)} cannot be less than zero.");
+            }
+
+            if (recordParameters == null)
+            {
+                throw new ArgumentNullException(nameof(recordParameters));
+            }
+
+            recordParameters.Id = id;
+            this.validator.ValidateParameters(recordParameters);
+
+            var recordNumberToChange = -1;
+            var recordBuffer = new byte[RecordSize];
+
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            for (int i = 0, recordNumber = 0; i < this.fileStream.Length; i += RecordSize, recordNumber++)
+            {
+                this.fileStream.Read(recordBuffer, 0, RecordSize);
+                var temporaryRecord = BytesToFileCabinetRecord(recordBuffer);
+
+                if (temporaryRecord.Id == id)
+                {
+                    recordNumberToChange = recordNumber;
+                    break;
+                }
+            }
+
+            if (recordNumberToChange >= 0)
+            {
+                var bytesOfRecordParameters = FileCabinetRecordToBytes(recordParameters);
+                this.fileStream.Seek(recordNumberToChange * RecordSize, SeekOrigin.Begin);
+                this.fileStream.Write(bytesOfRecordParameters, 0, bytesOfRecordParameters.Length);
+                this.fileStream.Flush();
+            }
+            else
+            {
+                throw new ArgumentException($"#{id} record is not found.", nameof(id));
+            }
         }
 
         /// <inheritdoc/>
