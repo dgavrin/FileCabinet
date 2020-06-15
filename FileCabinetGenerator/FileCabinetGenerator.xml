@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FileCabinetGenerator</name>
+    </assembly>
+    <members>
+        <member name="T:FileCabinetGenerator.Program">
+            <summary>
+            The main program class of <see cref="N:FileCabinetGenerator"/>.
+            </summary>
+        </member>
+        <member name="M:FileCabinetGenerator.Program.Main">
+            <summary>
+            The main method of <see cref="N:FileCabinetGenerator"/>.
+            </summary>
+        </member>
+    </members>
+</doc>
