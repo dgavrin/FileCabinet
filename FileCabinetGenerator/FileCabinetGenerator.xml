@@ -14,5 +14,25 @@
             The main method of <see cref="N:FileCabinetGenerator"/>.
             </summary>
         </member>
+        <member name="T:FileCabinetGenerator.TypeOfParameter">
+            <summary>
+            Represents parameter type.
+            </summary>
+        </member>
+        <member name="F:FileCabinetGenerator.TypeOfParameter.NotParameter">
+            <summary>
+            No parameter representation.
+            </summary>
+        </member>
+        <member name="F:FileCabinetGenerator.TypeOfParameter.FullParameter">
+            <summary>
+            Represents the full parameter.
+            </summary>
+        </member>
+        <member name="F:FileCabinetGenerator.TypeOfParameter.ShortParameter">
+            <summary>
+            Represents a short parameter.
+            </summary>
+        </member>
     </members>
 </doc>
