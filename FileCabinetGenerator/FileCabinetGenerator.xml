@@ -14,6 +14,23 @@
             The main method of <see cref="N:FileCabinetGenerator"/>.
             </summary>
         </member>
+        <member name="T:FileCabinetGenerator.RecordsGenerator">
+            <summary>
+            Class for generating records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetGenerator.RecordsGenerator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetGenerator.RecordsGenerator"/> class.
+            </summary>
+            <param name="id">Id.</param>
+            <param name="amount">Amount of records.</param>
+        </member>
+        <member name="M:FileCabinetGenerator.RecordsGenerator.GenerateRecords">
+            <summary>
+            Generates a specified number of records.
+            </summary>
+        </member>
         <member name="T:FileCabinetGenerator.TypeOfParameter">
             <summary>
             Represents parameter type.
