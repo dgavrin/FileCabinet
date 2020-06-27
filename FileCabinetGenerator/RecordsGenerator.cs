@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using FileCabinetApp.Records;
+using FileCabinetApp.Services;
 
 namespace FileCabinetGenerator
 {
@@ -60,6 +61,15 @@ namespace FileCabinetGenerator
             {
                 Console.WriteLine("Records are already generated.");
             }
+        }
+
+        /// <summary>
+        /// Creates a snapshot of a file cabinet service.
+        /// </summary>
+        /// <returns>A snapshot of the file cabinet service.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot()
+        {
+            return new FileCabinetServiceSnapshot(this.list);
         }
 
         private static string GenerateName()

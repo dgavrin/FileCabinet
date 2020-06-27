@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace FileCabinetGenerator
 {
     /// <summary>
     /// The main program class of <see cref="global::FileCabinetGenerator"/>.
     /// </summary>
-    public static class FileCabinetGenerator
+    public static class Program
     {
         private const string HintMessage = "Enter valid parameters: output-type, output file name, records-amount and start-id.";
 
@@ -39,8 +40,10 @@ namespace FileCabinetGenerator
             {
                 DisplayPreferences();
 
-                FileCabinetGenerator.recordsGenerator = new RecordsGenerator(FileCabinetGenerator.startId, FileCabinetGenerator.recordsAmount);
-                FileCabinetGenerator.recordsGenerator.GenerateRecords();
+                Program.recordsGenerator = new RecordsGenerator(Program.startId, Program.recordsAmount);
+                Program.recordsGenerator.GenerateRecords();
+
+                Export();
             }
             else
             {
@@ -88,29 +91,29 @@ namespace FileCabinetGenerator
                 var isValidPreferences = true;
 
                 // Check output type.
-                if (FileCabinetGenerator.outputType.Equals("invalid", StringComparison.InvariantCultureIgnoreCase))
+                if (Program.outputType.Equals("invalid", StringComparison.InvariantCultureIgnoreCase))
                 {
                     isValidPreferences = false;
                     Console.WriteLine("Invalid output type. Should be csv or xml.");
                 }
 
                 // Check output file name.
-                if (FileCabinetGenerator.fileName.Equals("invalid", StringComparison.InvariantCultureIgnoreCase))
+                if (Program.fileName.Equals("invalid", StringComparison.InvariantCultureIgnoreCase))
                 {
                     isValidPreferences = false;
                 }
-                else if (FileCabinetGenerator.fileName.Equals("invalid output type", StringComparison.InvariantCultureIgnoreCase))
+                else if (Program.fileName.Equals("invalid output type", StringComparison.InvariantCultureIgnoreCase))
                 {
                     isValidPreferences = false;
                 }
-                else if (FileCabinetGenerator.fileName.Equals("invalid file extension", StringComparison.InvariantCultureIgnoreCase))
+                else if (Program.fileName.Equals("invalid file extension", StringComparison.InvariantCultureIgnoreCase))
                 {
                     isValidPreferences = false;
                     Console.WriteLine("Invalid output file name. The file extension must match the type of output.");
                 }
 
                 // Check records amount.
-                switch (FileCabinetGenerator.recordsAmount)
+                switch (Program.recordsAmount)
                 {
                     case -1:
                         isValidPreferences = false;
@@ -127,7 +130,7 @@ namespace FileCabinetGenerator
                 }
 
                 // Check start id.
-                switch (FileCabinetGenerator.startId)
+                switch (Program.startId)
                 {
                     case -1:
                         isValidPreferences = false;
@@ -204,11 +207,11 @@ namespace FileCabinetGenerator
 
             if (outputType.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
             {
-                FileCabinetGenerator.outputType = "csv";
+                Program.outputType = "csv";
             }
             else if (outputType.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
             {
-                FileCabinetGenerator.outputType = "xml";
+                Program.outputType = "xml";
             }
         }
 
@@ -219,20 +222,20 @@ namespace FileCabinetGenerator
                 throw new ArgumentNullException(nameof(fileName));
             }
 
-            if (!FileCabinetGenerator.outputType.Equals("invalid", StringComparison.InvariantCultureIgnoreCase))
+            if (!Program.outputType.Equals("invalid", StringComparison.InvariantCultureIgnoreCase))
             {
                 if (fileName.EndsWith("." + outputType, StringComparison.InvariantCulture))
                 {
-                    FileCabinetGenerator.fileName = fileName;
+                    Program.fileName = fileName;
                 }
                 else
                 {
-                    FileCabinetGenerator.fileName = "invalid file extension";
+                    Program.fileName = "invalid file extension";
                 }
             }
             else
             {
-                FileCabinetGenerator.fileName = "invalid output type";
+                Program.fileName = "invalid output type";
             }
         }
 
@@ -247,16 +250,16 @@ namespace FileCabinetGenerator
             {
                 if (parsedRecordsAmount > 0)
                 {
-                    FileCabinetGenerator.recordsAmount = parsedRecordsAmount;
+                    Program.recordsAmount = parsedRecordsAmount;
                 }
                 else
                 {
-                    FileCabinetGenerator.recordsAmount = -1; // Invalid records amount. Should be more than 0.
+                    Program.recordsAmount = -1; // Invalid records amount. Should be more than 0.
                 }
             }
             else
             {
-                FileCabinetGenerator.recordsAmount = -2; // Invalid records amount. Should be integer.
+                Program.recordsAmount = -2; // Invalid records amount. Should be integer.
             }
         }
 
@@ -271,27 +274,77 @@ namespace FileCabinetGenerator
             {
                 if (parsedStartId > 0)
                 {
-                    FileCabinetGenerator.startId = parsedStartId;
+                    Program.startId = parsedStartId;
                 }
                 else
                 {
-                    FileCabinetGenerator.startId = -1; // Invalid start id. Should be more than 0.
+                    Program.startId = -1; // Invalid start id. Should be more than 0.
                 }
             }
             else
             {
-                FileCabinetGenerator.startId = -2; // Invalid start id. Should be integer.
+                Program.startId = -2; // Invalid start id. Should be integer.
             }
         }
 
         private static void DisplayPreferences()
         {
             Console.WriteLine("Select Preferences:");
-            Console.WriteLine($"Output-type: {FileCabinetGenerator.outputType}");
-            Console.WriteLine($"Output: {FileCabinetGenerator.fileName}");
-            Console.WriteLine($"Records-amount: {FileCabinetGenerator.recordsAmount}");
-            Console.WriteLine($"Start-id: {FileCabinetGenerator.startId}");
+            Console.WriteLine($"Output-type: {Program.outputType}");
+            Console.WriteLine($"Output: {Program.fileName}");
+            Console.WriteLine($"Records-amount: {Program.recordsAmount}");
+            Console.WriteLine($"Start-id: {Program.startId}");
             Console.WriteLine();
+        }
+
+        private static void Export()
+        {
+            if (File.Exists(Program.fileName))
+            {
+                Console.Write($"File is exist - rewrite {fileName}? [Y/n]: ");
+                char userResponse;
+                do
+                {
+                    userResponse = Console.ReadKey().KeyChar;
+                    Console.WriteLine();
+                }
+                while (userResponse != 'Y' && userResponse != 'y' && userResponse != 'N' && userResponse != 'n');
+
+                if (userResponse == 'n')
+                {
+                    return;
+                }
+            }
+
+            try
+            {
+                using (StreamWriter streamWriter = new StreamWriter(fileName))
+                {
+                    var snapshot = recordsGenerator.MakeSnapshot();
+                    snapshot.SaveToCsv(streamWriter);
+                    ReportExportSuccess(fileName);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                ReportAnExportError(Program.fileName);
+            }
+            catch (IOException)
+            {
+                ReportAnExportError(Program.fileName);
+            }
+
+            void ReportExportSuccess(string path)
+            {
+                Console.WriteLine($"All records are exported to file {path}.");
+                Console.WriteLine();
+            }
+
+            void ReportAnExportError(string path)
+            {
+                Console.WriteLine($"Export failed: can't open file {path}.");
+                Console.WriteLine();
+            }
         }
     }
 }

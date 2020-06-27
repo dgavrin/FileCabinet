@@ -31,6 +31,12 @@
             Generates a specified number of records.
             </summary>
         </member>
+        <member name="M:FileCabinetGenerator.RecordsGenerator.MakeSnapshot">
+            <summary>
+            Creates a snapshot of a file cabinet service.
+            </summary>
+            <returns>A snapshot of the file cabinet service.</returns>
+        </member>
         <member name="T:FileCabinetGenerator.TypeOfParameter">
             <summary>
             Represents parameter type.
