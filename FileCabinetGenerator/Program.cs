@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
+using System.Xml;
 
 namespace FileCabinetGenerator
 {
@@ -318,11 +320,31 @@ namespace FileCabinetGenerator
 
             try
             {
-                using (StreamWriter streamWriter = new StreamWriter(fileName))
+                switch (Program.outputType)
                 {
-                    var snapshot = recordsGenerator.MakeSnapshot();
-                    snapshot.SaveToCsv(streamWriter);
-                    ReportExportSuccess(fileName);
+                    case "csv":
+                        using (StreamWriter streamWriter = new StreamWriter(fileName))
+                        {
+                            var snapshot = Program.recordsGenerator.MakeSnapshot();
+                            snapshot.SaveToCsv(streamWriter);
+                            ReportExportSuccess(fileName);
+                        }
+
+                        break;
+                    case "xml":
+                        XmlWriterSettings xmlWriterSettings = new XmlWriterSettings();
+                        xmlWriterSettings.Encoding = Encoding.UTF8;
+                        xmlWriterSettings.Indent = true;
+                        xmlWriterSettings.IndentChars = "\t";
+
+                        using (XmlWriter xmlWriter = XmlWriter.Create(fileName, xmlWriterSettings))
+                        {
+                            var snapshot = Program.recordsGenerator.MakeSnapshot();
+                            snapshot.SaveToXml(xmlWriter);
+                            ReportExportSuccess(fileName);
+                        }
+
+                        break;
                 }
             }
             catch (UnauthorizedAccessException)
