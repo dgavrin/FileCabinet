@@ -36,6 +36,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -48,6 +49,7 @@ namespace FileCabinetApp
             new string[] { "edit", "edits a record", "The 'edit' command edits a record." },
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
             new string[] { "export", "exports the list of records to a <csv/xml> file at the specified path", "The 'export' command exports the list of records to a <csv/xml> file at the specified path" },
+            new string[] { "import", "imports a list of records from the csv file at the specified path", "The 'import csv' command imports a list of records from the csv file at the specified path" },
         };
 
         /// <summary>
@@ -473,6 +475,74 @@ namespace FileCabinetApp
             void ReportAnErrorWhileEnteringParameters()
             {
                 Console.WriteLine("Error entering parameters. The syntax for the 'export' command is \"export <csv/xml> <fileName>\".");
+                Console.WriteLine();
+            }
+        }
+
+        private static void Import(string parameters)
+        {
+            if (!string.IsNullOrEmpty(parameters))
+            {
+                string[] inputParameters = parameters.Split(' ', 2);
+
+                if (inputParameters.Length < 2)
+                {
+                    Console.WriteLine("Please try again. Enter the key. The syntax for the 'import' command is \"import csv <fileName> \".");
+                    Console.WriteLine();
+                    return;
+                }
+
+                const int commandIndex = 0;
+                const int fileNameIndex = 1;
+                var command = inputParameters[commandIndex];
+                var fileName = inputParameters[fileNameIndex];
+
+                if (string.IsNullOrEmpty(command))
+                {
+                    Console.WriteLine($"Please try again. The '{command}' is invalid parameter.");
+                    Console.WriteLine();
+                    return;
+                }
+
+                if (command.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (!File.Exists(fileName))
+                    {
+                        Console.WriteLine($"Import error: file {fileName} is not exist.");
+                        Console.WriteLine();
+                        return;
+                    }
+
+                    try
+                    {
+                        if (command.ToUpperInvariant() == "CSV")
+                        {
+                            if (fileName.EndsWith(".csv", StringComparison.InvariantCulture))
+                            {
+
+                            }
+                        }
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine($"Export failed: can't open file {fileName}.");
+                        Console.WriteLine();
+                    }
+                    catch (IOException)
+                    {
+                        Console.WriteLine($"Export failed: can't open file {fileName}.");
+                        Console.WriteLine();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("When using \"import\", the type of the csv command and the file extension must match.");
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error entering parameters. The syntax for the 'import' command is \"import csv <fileName>\".");
                 Console.WriteLine();
             }
         }
