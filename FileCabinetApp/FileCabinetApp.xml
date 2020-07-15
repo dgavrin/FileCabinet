@@ -54,6 +54,23 @@
             The main method.
             </summary>
         </member>
+        <member name="T:FileCabinetApp.Readers.FileCabinetRecordCsvReader">
+            <summary>
+            File cabinet records csv reader.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Readers.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Readers.FileCabinetRecordCsvReader"/> class.
+            </summary>
+            <param name="streamReader">StreamReader.</param>
+        </member>
+        <member name="M:FileCabinetApp.Readers.FileCabinetRecordCsvReader.ReadAll">
+            <summary>
+            Gets a list of records to import.
+            </summary>
+            <returns>List of records to import.</returns>
+        </member>
         <member name="T:FileCabinetApp.Records.FileCabinetRecord">
             <summary>
             Presentation of a record in a file cabinet.
@@ -110,6 +127,12 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Records.RecordParameters"/> class.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.Records.RecordParameters.#ctor(FileCabinetApp.Records.FileCabinetRecord)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Records.RecordParameters"/> class.
+            </summary>
+            <param name="fileCabinetRecord">FileCabinetRecord.</param>
         </member>
         <member name="M:FileCabinetApp.Records.RecordParameters.#ctor(System.String,System.String,System.DateTime,System.Decimal,System.Char,System.Int16)">
             <summary>
@@ -169,6 +192,9 @@
             Releases fileStream, binaryReader, binaryWriter.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Dispose(System.Boolean)">
             <summary>
             Releases fileStream, binaryReader, binaryWriter.
@@ -224,6 +250,9 @@
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByDateOfBirth(System.String)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.Services.FileCabinetServiceSnapshot">
             <summary>
             Represents a snapshot of a file cabinet service.
@@ -235,11 +264,23 @@
             </summary>
             <param name="list"> List of records. </param>
         </member>
+        <member name="P:FileCabinetApp.Services.FileCabinetServiceSnapshot.Records">
+            <summary>
+            Gets returns captured records.
+            </summary>
+            <value>Returns captured records.</value>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>
             Saves a list of entries to a csv file.
             </summary>
             <param name="streamWriter"> Stream for recording. </param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.StreamReader)">
+            <summary>
+            Loads fom csv.
+            </summary>
+            <param name="streamReader">StreamReader.</param>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.SaveToXml(System.Xml.XmlWriter)">
             <summary>
@@ -317,6 +358,13 @@
             </summary>
             <param name="records"> Collection of entries. </param>
         </member>
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <summary>
+            Restores snapshot.
+            </summary>
+            <param name="fileCabinetServiceSnapshot">FileCabinetServiceSnapshot.</param>
+            <returns>Number of imported records.</returns>
+        </member>
         <member name="T:FileCabinetApp.Validators.CustomValidator">
             <summary>
             Represents custom validator for file cabinet service.
@@ -340,7 +388,7 @@
         <member name="M:FileCabinetApp.Validators.CustomValidator.HeightValidator(System.Int16)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.CustomValidator.ValidateParameters(FileCabinetApp.Records.RecordParameters)">
+        <member name="M:FileCabinetApp.Validators.CustomValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validators.DefaulValidator">
@@ -366,7 +414,7 @@
         <member name="M:FileCabinetApp.Validators.DefaulValidator.HeightValidator(System.Int16)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.DefaulValidator.ValidateParameters(FileCabinetApp.Records.RecordParameters)">
+        <member name="M:FileCabinetApp.Validators.DefaulValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validators.IRecordValidator">
@@ -374,11 +422,12 @@
             Record validator.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.IRecordValidator.ValidateParameters(FileCabinetApp.Records.RecordParameters)">
+        <member name="M:FileCabinetApp.Validators.IRecordValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <summary>
             Validates the parameters.
             </summary>
             <param name="recordParameters"> Record fileds. </param>
+            <returns>Valid or invalid.</returns>
         </member>
         <member name="M:FileCabinetApp.Validators.IRecordValidator.FirstNameValidator(System.String)">
             <summary>

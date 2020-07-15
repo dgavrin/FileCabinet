@@ -285,6 +285,12 @@ namespace FileCabinetApp.Services
             GC.SuppressFinalize(this);
         }
 
+        /// <inheritdoc/>
+        public int Restore(FileCabinetServiceSnapshot fileCabinetServiceSnapshot)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Releases fileStream, binaryReader, binaryWriter.
         /// </summary>

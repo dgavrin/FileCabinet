@@ -12,7 +12,8 @@ namespace FileCabinetApp.Validators
         /// Validates the parameters.
         /// </summary>
         /// <param name="recordParameters"> Record fileds. </param>
-        public void ValidateParameters(RecordParameters recordParameters);
+        /// <returns>Valid or invalid.</returns>
+        public Tuple<bool, string> ValidateParameters(FileCabinetRecord recordParameters);
 
         /// <summary>
         /// Checks the validity of the first name.

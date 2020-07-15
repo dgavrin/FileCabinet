@@ -519,7 +519,14 @@ namespace FileCabinetApp
                         {
                             if (fileName.EndsWith(".csv", StringComparison.InvariantCulture))
                             {
-
+                                using (StreamReader streamReader = new StreamReader(fileName))
+                                {
+                                    var fileCabinetServiceSnapshot = fileCabinetService.MakeSnapshot();
+                                    fileCabinetServiceSnapshot.LoadFromCsv(streamReader);
+                                    var importedRecordsCount = Program.fileCabinetService.Restore(fileCabinetServiceSnapshot);
+                                    Console.WriteLine($"{importedRecordsCount} records were imported from {fileName}.");
+                                    Console.WriteLine();
+                                }
                             }
                         }
                     }

@@ -17,6 +17,16 @@ namespace FileCabinetApp.Records
         /// <summary>
         /// Initializes a new instance of the <see cref="RecordParameters"/> class.
         /// </summary>
+        /// <param name="fileCabinetRecord">FileCabinetRecord.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Проверить аргументы или открытые методы", Justification = "<Ожидание>")]
+        public RecordParameters(FileCabinetRecord fileCabinetRecord)
+        : this(fileCabinetRecord.FirstName, fileCabinetRecord.LastName, fileCabinetRecord.DateOfBirth, fileCabinetRecord.Wallet, fileCabinetRecord.MaritalStatus, fileCabinetRecord.Height)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RecordParameters"/> class.
+        /// </summary>
         /// <param name="firstName"> The first name. </param>
         /// <param name="lastName"> The last name. </param>
         /// <param name="dateOfBirth"> The date of birth. </param>
