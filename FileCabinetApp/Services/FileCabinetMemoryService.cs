@@ -283,7 +283,7 @@ namespace FileCabinetApp.Services
                 }
                 else
                 {
-                    Console.WriteLine($"Error. Record #{importedRecord} is not imported. Invalid field: {validationResult.Item2}.");
+                    Console.WriteLine($"Error. Record #{importedRecord.Id} is not imported. Invalid field: {validationResult.Item2}.");
                 }
             }
 
