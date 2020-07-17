@@ -521,6 +521,7 @@ namespace FileCabinetApp
                             {
                                 using (StreamReader streamReader = new StreamReader(fileName))
                                 {
+                                    Console.WriteLine("Please wait. Importing records may take some time.");
                                     var fileCabinetServiceSnapshot = fileCabinetService.MakeSnapshot();
                                     fileCabinetServiceSnapshot.LoadFromCsv(streamReader);
                                     var importedRecordsCount = Program.fileCabinetService.Restore(fileCabinetServiceSnapshot);
