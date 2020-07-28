@@ -62,7 +62,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <summary>
-        /// Loads fom csv.
+        /// Loads from csv.
         /// </summary>
         /// <param name="streamReader">StreamReader.</param>
         public void LoadFromCsv(StreamReader streamReader)
@@ -74,6 +74,28 @@ namespace FileCabinetApp.Services
 
             var csvReader = new FileCabinetRecordCsvReader(streamReader);
             var loadedRecords = csvReader.ReadAll();
+
+            if (loadedRecords.Count == 0)
+            {
+                return;
+            }
+
+            this.records = loadedRecords.ToArray<FileCabinetRecord>();
+        }
+
+        /// <summary>
+        /// Loads from xml.
+        /// </summary>
+        /// <param name="streamReader">StreamReader.</param>
+        public void LoadFromXml(StreamReader streamReader)
+        {
+            if (streamReader == null)
+            {
+                throw new ArgumentNullException(nameof(streamReader));
+            }
+
+            var xmlReader = new FileCabinetRecordXmlReader(streamReader);
+            var loadedRecords = xmlReader.ReadAll();
 
             if (loadedRecords.Count == 0)
             {

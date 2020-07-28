@@ -504,7 +504,7 @@ namespace FileCabinetApp
                     return;
                 }
 
-                if (command.Equals("csv", StringComparison.InvariantCultureIgnoreCase))
+                if (command.Equals("csv", StringComparison.InvariantCultureIgnoreCase) || command.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
                 {
                     if (!File.Exists(fileName))
                     {
@@ -522,12 +522,36 @@ namespace FileCabinetApp
                                 using (StreamReader streamReader = new StreamReader(fileName))
                                 {
                                     Console.WriteLine("Please wait. Importing records may take some time.");
-                                    var fileCabinetServiceSnapshot = fileCabinetService.MakeSnapshot();
+                                    var fileCabinetServiceSnapshot = Program.fileCabinetService.MakeSnapshot();
                                     fileCabinetServiceSnapshot.LoadFromCsv(streamReader);
                                     var importedRecordsCount = Program.fileCabinetService.Restore(fileCabinetServiceSnapshot);
                                     Console.WriteLine($"{importedRecordsCount} records were imported from {fileName}.");
                                     Console.WriteLine();
                                 }
+                            }
+                            else
+                            {
+                                ReportAFileExtensionError();
+                            }
+                        }
+
+                        if (command.ToUpperInvariant() == "XML")
+                        {
+                            if (fileName.EndsWith(".xml", StringComparison.InvariantCulture))
+                            {
+                                using (StreamReader streamReader = new StreamReader(fileName))
+                                {
+                                    Console.WriteLine("Please wait. Importing records may take some time.");
+                                    var fileCabinetServiceSnapshot = Program.fileCabinetService.MakeSnapshot();
+                                    fileCabinetServiceSnapshot.LoadFromXml(streamReader);
+                                    var importedRecordsCount = Program.fileCabinetService.Restore(fileCabinetServiceSnapshot);
+                                    Console.WriteLine($"{importedRecordsCount} records were imported from {fileName}.");
+                                    Console.WriteLine();
+                                }
+                            }
+                            else
+                            {
+                                ReportAFileExtensionError();
                             }
                         }
                     }
@@ -551,6 +575,12 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("Error entering parameters. The syntax for the 'import' command is \"import csv <fileName>\".");
+                Console.WriteLine();
+            }
+
+            void ReportAFileExtensionError()
+            {
+                Console.WriteLine("When using \"import\", the type of the <csv/xml> command and the file extension must match.");
                 Console.WriteLine();
             }
         }

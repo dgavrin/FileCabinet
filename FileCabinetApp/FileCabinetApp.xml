@@ -71,6 +71,23 @@
             </summary>
             <returns>List of records to import.</returns>
         </member>
+        <member name="T:FileCabinetApp.Readers.FileCabinetRecordXmlReader">
+            <summary>
+            File cabinet records xml reader.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Readers.FileCabinetRecordXmlReader.#ctor(System.IO.StreamReader)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Readers.FileCabinetRecordXmlReader"/> class.
+            </summary>
+            <param name="streamReader">StreamReader.</param>
+        </member>
+        <member name="M:FileCabinetApp.Readers.FileCabinetRecordXmlReader.ReadAll">
+            <summary>
+            Gets a list of records to import.
+            </summary>
+            <returns>List of records to import.</returns>
+        </member>
         <member name="T:FileCabinetApp.Records.FileCabinetRecord">
             <summary>
             Presentation of a record in a file cabinet.
@@ -278,7 +295,13 @@
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.StreamReader)">
             <summary>
-            Loads fom csv.
+            Loads from csv.
+            </summary>
+            <param name="streamReader">StreamReader.</param>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.LoadFromXml(System.IO.StreamReader)">
+            <summary>
+            Loads from xml.
             </summary>
             <param name="streamReader">StreamReader.</param>
         </member>
