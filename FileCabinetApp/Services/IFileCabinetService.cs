@@ -72,5 +72,12 @@ namespace FileCabinetApp.Services
         /// </summary>
         /// <param name="records"> Collection of entries. </param>
         public void DisplayRecords(ReadOnlyCollection<FileCabinetRecord> records);
+
+        /// <summary>
+        /// Restores snapshot.
+        /// </summary>
+        /// <param name="fileCabinetServiceSnapshot">FileCabinetServiceSnapshot.</param>
+        /// <returns>Number of imported records.</returns>
+        public int Restore(FileCabinetServiceSnapshot fileCabinetServiceSnapshot);
     }
 }

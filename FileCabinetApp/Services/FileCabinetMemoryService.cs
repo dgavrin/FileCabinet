@@ -254,6 +254,42 @@ namespace FileCabinetApp.Services
             }
         }
 
+        /// <inheritdoc/>
+        public int Restore(FileCabinetServiceSnapshot fileCabinetServiceSnapshot)
+        {
+            if (fileCabinetServiceSnapshot == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetServiceSnapshot));
+            }
+
+            var loadedRecords = fileCabinetServiceSnapshot.Records;
+            var importedRecordsCount = 0;
+
+            foreach (var importedRecord in loadedRecords)
+            {
+                var validationResult = this.validator.ValidateParameters(importedRecord);
+                if (validationResult.Item1)
+                {
+                    var importedRecordParameters = new RecordParameters(importedRecord);
+                    importedRecordsCount++;
+                    try
+                    {
+                        this.EditRecord(importedRecord.Id, importedRecordParameters);
+                    }
+                    catch (ArgumentException)
+                    {
+                        this.CreateRecord(importedRecordParameters);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Error. Record #{importedRecord.Id} is not imported. Invalid field: {validationResult.Item2}.");
+                }
+            }
+
+            return importedRecordsCount;
+        }
+
         private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
         {
             do

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using FileCabinetApp.Readers;
 using FileCabinetApp.Records;
 using FileCabinetApp.Writers;
 
@@ -30,6 +33,15 @@ namespace FileCabinetApp.Services
         }
 
         /// <summary>
+        /// Gets returns captured records.
+        /// </summary>
+        /// <value>Returns captured records.</value>
+        public ReadOnlyCollection<FileCabinetRecord> Records
+        {
+            get { return new ReadOnlyCollection<FileCabinetRecord>(this.records); }
+        }
+
+        /// <summary>
         /// Saves a list of entries to a csv file.
         /// </summary>
         /// <param name="streamWriter"> Stream for recording. </param>
@@ -47,6 +59,50 @@ namespace FileCabinetApp.Services
             {
                 writer.Write(record);
             }
+        }
+
+        /// <summary>
+        /// Loads from csv.
+        /// </summary>
+        /// <param name="streamReader">StreamReader.</param>
+        public void LoadFromCsv(StreamReader streamReader)
+        {
+            if (streamReader == null)
+            {
+                throw new ArgumentNullException(nameof(streamReader));
+            }
+
+            var csvReader = new FileCabinetRecordCsvReader(streamReader);
+            var loadedRecords = csvReader.ReadAll();
+
+            if (loadedRecords.Count == 0)
+            {
+                return;
+            }
+
+            this.records = loadedRecords.ToArray<FileCabinetRecord>();
+        }
+
+        /// <summary>
+        /// Loads from xml.
+        /// </summary>
+        /// <param name="streamReader">StreamReader.</param>
+        public void LoadFromXml(StreamReader streamReader)
+        {
+            if (streamReader == null)
+            {
+                throw new ArgumentNullException(nameof(streamReader));
+            }
+
+            var xmlReader = new FileCabinetRecordXmlReader(streamReader);
+            var loadedRecords = xmlReader.ReadAll();
+
+            if (loadedRecords.Count == 0)
+            {
+                return;
+            }
+
+            this.records = loadedRecords.ToArray<FileCabinetRecord>();
         }
 
         /// <summary>

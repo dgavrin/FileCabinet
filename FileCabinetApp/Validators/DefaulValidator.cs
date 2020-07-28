@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using FileCabinetApp.Records;
 
 namespace FileCabinetApp.Validators
@@ -108,19 +109,34 @@ namespace FileCabinetApp.Validators
         }
 
         /// <inheritdoc/>
-        public void ValidateParameters(RecordParameters recordParameters)
+        public Tuple<bool, string> ValidateParameters(FileCabinetRecord recordParameters)
         {
             if (recordParameters == null)
             {
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            this.FirstNameValidator(recordParameters.FirstName);
-            this.LastNameValidator(recordParameters.LastName);
-            this.DateOfBirthValidator(recordParameters.DateOfBirth);
-            this.WalletValidator(recordParameters.Wallet);
-            this.MaritalStatusValidator(recordParameters.MaritalStatus);
-            this.HeightValidator(recordParameters.Height);
+            var validationResults = new Tuple<bool, string>[6];
+
+            validationResults[0] = this.FirstNameValidator(recordParameters.FirstName);
+            validationResults[1] = this.LastNameValidator(recordParameters.LastName);
+            validationResults[2] = this.DateOfBirthValidator(recordParameters.DateOfBirth);
+            validationResults[3] = this.WalletValidator(recordParameters.Wallet);
+            validationResults[4] = this.MaritalStatusValidator(recordParameters.MaritalStatus);
+            validationResults[5] = this.HeightValidator(recordParameters.Height);
+
+            bool validationResult = true;
+            StringBuilder errorMessages = new StringBuilder();
+            foreach (var result in validationResults)
+            {
+                validationResult = validationResult && result.Item1;
+                if (!result.Item1)
+                {
+                    errorMessages.Append(" " + result.Item2);
+                }
+            }
+
+            return new Tuple<bool, string>(validationResult, errorMessages.ToString());
         }
     }
 }
