@@ -23,6 +23,7 @@ namespace FileCabinetApp.Services
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         private IRecordValidator validator;
+        private int lastRecordId = 1;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
@@ -112,7 +113,7 @@ namespace FileCabinetApp.Services
 
             var record = new FileCabinetRecord
             {
-                Id = this.list.Count + 1,
+                Id = this.lastRecordId++,
                 FirstName = recordParameters.FirstName,
                 LastName = recordParameters.LastName,
                 DateOfBirth = recordParameters.DateOfBirth,
@@ -159,9 +160,7 @@ namespace FileCabinetApp.Services
             {
                 if (record.Id == id)
                 {
-                    this.firstNameDictionary[record.FirstName.ToUpperInvariant()].Remove(record);
-                    this.lastNameDictionary[record.LastName.ToUpperInvariant()].Remove(record);
-                    this.dateOfBirthDictionary[record.DateOfBirth].Remove(record);
+                    this.RemoveEntryFromDictionaries(record);
 
                     record.FirstName = recordParameters.FirstName;
                     record.LastName = recordParameters.LastName;
@@ -290,6 +289,28 @@ namespace FileCabinetApp.Services
             return importedRecordsCount;
         }
 
+        /// <inheritdoc/>
+        public bool Remove(int recordIdForRemove)
+        {
+            if (recordIdForRemove < 1)
+            {
+                throw new ArgumentException($"The {nameof(recordIdForRemove)} cannot be less than one.");
+            }
+
+            var indexOfRecordForRemove = -1;
+            if (this.TryGetIndexOfRecordWithId(recordIdForRemove, out indexOfRecordForRemove))
+            {
+                this.RemoveEntryFromDictionaries(this.list[indexOfRecordForRemove]);
+                this.list.RemoveAt(indexOfRecordForRemove);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
         {
             do
@@ -317,6 +338,39 @@ namespace FileCabinetApp.Services
                 return value;
             }
             while (true);
+        }
+
+        private bool TryGetIndexOfRecordWithId(int id, out int index)
+        {
+            index = -1;
+
+            for (int i = 0; i < this.list.Count; i++)
+            {
+                if (this.list[i].Id == id)
+                {
+                    index = i;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void RemoveEntryFromDictionaries(FileCabinetRecord fileCabinetRecord)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            if (this.firstNameDictionary.ContainsKey(fileCabinetRecord.FirstName.ToUpperInvariant()) &&
+                this.lastNameDictionary.ContainsKey(fileCabinetRecord.LastName.ToUpperInvariant()) &&
+                this.dateOfBirthDictionary.ContainsKey(fileCabinetRecord.DateOfBirth))
+            {
+                this.firstNameDictionary[fileCabinetRecord.FirstName.ToUpperInvariant()].Remove(fileCabinetRecord);
+                this.lastNameDictionary[fileCabinetRecord.LastName.ToUpperInvariant()].Remove(fileCabinetRecord);
+                this.dateOfBirthDictionary[fileCabinetRecord.DateOfBirth].Remove(fileCabinetRecord);
+            }
         }
 
         private void AddEntryToDictionaries(FileCabinetRecord record)

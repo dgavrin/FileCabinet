@@ -37,6 +37,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
+            new Tuple<string, Action<string>>("remove", Remove),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -50,6 +51,7 @@ namespace FileCabinetApp
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
             new string[] { "export", "exports the list of records to a <csv/xml> file at the specified path", "The 'export' command exports the list of records to a <csv/xml> file at the specified path" },
             new string[] { "import", "imports a list of records from the csv file at the specified path", "The 'import csv' command imports a list of records from the csv file at the specified path" },
+            new string[] { "remove", "removal record by id", "The 'remove' command removes a record by id." },
         };
 
         /// <summary>
@@ -581,6 +583,29 @@ namespace FileCabinetApp
             void ReportAFileExtensionError()
             {
                 Console.WriteLine("When using \"import\", the type of the <csv/xml> command and the file extension must match.");
+                Console.WriteLine();
+            }
+        }
+
+        private static void Remove(string parameters)
+        {
+            if (parameters.Length == 0)
+            {
+                Console.WriteLine("Please try again. Enter record ID. 'remove <ID>'.");
+                Console.WriteLine();
+                return;
+            }
+
+            var recordIdForRemove = Convert.ToInt32(parameters, CultureInfo.InvariantCulture);
+
+            if (Program.fileCabinetService.Remove(recordIdForRemove))
+            {
+                Console.WriteLine($"Record #{recordIdForRemove} is removed.");
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.WriteLine($"Record #{recordIdForRemove} doesn't exists.");
                 Console.WriteLine();
             }
         }
