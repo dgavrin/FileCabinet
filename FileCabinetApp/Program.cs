@@ -38,6 +38,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
             new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -52,6 +53,7 @@ namespace FileCabinetApp
             new string[] { "export", "exports the list of records to a <csv/xml> file at the specified path", "The 'export' command exports the list of records to a <csv/xml> file at the specified path" },
             new string[] { "import", "imports a list of records from the csv file at the specified path", "The 'import csv' command imports a list of records from the csv file at the specified path" },
             new string[] { "remove", "removal record by id", "The 'remove' command removes a record by id." },
+            new string[] { "purge", "defragments the data file", "The 'purge' command defragments the data file." },
         };
 
         /// <summary>
@@ -607,6 +609,14 @@ namespace FileCabinetApp
             {
                 Console.WriteLine($"Record #{recordIdForRemove} doesn't exists.");
                 Console.WriteLine();
+            }
+        }
+
+        private static void Purge(string parameters)
+        {
+            if (Program.fileCabinetService is FileCabinetFileSystemService fileCabinetFileSystemService)
+            {
+                fileCabinetFileSystemService.Purge();
             }
         }
     }

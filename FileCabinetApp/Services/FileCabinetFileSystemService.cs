@@ -148,6 +148,28 @@ namespace FileCabinetApp.Services
             }
         }
 
+        /// <summary>
+        /// Defragments the data file.
+        /// </summary>
+        public void Purge()
+        {
+            var totalNumberOfRecords = (int)(this.fileStream.Length / RecordSize);
+            var records = this.GetRecords();
+
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            foreach (var record in records)
+            {
+                var bytesOfRecord = FileCabinetRecordToBytes(record);
+                this.fileStream.Write(bytesOfRecord, 0, bytesOfRecord.Length);
+            }
+
+            this.fileStream.Flush();
+            this.fileStream.SetLength(this.fileStream.Position);
+
+            Console.WriteLine($"Data file processing is completed: {totalNumberOfRecords - records.Count} of {totalNumberOfRecords} records were purged.");
+            Console.WriteLine();
+        }
+
         /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {

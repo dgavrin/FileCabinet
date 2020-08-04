@@ -183,6 +183,11 @@
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Purge">
+            <summary>
+            Defragments the data file.
+            </summary>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.FindByDateOfBirth(System.String)">
             <inheritdoc/>
         </member>
