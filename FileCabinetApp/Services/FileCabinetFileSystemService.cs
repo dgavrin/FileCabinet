@@ -30,6 +30,7 @@ namespace FileCabinetApp.Services
 
         private IRecordValidator validator;
         private bool disposedValue;
+        private int lastRecordId;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetFileSystemService"/> class.
@@ -61,6 +62,8 @@ namespace FileCabinetApp.Services
             {
                 this.validator = new DefaulValidator();
             }
+
+            this.lastRecordId = this.GetLastRecordId();
         }
 
         /// <inheritdoc/>
@@ -97,7 +100,7 @@ namespace FileCabinetApp.Services
 
             var newRecord = new FileCabinetRecord
             {
-                Id = (int)(this.fileStream.Length / RecordSize) + 1,
+                Id = ++this.lastRecordId,
                 FirstName = recordParameters.FirstName,
                 LastName = recordParameters.LastName,
                 DateOfBirth = recordParameters.DateOfBirth,
@@ -130,20 +133,7 @@ namespace FileCabinetApp.Services
             this.validator.ValidateParameters(recordParameters);
 
             var recordNumberToChange = -1;
-            var recordBuffer = new byte[RecordSize];
-
-            this.fileStream.Seek(0, SeekOrigin.Begin);
-            for (int i = 0, recordNumber = 0; i < this.fileStream.Length; i += RecordSize, recordNumber++)
-            {
-                this.fileStream.Read(recordBuffer, 0, RecordSize);
-                var temporaryRecord = BytesToFileCabinetRecord(recordBuffer);
-
-                if (temporaryRecord.Id == id)
-                {
-                    recordNumberToChange = recordNumber;
-                    break;
-                }
-            }
+            this.TryGetIndexOfRecordWithId(id, out recordNumberToChange);
 
             if (recordNumberToChange >= 0)
             {
@@ -156,6 +146,28 @@ namespace FileCabinetApp.Services
             {
                 throw new ArgumentException($"#{id} record is not found.", nameof(id));
             }
+        }
+
+        /// <summary>
+        /// Defragments the data file.
+        /// </summary>
+        public void Purge()
+        {
+            var totalNumberOfRecords = (int)(this.fileStream.Length / RecordSize);
+            var records = this.GetRecords();
+
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            foreach (var record in records)
+            {
+                var bytesOfRecord = FileCabinetRecordToBytes(record);
+                this.fileStream.Write(bytesOfRecord, 0, bytesOfRecord.Length);
+            }
+
+            this.fileStream.Flush();
+            this.fileStream.SetLength(this.fileStream.Position);
+
+            Console.WriteLine($"Data file processing is completed: {totalNumberOfRecords - records.Count} of {totalNumberOfRecords} records were purged.");
+            Console.WriteLine();
         }
 
         /// <inheritdoc/>
@@ -234,16 +246,24 @@ namespace FileCabinetApp.Services
             for (int i = 0; i < this.fileStream.Length; i += RecordSize)
             {
                 this.fileStream.Read(recordBuffer, 0, RecordSize);
-                records.Add(BytesToFileCabinetRecord(recordBuffer));
+                FileCabinetRecord temporaryRecord;
+
+                if (BytesToFileCabinetRecord(recordBuffer, out temporaryRecord))
+                {
+                    records.Add(temporaryRecord);
+                }
             }
 
             return new ReadOnlyCollection<FileCabinetRecord>(records);
         }
 
         /// <inheritdoc/>
-        public int GetStat()
+        public (int active, int removed) GetStat()
         {
-            return (int)(this.fileStream.Length / RecordSize);
+            var active = this.GetRecords().Count;
+            var removed = (int)(this.fileStream.Length / RecordSize) - active;
+
+            return (active, removed);
         }
 
         /// <inheritdoc/>
@@ -320,6 +340,28 @@ namespace FileCabinetApp.Services
             }
 
             return importedRecordsCount;
+        }
+
+        /// <inheritdoc/>
+        public bool Remove(int recordIdForRemove)
+        {
+            if (recordIdForRemove < 1)
+            {
+                throw new ArgumentException($"The {nameof(recordIdForRemove)} cannot be less than one.");
+            }
+
+            var indexOfRecordForRemove = -1;
+            if (this.TryGetIndexOfRecordWithId(recordIdForRemove, out indexOfRecordForRemove))
+            {
+                this.fileStream.Seek(indexOfRecordForRemove * RecordSize, SeekOrigin.Begin);
+                this.fileStream.WriteByte(1);
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -402,7 +444,7 @@ namespace FileCabinetApp.Services
             return bytes;
         }
 
-        private static FileCabinetRecord BytesToFileCabinetRecord(byte[] bytes)
+        private static bool BytesToFileCabinetRecord(byte[] bytes, out FileCabinetRecord fileCabinetRecord)
         {
             if (bytes == null)
             {
@@ -414,30 +456,76 @@ namespace FileCabinetApp.Services
                 throw new ArgumentException("Error. Record is corrupted.", nameof(bytes));
             }
 
-            var record = new FileCabinetRecord();
+            fileCabinetRecord = new FileCabinetRecord();
 
             using (var memoryStream = new MemoryStream(bytes))
             using (var binaryReader = new BinaryReader(memoryStream))
             {
                 short status = binaryReader.ReadInt16();
-                record.Id = binaryReader.ReadInt32();
 
-                record.FirstName = binaryReader.ReadString().Trim(' ');
-                record.LastName = binaryReader.ReadString().Trim(' ');
+                if (status == 0)
+                {
+                    fileCabinetRecord.Id = binaryReader.ReadInt32();
 
-                record.DateOfBirth = new DateTime(
-                    binaryReader.ReadInt32(),
-                    binaryReader.ReadInt32(),
-                    binaryReader.ReadInt32());
+                    fileCabinetRecord.FirstName = binaryReader.ReadString().Trim(' ');
+                    fileCabinetRecord.LastName = binaryReader.ReadString().Trim(' ');
 
-                record.Wallet = binaryReader.ReadDecimal();
+                    fileCabinetRecord.DateOfBirth = new DateTime(
+                        binaryReader.ReadInt32(),
+                        binaryReader.ReadInt32(),
+                        binaryReader.ReadInt32());
 
-                record.MaritalStatus = binaryReader.ReadChar();
+                    fileCabinetRecord.Wallet = binaryReader.ReadDecimal();
 
-                record.Height = binaryReader.ReadInt16();
+                    fileCabinetRecord.MaritalStatus = binaryReader.ReadChar();
+
+                    fileCabinetRecord.Height = binaryReader.ReadInt16();
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        private bool TryGetIndexOfRecordWithId(int id, out int index)
+        {
+            index = -1;
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+
+            var recordBuffer = new byte[RecordSize];
+
+            for (int position = 0, i = 0; position < this.fileStream.Length; position += RecordSize, i++)
+            {
+                this.fileStream.Read(recordBuffer, 0, RecordSize);
+                FileCabinetRecord temporaryRecord;
+
+                if (BytesToFileCabinetRecord(recordBuffer, out temporaryRecord) && temporaryRecord.Id == id)
+                {
+                    index = i;
+                    return true;
+                }
             }
 
-            return record;
+            return false;
+        }
+
+        private int GetLastRecordId()
+        {
+            var maxRecordId = 1;
+            var listOfRecords = this.GetRecords();
+
+            foreach (var record in listOfRecords)
+            {
+                if (maxRecordId < record.Id)
+                {
+                    maxRecordId = record.Id;
+                }
+            }
+
+            return maxRecordId;
         }
     }
 }

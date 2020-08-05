@@ -25,7 +25,7 @@ namespace FileCabinetApp.Services
         /// Get statistics about records.
         /// </summary>
         /// <returns> Number of records. </returns>
-        public int GetStat();
+        public (int active, int removed) GetStat();
 
         /// <summary>
         /// Edits a record by ID.
@@ -79,5 +79,12 @@ namespace FileCabinetApp.Services
         /// <param name="fileCabinetServiceSnapshot">FileCabinetServiceSnapshot.</param>
         /// <returns>Number of imported records.</returns>
         public int Restore(FileCabinetServiceSnapshot fileCabinetServiceSnapshot);
+
+        /// <summary>
+        /// Deletes the record with the specified ID and returns and returns a value indicating whether the deletion was successful.
+        /// </summary>
+        /// <param name="recordIdForRemove">The identifier of the entry to be deleted.</param>
+        /// <returns>A value used to determine if the deletion was successful.</returns>
+        public bool Remove(int recordIdForRemove);
     }
 }

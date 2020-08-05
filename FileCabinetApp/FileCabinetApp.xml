@@ -183,6 +183,11 @@
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Purge">
+            <summary>
+            Defragments the data file.
+            </summary>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.FindByDateOfBirth(System.String)">
             <inheritdoc/>
         </member>
@@ -210,6 +215,9 @@
             </summary>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Remove(System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Dispose(System.Boolean)">
@@ -268,6 +276,9 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Remove(System.Int32)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Services.FileCabinetServiceSnapshot">
@@ -387,6 +398,13 @@
             </summary>
             <param name="fileCabinetServiceSnapshot">FileCabinetServiceSnapshot.</param>
             <returns>Number of imported records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.Remove(System.Int32)">
+            <summary>
+            Deletes the record with the specified ID and returns and returns a value indicating whether the deletion was successful.
+            </summary>
+            <param name="recordIdForRemove">The identifier of the entry to be deleted.</param>
+            <returns>A value used to determine if the deletion was successful.</returns>
         </member>
         <member name="T:FileCabinetApp.Validators.CustomValidator">
             <summary>

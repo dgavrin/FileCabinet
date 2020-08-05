@@ -37,6 +37,8 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("import", Import),
+            new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
         };
 
         private static string[][] helpMessages = new string[][]
@@ -50,6 +52,8 @@ namespace FileCabinetApp
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
             new string[] { "export", "exports the list of records to a <csv/xml> file at the specified path", "The 'export' command exports the list of records to a <csv/xml> file at the specified path" },
             new string[] { "import", "imports a list of records from the csv file at the specified path", "The 'import csv' command imports a list of records from the csv file at the specified path" },
+            new string[] { "remove", "removal record by id", "The 'remove' command removes a record by id." },
+            new string[] { "purge", "defragments the data file", "The 'purge' command defragments the data file." },
         };
 
         /// <summary>
@@ -143,7 +147,13 @@ namespace FileCabinetApp
         private static void Stat(string parameters)
         {
             var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            Console.WriteLine($"{recordsCount.active} active record(s).");
+
+            if (Program.fileCabinetService is FileCabinetFileSystemService)
+            {
+                Console.WriteLine($"{recordsCount.removed} removed record(s).");
+            }
+
             Console.WriteLine();
         }
 
@@ -582,6 +592,37 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("When using \"import\", the type of the <csv/xml> command and the file extension must match.");
                 Console.WriteLine();
+            }
+        }
+
+        private static void Remove(string parameters)
+        {
+            if (parameters.Length == 0)
+            {
+                Console.WriteLine("Please try again. Enter record ID. 'remove <ID>'.");
+                Console.WriteLine();
+                return;
+            }
+
+            var recordIdForRemove = Convert.ToInt32(parameters, CultureInfo.InvariantCulture);
+
+            if (Program.fileCabinetService.Remove(recordIdForRemove))
+            {
+                Console.WriteLine($"Record #{recordIdForRemove} is removed.");
+                Console.WriteLine();
+            }
+            else
+            {
+                Console.WriteLine($"Record #{recordIdForRemove} doesn't exists.");
+                Console.WriteLine();
+            }
+        }
+
+        private static void Purge(string parameters)
+        {
+            if (Program.fileCabinetService is FileCabinetFileSystemService fileCabinetFileSystemService)
+            {
+                fileCabinetFileSystemService.Purge();
             }
         }
     }
