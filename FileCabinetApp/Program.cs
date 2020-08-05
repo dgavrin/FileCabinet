@@ -147,7 +147,13 @@ namespace FileCabinetApp
         private static void Stat(string parameters)
         {
             var recordsCount = Program.fileCabinetService.GetStat();
-            Console.WriteLine($"{recordsCount} record(s).");
+            Console.WriteLine($"{recordsCount.active} active record(s).");
+
+            if (Program.fileCabinetService is FileCabinetFileSystemService)
+            {
+                Console.WriteLine($"{recordsCount.removed} removed record(s).");
+            }
+
             Console.WriteLine();
         }
 

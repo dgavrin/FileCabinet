@@ -25,7 +25,7 @@ namespace FileCabinetApp.Services
         /// Get statistics about records.
         /// </summary>
         /// <returns> Number of records. </returns>
-        public int GetStat();
+        public (int active, int removed) GetStat();
 
         /// <summary>
         /// Edits a record by ID.

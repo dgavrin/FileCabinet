@@ -136,10 +136,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int GetStat()
-        {
-            return this.list.Count;
-        }
+        public (int active, int removed) GetStat() => (this.list.Count, 0);
 
         /// <inheritdoc/>
         public void EditRecord(int id, RecordParameters recordParameters)

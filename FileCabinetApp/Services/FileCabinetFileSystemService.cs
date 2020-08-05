@@ -258,9 +258,12 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int GetStat()
+        public (int active, int removed) GetStat()
         {
-            return (int)(this.fileStream.Length / RecordSize);
+            var active = this.GetRecords().Count;
+            var removed = (int)(this.fileStream.Length / RecordSize) - active;
+
+            return (active, removed);
         }
 
         /// <inheritdoc/>
