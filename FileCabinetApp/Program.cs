@@ -116,7 +116,32 @@ namespace FileCabinetApp
 
         private static ICommandHandler CreateCommandHandlers()
         {
-            return new CommandHandler();
+            var helpCommandHandler = new HelpCommandHandler();
+            var exitCommandHandler = new ExitCommandHandler();
+            var statCommandHandler = new StatCommandHandler();
+            var createCommandHandler = new CreateCommandHandler();
+            var listCommandHandler = new ListCommandHandler();
+            var editCommandHandler = new EditCommandHandler();
+            var findCommandHandler = new FindCommandHandler();
+            var exportCommandHandler = new ExportCommandHandler();
+            var importCommandHandler = new ImportCommandHandler();
+            var removeCommandHandler = new RemoveCommandHandler();
+            var purgeCommandHandler = new PurgeCommandHandler();
+            var printMissedCommandHandler = new PrintMissedCommandHandler();
+
+            helpCommandHandler.SetNext(exitCommandHandler);
+            exitCommandHandler.SetNext(statCommandHandler);
+            statCommandHandler.SetNext(createCommandHandler);
+            createCommandHandler.SetNext(listCommandHandler);
+            listCommandHandler.SetNext(editCommandHandler);
+            editCommandHandler.SetNext(findCommandHandler);
+            findCommandHandler.SetNext(exportCommandHandler);
+            exportCommandHandler.SetNext(importCommandHandler);
+            importCommandHandler.SetNext(removeCommandHandler);
+            removeCommandHandler.SetNext(purgeCommandHandler);
+            purgeCommandHandler.SetNext(printMissedCommandHandler);
+
+            return helpCommandHandler;
         }
     }
 }

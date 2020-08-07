@@ -10,10 +10,7 @@ namespace FileCabinetApp.CommandHandlers
         private ICommandHandler nextHandler;
 
         /// <inheritdoc/>
-        public virtual void Handle(AppCommandRequest appCommandRequest)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract void Handle(AppCommandRequest appCommandRequest);
 
         /// <inheritdoc/>
         public void SetNext(ICommandHandler commandHandler)
