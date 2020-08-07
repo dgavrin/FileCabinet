@@ -8,20 +8,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Find command handler.
     /// </summary>
-    public class FindCommandHandler : CommandHandlerBase, ICommandHandler
+    public class FindCommandHandler : ServiceCommandHandlerBase, ICommandHandler
     {
         private const string Command = "find";
 
         private ICommandHandler nextHandler;
-        private IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public FindCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>

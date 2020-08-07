@@ -7,20 +7,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Import command handler.
     /// </summary>
-    public class ImportCommandHandler : CommandHandlerBase, ICommandHandler
+    public class ImportCommandHandler : ServiceCommandHandlerBase, ICommandHandler
     {
         private const string Command = "import";
 
         private ICommandHandler nextHandler;
-        private IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public ImportCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>

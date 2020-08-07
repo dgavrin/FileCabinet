@@ -9,20 +9,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Export command handler.
     /// </summary>
-    public class ExportCommandHandler : CommandHandlerBase, ICommandHandler
+    public class ExportCommandHandler : ServiceCommandHandlerBase, ICommandHandler
     {
         private const string Command = "export";
 
         private ICommandHandler nextHandler;
-        private IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public ExportCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>

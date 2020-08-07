@@ -6,20 +6,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Stat command handler.
     /// </summary>
-    public class StatCommandHandler : CommandHandlerBase, ICommandHandler
+    public class StatCommandHandler : ServiceCommandHandlerBase, ICommandHandler
     {
         private const string Command = "stat";
 
         private ICommandHandler nextHandler;
-        private IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public StatCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>

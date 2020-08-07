@@ -6,20 +6,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Exit command handler.
     /// </summary>
-    public class ExitCommandHandler : CommandHandlerBase, ICommandHandler
+    public class ExitCommandHandler : ServiceCommandHandlerBase, ICommandHandler
     {
         private const string Command = "exit";
 
         private ICommandHandler nextHandler;
-        private IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExitCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public ExitCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>

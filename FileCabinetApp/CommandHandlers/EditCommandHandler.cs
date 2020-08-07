@@ -7,20 +7,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Edit command handler.
     /// </summary>
-    public class EditCommandHandler : CommandHandlerBase, ICommandHandler
+    public class EditCommandHandler : ServiceCommandHandlerBase, ICommandHandler
     {
         private const string Command = "edit";
 
         private ICommandHandler nextHandler;
-        private IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public EditCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>

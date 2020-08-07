@@ -6,20 +6,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// List command handler.
     /// </summary>
-    public class ListCommandHandler : CommandHandlerBase, ICommandHandler
+    public class ListCommandHandler : ServiceCommandHandlerBase, ICommandHandler
     {
         private const string Command = "list";
 
         private ICommandHandler nextHandler;
-        private IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public ListCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>

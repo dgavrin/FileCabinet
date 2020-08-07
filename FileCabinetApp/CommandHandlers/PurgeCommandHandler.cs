@@ -6,20 +6,19 @@ namespace FileCabinetApp.CommandHandlers
     /// <summary>
     /// Purge command handler.
     /// </summary>
-    public class PurgeCommandHandler : CommandHandlerBase, ICommandHandler
+    public class PurgeCommandHandler : ServiceCommandHandlerBase, ICommandHandler
     {
         private const string Command = "purge";
 
         private ICommandHandler nextHandler;
-        private IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public PurgeCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>
