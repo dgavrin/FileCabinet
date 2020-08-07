@@ -11,6 +11,16 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "stat";
 
         private ICommandHandler nextHandler;
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public StatCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)
@@ -22,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
-                Stat(appCommandRequest.Parameters);
+                this.Stat(appCommandRequest.Parameters);
             }
             else
             {
@@ -36,12 +46,12 @@ namespace FileCabinetApp.CommandHandlers
             this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
         }
 
-        private static void Stat(string parameters)
+        private void Stat(string parameters)
         {
-            var recordsCount = Program.FileCabinetService.GetStat();
+            var recordsCount = this.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount.active} active record(s).");
 
-            if (Program.FileCabinetService is FileCabinetFileSystemService)
+            if (this.fileCabinetService is FileCabinetFileSystemService)
             {
                 Console.WriteLine($"{recordsCount.removed} removed record(s).");
             }

@@ -10,7 +10,6 @@ namespace FileCabinetApp
     /// </summary>
     public static class Program
     {
-        public static IFileCabinetService FileCabinetService;
         public static bool IsRunning = true;
 
         private const string DeveloperName = "Denis Gavrin";
@@ -19,6 +18,7 @@ namespace FileCabinetApp
 
         private static string validationRules;
         private static string storage;
+        private static IFileCabinetService fileCabinetService;
 
         /// <summary>
         /// The main method.
@@ -106,10 +106,10 @@ namespace FileCabinetApp
             switch (Program.storage)
             {
                 case "file":
-                    Program.FileCabinetService = new FileCabinetFileSystemService(new FileStream(Program.FileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite), validationRules);
+                    Program.fileCabinetService = new FileCabinetFileSystemService(new FileStream(Program.FileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite), validationRules);
                     break;
                 default:
-                    Program.FileCabinetService = new FileCabinetMemoryService(Program.validationRules);
+                    Program.fileCabinetService = new FileCabinetMemoryService(Program.validationRules);
                     break;
             }
         }
@@ -117,16 +117,16 @@ namespace FileCabinetApp
         private static ICommandHandler CreateCommandHandlers()
         {
             var helpCommandHandler = new HelpCommandHandler();
-            var exitCommandHandler = new ExitCommandHandler();
-            var statCommandHandler = new StatCommandHandler();
-            var createCommandHandler = new CreateCommandHandler();
-            var listCommandHandler = new ListCommandHandler();
-            var editCommandHandler = new EditCommandHandler();
-            var findCommandHandler = new FindCommandHandler();
-            var exportCommandHandler = new ExportCommandHandler();
-            var importCommandHandler = new ImportCommandHandler();
-            var removeCommandHandler = new RemoveCommandHandler();
-            var purgeCommandHandler = new PurgeCommandHandler();
+            var exitCommandHandler = new ExitCommandHandler(Program.fileCabinetService);
+            var statCommandHandler = new StatCommandHandler(Program.fileCabinetService);
+            var createCommandHandler = new CreateCommandHandler(Program.fileCabinetService);
+            var listCommandHandler = new ListCommandHandler(Program.fileCabinetService);
+            var editCommandHandler = new EditCommandHandler(Program.fileCabinetService);
+            var findCommandHandler = new FindCommandHandler(Program.fileCabinetService);
+            var exportCommandHandler = new ExportCommandHandler(Program.fileCabinetService);
+            var importCommandHandler = new ImportCommandHandler(Program.fileCabinetService);
+            var removeCommandHandler = new RemoveCommandHandler(Program.fileCabinetService);
+            var purgeCommandHandler = new PurgeCommandHandler(Program.fileCabinetService);
             var printMissedCommandHandler = new PrintMissedCommandHandler();
 
             helpCommandHandler.SetNext(exitCommandHandler);

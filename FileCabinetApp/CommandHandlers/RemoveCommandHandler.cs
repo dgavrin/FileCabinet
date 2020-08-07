@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -11,6 +12,16 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "remove";
 
         private ICommandHandler nextHandler;
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public RemoveCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)
@@ -22,7 +33,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
-                Remove(appCommandRequest.Parameters);
+                this.Remove(appCommandRequest.Parameters);
             }
             else
             {
@@ -36,7 +47,7 @@ namespace FileCabinetApp.CommandHandlers
             this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
         }
 
-        private static void Remove(string parameters)
+        private void Remove(string parameters)
         {
             if (parameters.Length == 0)
             {
@@ -47,7 +58,7 @@ namespace FileCabinetApp.CommandHandlers
 
             var recordIdForRemove = Convert.ToInt32(parameters, CultureInfo.InvariantCulture);
 
-            if (Program.FileCabinetService.Remove(recordIdForRemove))
+            if (this.fileCabinetService.Remove(recordIdForRemove))
             {
                 Console.WriteLine($"Record #{recordIdForRemove} is removed.");
                 Console.WriteLine();

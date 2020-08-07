@@ -4,13 +4,23 @@ using FileCabinetApp.Services;
 namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>
-    /// CommandHadler.
+    /// Purge command handler.
     /// </summary>
     public class PurgeCommandHandler : CommandHandlerBase, ICommandHandler
     {
         private const string Command = "purge";
 
         private ICommandHandler nextHandler;
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public PurgeCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)
@@ -22,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
-                Purge(appCommandRequest.Parameters);
+                this.Purge(appCommandRequest.Parameters);
             }
             else
             {
@@ -36,9 +46,9 @@ namespace FileCabinetApp.CommandHandlers
             this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
         }
 
-        private static void Purge(string parameters)
+        private void Purge(string parameters)
         {
-            if (Program.FileCabinetService is FileCabinetFileSystemService fileCabinetFileSystemService)
+            if (this.fileCabinetService is FileCabinetFileSystemService fileCabinetFileSystemService)
             {
                 fileCabinetFileSystemService.Purge();
             }

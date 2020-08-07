@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -11,6 +12,16 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "edit";
 
         private ICommandHandler nextHandler;
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EditCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public EditCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)
@@ -22,7 +33,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
-                Edit(appCommandRequest.Parameters);
+                this.Edit(appCommandRequest.Parameters);
             }
             else
             {
@@ -36,7 +47,7 @@ namespace FileCabinetApp.CommandHandlers
             this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
         }
 
-        private static void Edit(string parameters)
+        private void Edit(string parameters)
         {
             if (parameters.Length == 0)
             {
@@ -46,7 +57,7 @@ namespace FileCabinetApp.CommandHandlers
             }
 
             var recordIdForEdit = Convert.ToInt32(parameters, CultureInfo.InvariantCulture);
-            var listOfRecords = Program.FileCabinetService.GetRecords();
+            var listOfRecords = this.fileCabinetService.GetRecords();
 
             foreach (var record in listOfRecords)
             {
@@ -54,8 +65,8 @@ namespace FileCabinetApp.CommandHandlers
                 {
                     try
                     {
-                        var editRecord = Program.FileCabinetService.SetInformationToRecord();
-                        Program.FileCabinetService.EditRecord(recordIdForEdit, editRecord);
+                        var editRecord = this.fileCabinetService.SetInformationToRecord();
+                        this.fileCabinetService.EditRecord(recordIdForEdit, editRecord);
                         Console.WriteLine($"Record #{recordIdForEdit} is updated.");
                         Console.WriteLine();
                         return;

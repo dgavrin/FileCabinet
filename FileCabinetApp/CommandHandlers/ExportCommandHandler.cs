@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Xml;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -13,6 +14,16 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "export";
 
         private ICommandHandler nextHandler;
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ExportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public ExportCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)
@@ -24,7 +35,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
-                Export(appCommandRequest.Parameters);
+                this.Export(appCommandRequest.Parameters);
             }
             else
             {
@@ -38,7 +49,7 @@ namespace FileCabinetApp.CommandHandlers
             this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
         }
 
-        private static void Export(string parameters)
+        private void Export(string parameters)
         {
             if (!string.IsNullOrEmpty(parameters))
             {
@@ -88,7 +99,7 @@ namespace FileCabinetApp.CommandHandlers
                         {
                             using (StreamWriter streamWriter = new StreamWriter(fileName))
                             {
-                                var snapshot = Program.FileCabinetService.MakeSnapshot();
+                                var snapshot = this.fileCabinetService.MakeSnapshot();
                                 snapshot.SaveToCsv(streamWriter);
                                 ReportExportSuccess(fileName);
                             }
@@ -109,7 +120,7 @@ namespace FileCabinetApp.CommandHandlers
 
                             using (XmlWriter xmlWriter = XmlWriter.Create(fileName, xmlWriterSettings))
                             {
-                                var snapshot = Program.FileCabinetService.MakeSnapshot();
+                                var snapshot = this.fileCabinetService.MakeSnapshot();
                                 snapshot.SaveToXml(xmlWriter);
                                 ReportExportSuccess(fileName);
                             }

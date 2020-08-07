@@ -1,4 +1,5 @@
 ﻿using System;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -10,6 +11,16 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "list";
 
         private ICommandHandler nextHandler;
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public ListCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)
@@ -21,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
-                List(appCommandRequest.Parameters);
+                this.List(appCommandRequest.Parameters);
             }
             else
             {
@@ -35,10 +46,10 @@ namespace FileCabinetApp.CommandHandlers
             this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
         }
 
-        private static void List(string parameters)
+        private void List(string parameters)
         {
-            var listOfRecords = Program.FileCabinetService.GetRecords();
-            Program.FileCabinetService.DisplayRecords(listOfRecords);
+            var listOfRecords = this.fileCabinetService.GetRecords();
+            this.fileCabinetService.DisplayRecords(listOfRecords);
             Console.WriteLine();
         }
     }

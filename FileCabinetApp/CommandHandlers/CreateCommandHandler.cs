@@ -1,4 +1,5 @@
 ﻿using System;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -10,6 +11,16 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "create";
 
         private ICommandHandler nextHandler;
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreateCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public CreateCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)
@@ -21,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
-                Create(appCommandRequest.Parameters);
+                this.Create(appCommandRequest.Parameters);
             }
             else
             {
@@ -35,7 +46,7 @@ namespace FileCabinetApp.CommandHandlers
             this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
         }
 
-        private static void Create(string parameters)
+        private void Create(string parameters)
         {
             bool invalidValues = true;
 
@@ -43,8 +54,8 @@ namespace FileCabinetApp.CommandHandlers
             {
                 try
                 {
-                    var newRecord = Program.FileCabinetService.SetInformationToRecord();
-                    var recordId = Program.FileCabinetService.CreateRecord(newRecord);
+                    var newRecord = this.fileCabinetService.SetInformationToRecord();
+                    var recordId = this.fileCabinetService.CreateRecord(newRecord);
                     Console.WriteLine($"Record #{recordId} is created.");
                     Console.WriteLine();
 

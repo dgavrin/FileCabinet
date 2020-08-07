@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using FileCabinetApp.Records;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -12,6 +13,16 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "find";
 
         private ICommandHandler nextHandler;
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public FindCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)
@@ -23,7 +34,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
-                Find(appCommandRequest.Parameters);
+                this.Find(appCommandRequest.Parameters);
             }
             else
             {
@@ -37,13 +48,13 @@ namespace FileCabinetApp.CommandHandlers
             this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
         }
 
-        private static void Find(string parameters)
+        private void Find(string parameters)
         {
             Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[]
             {
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("firstname", Program.FileCabinetService.FindByFirstName),
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("lastname", Program.FileCabinetService.FindByLastName),
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("dateofbirth", Program.FileCabinetService.FindByDateOfBirth),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("firstname", this.fileCabinetService.FindByFirstName),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("lastname", this.fileCabinetService.FindByLastName),
+            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("dateofbirth", this.fileCabinetService.FindByDateOfBirth),
             };
 
             if (!string.IsNullOrEmpty(parameters))
@@ -80,7 +91,7 @@ namespace FileCabinetApp.CommandHandlers
                     }
                     else
                     {
-                        Program.FileCabinetService.DisplayRecords(foundRecords);
+                        this.fileCabinetService.DisplayRecords(foundRecords);
                         Console.WriteLine();
                     }
                 }

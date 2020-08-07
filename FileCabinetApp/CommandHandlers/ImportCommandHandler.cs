@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using FileCabinetApp.Services;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -11,6 +12,16 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "import";
 
         private ICommandHandler nextHandler;
+        private IFileCabinetService fileCabinetService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public ImportCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)
@@ -22,7 +33,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
-                Import(appCommandRequest.Parameters);
+                this.Import(appCommandRequest.Parameters);
             }
             else
             {
@@ -36,7 +47,7 @@ namespace FileCabinetApp.CommandHandlers
             this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
         }
 
-        private static void Import(string parameters)
+        private void Import(string parameters)
         {
             if (!string.IsNullOrEmpty(parameters))
             {
@@ -79,9 +90,9 @@ namespace FileCabinetApp.CommandHandlers
                                 using (StreamReader streamReader = new StreamReader(fileName))
                                 {
                                     Console.WriteLine("Please wait. Importing records may take some time.");
-                                    var fileCabinetServiceSnapshot = Program.FileCabinetService.MakeSnapshot();
+                                    var fileCabinetServiceSnapshot = this.fileCabinetService.MakeSnapshot();
                                     fileCabinetServiceSnapshot.LoadFromCsv(streamReader);
-                                    var importedRecordsCount = Program.FileCabinetService.Restore(fileCabinetServiceSnapshot);
+                                    var importedRecordsCount = this.fileCabinetService.Restore(fileCabinetServiceSnapshot);
                                     Console.WriteLine($"{importedRecordsCount} records were imported from {fileName}.");
                                     Console.WriteLine();
                                 }
@@ -99,9 +110,9 @@ namespace FileCabinetApp.CommandHandlers
                                 using (StreamReader streamReader = new StreamReader(fileName))
                                 {
                                     Console.WriteLine("Please wait. Importing records may take some time.");
-                                    var fileCabinetServiceSnapshot = Program.FileCabinetService.MakeSnapshot();
+                                    var fileCabinetServiceSnapshot = this.fileCabinetService.MakeSnapshot();
                                     fileCabinetServiceSnapshot.LoadFromXml(streamReader);
-                                    var importedRecordsCount = Program.FileCabinetService.Restore(fileCabinetServiceSnapshot);
+                                    var importedRecordsCount = this.fileCabinetService.Restore(fileCabinetServiceSnapshot);
                                     Console.WriteLine($"{importedRecordsCount} records were imported from {fileName}.");
                                     Console.WriteLine();
                                 }
