@@ -82,11 +82,12 @@
             Exit command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService)">
+        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,System.Action{System.Boolean})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ExitCommandHandler"/> class.
             </summary>
             <param name="fileCabinetService">FileCabinetService.</param>
+            <param name="isRunning">The close.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>

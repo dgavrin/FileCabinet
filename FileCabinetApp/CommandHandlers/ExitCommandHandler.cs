@@ -10,15 +10,19 @@ namespace FileCabinetApp.CommandHandlers
     {
         private const string Command = "exit";
 
+        private readonly Action<bool> isRunning;
+
         private ICommandHandler nextHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExitCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
-        public ExitCommandHandler(IFileCabinetService fileCabinetService)
+        /// <param name="isRunning">The close.</param>
+        public ExitCommandHandler(IFileCabinetService fileCabinetService, Action<bool> isRunning)
             : base(fileCabinetService)
         {
+            this.isRunning = isRunning ?? throw new ArgumentNullException(nameof(isRunning));
         }
 
         /// <inheritdoc/>
@@ -48,7 +52,7 @@ namespace FileCabinetApp.CommandHandlers
         private void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
-            Program.IsRunning = false;
+            this.isRunning(false);
 
             if (this.fileCabinetService is FileCabinetFileSystemService fileCabinetFileSystemService)
             {
