@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FileCabinetApp.Records;
 
 namespace FileCabinetApp.Validators
@@ -6,22 +7,22 @@ namespace FileCabinetApp.Validators
     /// <summary>
     /// Represents custom validator for file cabinet service.
     /// </summary>
-    public class CustomValidator : IRecordValidator
+    public class CustomValidator : CompositeValidator
     {
-        /// <inheritdoc/>
-        public void ValidateParameters(FileCabinetRecord recordParameters)
-        {
-            if (recordParameters == null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CustomValidator"/> class.
+        /// </summary>
+        public CustomValidator()
+            : base(new IRecordValidator[]
             {
-                throw new ArgumentNullException(nameof(recordParameters));
-            }
-
-            new FirstNameValidator(4, 20).ValidateParameters(recordParameters);
-            new LastNameValidator(4, 20).ValidateParameters(recordParameters);
-            new DateOfBirthValidator(new DateTime(1990, 1, 1), DateTime.Now).ValidateParameters(recordParameters);
-            new WalletValidator(100M).ValidateParameters(recordParameters);
-            new MaritalStatusValidator().ValidateParameters(recordParameters);
-            new HeightValidator(50).ValidateParameters(recordParameters);
+                new FirstNameValidator(4, 20),
+                new LastNameValidator(4, 20),
+                new DateOfBirthValidator(new DateTime(1990, 1, 1), DateTime.Today),
+                new WalletValidator(100M),
+                new MaritalStatusValidator(),
+                new HeightValidator(50),
+            })
+        {
         }
     }
 }
