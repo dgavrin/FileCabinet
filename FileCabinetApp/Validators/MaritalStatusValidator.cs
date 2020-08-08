@@ -6,7 +6,7 @@ namespace FileCabinetApp.Validators
     /// <summary>
     /// Represents defualt validator for marital status.
     /// </summary>
-    public class CustomMaritalStatusValidator : IRecordValidator
+    public class MaritalStatusValidator : IRecordValidator
     {
         /// <inheritdoc/>
         public void ValidateParameters(FileCabinetRecord recordParameters)

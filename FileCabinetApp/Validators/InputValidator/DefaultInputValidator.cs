@@ -7,7 +7,7 @@ namespace FileCabinetApp.Validators.InputValidator
     /// <summary>
     /// Represents defualt validator for input.
     /// </summary>
-    public class DefaulInputValidator : IInputValidator
+    public class DefaultInputValidator : IInputValidator
     {
         private const short MinimumHeight = 0;
         private const int MinimumLengthOfFirstAndLastName = 2;

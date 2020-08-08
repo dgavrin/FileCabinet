@@ -666,46 +666,6 @@
             <param name="recordIdForRemove">The identifier of the entry to be deleted.</param>
             <returns>A value used to determine if the deletion was successful.</returns>
         </member>
-        <member name="T:FileCabinetApp.Validators.CustomDateOfBirthValidator">
-            <summary>
-            Represents defualt validator for date of birth.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomDateOfBirthValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.CustomFirstNameValidator">
-            <summary>
-            Represents defualt validator for first name.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomFirstNameValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.CustomHeightValidator">
-            <summary>
-            Represents defualt validator for first name.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomHeightValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.CustomLastNameValidator">
-            <summary>
-            Represents defualt validator for last name.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomLastNameValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.CustomMaritalStatusValidator">
-            <summary>
-            Represents defualt validator for marital status.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomMaritalStatusValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.Validators.CustomValidator">
             <summary>
             Represents custom validator for file cabinet service.
@@ -714,68 +674,56 @@
         <member name="M:FileCabinetApp.Validators.CustomValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.Validators.CustomWalletValidator">
-            <summary>
-            Represents defualt validator for wallet.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.CustomWalletValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.DefaultDateOfBirthValidator">
+        <member name="T:FileCabinetApp.Validators.DateOfBirthValidator">
             <summary>
             Represents defualt validator for date of birth.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.DefaultDateOfBirthValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.DefaultFirstNameValidator">
+        <member name="M:FileCabinetApp.Validators.DateOfBirthValidator.#ctor(System.DateTime,System.DateTime)">
             <summary>
-            Represents defualt validator for first name.
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.DateOfBirthValidator"/> class.
             </summary>
+            <param name="from">Minimal date of birth.</param>
+            <param name="to">Maximal date of birth.</param>
         </member>
-        <member name="M:FileCabinetApp.Validators.DefaultFirstNameValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Validators.DateOfBirthValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.Validators.DefaultHeightValidator">
-            <summary>
-            Represents defualt validator for first name.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.DefaultHeightValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.DefaultLastNameValidator">
-            <summary>
-            Represents defualt validator for last name.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.DefaultLastNameValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.DefaultMaritalStatusValidator">
-            <summary>
-            Represents defualt validator for marital status.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.DefaultMaritalStatusValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.DefaultWalletValidator">
-            <summary>
-            Represents defualt validator for wallet.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Validators.DefaultWalletValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Validators.DefaulValidator">
+        <member name="T:FileCabinetApp.Validators.DefaultValidator">
             <summary>
             Represents defualt validator for file cabinet service.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.DefaulValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Validators.DefaultValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Validators.FirstNameValidator">
+            <summary>
+            Represents defualt validator for first name.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.FirstNameValidator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.FirstNameValidator"/> class.
+            </summary>
+            <param name="minLength">Minimum length of first name.</param>
+            <param name="maxLength">Maximum length of first name.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.FirstNameValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Validators.HeightValidator">
+            <summary>
+            Represents defualt validator for first name.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.HeightValidator.#ctor(System.Int16)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.HeightValidator"/> class.
+            </summary>
+            <param name="minHeight">Minimum height.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.HeightValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validators.InputValidator.CustomInputValidator">
@@ -804,30 +752,30 @@
         <member name="M:FileCabinetApp.Validators.InputValidator.CustomInputValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.Validators.InputValidator.DefaulInputValidator">
+        <member name="T:FileCabinetApp.Validators.InputValidator.DefaultInputValidator">
             <summary>
             Represents defualt validator for input.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Validators.InputValidator.DefaulInputValidator.FirstNameValidator(System.String)">
+        <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.FirstNameValidator(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.InputValidator.DefaulInputValidator.LastNameValidator(System.String)">
+        <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.LastNameValidator(System.String)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.InputValidator.DefaulInputValidator.DateOfBirthValidator(System.DateTime)">
+        <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.DateOfBirthValidator(System.DateTime)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.InputValidator.DefaulInputValidator.WalletValidator(System.Decimal)">
+        <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.WalletValidator(System.Decimal)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.InputValidator.DefaulInputValidator.MaritalStatusValidator(System.Char)">
+        <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.MaritalStatusValidator(System.Char)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.InputValidator.DefaulInputValidator.HeightValidator(System.Int16)">
+        <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.HeightValidator(System.Int16)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Validators.InputValidator.DefaulInputValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Validators.InputValidator.IInputValidator">
@@ -894,6 +842,43 @@
             Validates the parameters.
             </summary>
             <param name="recordParameters"> Record fileds. </param>
+        </member>
+        <member name="T:FileCabinetApp.Validators.LastNameValidator">
+            <summary>
+            Represents defualt validator for last name.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.LastNameValidator.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.LastNameValidator"/> class.
+            </summary>
+            <param name="minLength">Minimum length of last name.</param>
+            <param name="maxLength">Maximum length of last name.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.LastNameValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Validators.MaritalStatusValidator">
+            <summary>
+            Represents defualt validator for marital status.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.MaritalStatusValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Validators.WalletValidator">
+            <summary>
+            Represents defualt validator for wallet.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.WalletValidator.#ctor(System.Decimal)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.WalletValidator"/> class.
+            </summary>
+            <param name="minAmountOfMoney">Minimum amount of money.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.WalletValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
+            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Writers.FileCabinetRecordCsvWriter">
             <summary>

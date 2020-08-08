@@ -61,7 +61,7 @@ namespace FileCabinetApp.Services
             }
             else
             {
-                this.validator = new DefaulValidator();
+                this.validator = new DefaultValidator();
             }
 
             this.lastRecordId = this.GetLastRecordId();
@@ -78,7 +78,7 @@ namespace FileCabinetApp.Services
                 }
                 else
                 {
-                    return new DefaulInputValidator();
+                    return new DefaultInputValidator();
                 }
             }
         }

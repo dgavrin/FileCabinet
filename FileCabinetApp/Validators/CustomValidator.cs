@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using FileCabinetApp.Records;
 
 namespace FileCabinetApp.Validators
@@ -17,12 +16,12 @@ namespace FileCabinetApp.Validators
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            new CustomFirstNameValidator().ValidateParameters(recordParameters);
-            new CustomLastNameValidator().ValidateParameters(recordParameters);
-            new CustomDateOfBirthValidator().ValidateParameters(recordParameters);
-            new CustomWalletValidator().ValidateParameters(recordParameters);
-            new CustomMaritalStatusValidator().ValidateParameters(recordParameters);
-            new CustomHeightValidator().ValidateParameters(recordParameters);
+            new FirstNameValidator(4, 20).ValidateParameters(recordParameters);
+            new LastNameValidator(4, 20).ValidateParameters(recordParameters);
+            new DateOfBirthValidator(new DateTime(1990, 1, 1), DateTime.Now).ValidateParameters(recordParameters);
+            new WalletValidator(100M).ValidateParameters(recordParameters);
+            new MaritalStatusValidator().ValidateParameters(recordParameters);
+            new HeightValidator(50).ValidateParameters(recordParameters);
         }
     }
 }

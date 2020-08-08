@@ -43,7 +43,7 @@ namespace FileCabinetApp.Services
             }
             else
             {
-                this.validator = new DefaulValidator();
+                this.validator = new DefaultValidator();
             }
         }
 
@@ -58,7 +58,7 @@ namespace FileCabinetApp.Services
                 }
                 else
                 {
-                    return new DefaulInputValidator();
+                    return new DefaultInputValidator();
                 }
             }
         }
