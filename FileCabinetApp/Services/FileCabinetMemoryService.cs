@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
+using FileCabinetApp.Validators.InputValidator;
 
 namespace FileCabinetApp.Services
 {
@@ -46,31 +47,20 @@ namespace FileCabinetApp.Services
             }
         }
 
-        /// <summary>
-        /// Enter personal information about the person to record.
-        /// </summary>
-        /// <returns> RecordParameters. </returns>
-        public RecordParameters SetInformationToRecord()
+        /// <inheritdoc/>
+        public IInputValidator InputValidator
         {
-            Console.Write("First Name: ");
-            var firstName = ReadInput(InputConverters.StringConverter, this.validator.FirstNameValidator);
-
-            Console.Write("Last Name: ");
-            var lastName = ReadInput(InputConverters.StringConverter, this.validator.LastNameValidator);
-
-            Console.Write("Date of birth (MM/DD/YYYY): ");
-            var dateOfBirth = ReadInput(InputConverters.DateConverter, this.validator.DateOfBirthValidator);
-
-            Console.Write("Wallet: ");
-            var wallet = ReadInput(InputConverters.WalletConverter, this.validator.WalletValidator);
-
-            Console.Write("Marital status ('M' - married, 'U' - unmarried): ");
-            var maritalStatus = ReadInput(InputConverters.MaritalStatusConverter, this.validator.MaritalStatusValidator);
-
-            Console.Write("Height: ");
-            var height = ReadInput(InputConverters.HeightConverter, this.validator.HeightValidator);
-
-            return new RecordParameters(firstName, lastName, dateOfBirth, wallet, maritalStatus, height);
+            get
+            {
+                if (this.validator is CustomValidator)
+                {
+                    return new CustomInputValidator();
+                }
+                else
+                {
+                    return new DefaulInputValidator();
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -241,7 +231,8 @@ namespace FileCabinetApp.Services
 
             foreach (var importedRecord in loadedRecords)
             {
-                var validationResult = this.validator.ValidateParameters(importedRecord);
+                var inputValidator = this.InputValidator;
+                var validationResult = inputValidator.ValidateParameters(importedRecord);
                 if (validationResult.Item1)
                 {
                     var importedRecordParameters = new RecordParameters(importedRecord);
@@ -284,35 +275,6 @@ namespace FileCabinetApp.Services
             {
                 return false;
             }
-        }
-
-        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
-        {
-            do
-            {
-                T value;
-
-                var input = Console.ReadLine();
-                var conversionResult = converter(input);
-
-                if (!conversionResult.Item1)
-                {
-                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
-                    continue;
-                }
-
-                value = conversionResult.Item3;
-
-                var validationResult = validator(value);
-                if (!validationResult.Item1)
-                {
-                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
-                    continue;
-                }
-
-                return value;
-            }
-            while (true);
         }
 
         private bool TryGetIndexOfRecordWithId(int id, out int index)

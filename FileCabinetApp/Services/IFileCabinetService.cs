@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using FileCabinetApp.Records;
+using FileCabinetApp.Validators.InputValidator;
 
 namespace FileCabinetApp.Services
 {
@@ -8,6 +9,14 @@ namespace FileCabinetApp.Services
     /// </summary>
     public interface IFileCabinetService
     {
+        /// <summary>
+        /// Gets input validator.
+        /// </summary>
+        /// <value>
+        /// Input validator.
+        /// </value>
+        public IInputValidator InputValidator { get; }
+
         /// <summary>
         /// Creates a record with personal information about a person and adds it to the list.
         /// </summary>
@@ -54,12 +63,6 @@ namespace FileCabinetApp.Services
         /// <param name="dateOfBirth"> The date of birth. </param>
         /// <returns> List of entries. </returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
-
-        /// <summary>
-        /// Enter personal information about the person to record.
-        /// </summary>
-        /// <returns> RecordParameters. </returns>
-        public RecordParameters SetInformationToRecord();
 
         /// <summary>
         /// Creates a snapshot of a file cabinet service.

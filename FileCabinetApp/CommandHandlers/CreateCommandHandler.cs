@@ -53,7 +53,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 try
                 {
-                    var newRecord = this.fileCabinetService.SetInformationToRecord();
+                    var newRecord = this.SetInformationToRecord();
                     var recordId = this.fileCabinetService.CreateRecord(newRecord);
                     Console.WriteLine($"Record #{recordId} is created.");
                     Console.WriteLine();

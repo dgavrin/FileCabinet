@@ -64,7 +64,7 @@ namespace FileCabinetApp.CommandHandlers
                 {
                     try
                     {
-                        var editRecord = this.fileCabinetService.SetInformationToRecord();
+                        var editRecord = this.SetInformationToRecord();
                         this.fileCabinetService.EditRecord(recordIdForEdit, editRecord);
                         Console.WriteLine($"Record #{recordIdForEdit} is updated.");
                         Console.WriteLine();
