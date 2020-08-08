@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using FileCabinetApp.CommandHandlers;
-using FileCabinetApp.Printers;
+using FileCabinetApp.Records;
 using FileCabinetApp.Services;
 
 namespace FileCabinetApp
@@ -120,16 +121,14 @@ namespace FileCabinetApp
             var exitCommandHandler = new ExitCommandHandler(Program.fileCabinetService, x => isRunning = x);
             var statCommandHandler = new StatCommandHandler(Program.fileCabinetService);
             var createCommandHandler = new CreateCommandHandler(Program.fileCabinetService);
+            var listCommandHandler = new ListCommandHandler(Program.fileCabinetService, records => DefaultRecordPrint(records));
+            var findCommandHandler = new FindCommandHandler(Program.fileCabinetService, records => DefaultRecordPrint(records));
             var editCommandHandler = new EditCommandHandler(Program.fileCabinetService);
             var exportCommandHandler = new ExportCommandHandler(Program.fileCabinetService);
             var importCommandHandler = new ImportCommandHandler(Program.fileCabinetService);
             var removeCommandHandler = new RemoveCommandHandler(Program.fileCabinetService);
             var purgeCommandHandler = new PurgeCommandHandler(Program.fileCabinetService);
             var printMissedCommandHandler = new PrintMissedCommandHandler();
-
-            var recordPrinter = new DefaultRecordPrinter();
-            var listCommandHandler = new ListCommandHandler(Program.fileCabinetService, recordPrinter);
-            var findCommandHandler = new FindCommandHandler(Program.fileCabinetService, recordPrinter);
 
             helpCommandHandler.SetNext(exitCommandHandler);
             exitCommandHandler.SetNext(statCommandHandler);
@@ -144,6 +143,19 @@ namespace FileCabinetApp
             purgeCommandHandler.SetNext(printMissedCommandHandler);
 
             return helpCommandHandler;
+        }
+
+        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
+        {
+            if (records == null)
+            {
+                throw new ArgumentNullException(nameof(records));
+            }
+
+            foreach (var record in records)
+            {
+                Console.WriteLine(record.ToString());
+            }
         }
     }
 }

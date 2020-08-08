@@ -117,7 +117,7 @@
             Find command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,FileCabinetApp.Printers.IRecordPrinter)">
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord}})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
             </summary>
@@ -180,7 +180,7 @@
             List command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,FileCabinetApp.Printers.IRecordPrinter)">
+        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord}})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ListCommandHandler"/> class.
             </summary>
@@ -307,25 +307,6 @@
             </summary>
             <param name="value"> String to convert. </param>
             <returns> True if it is possible to convert and resulting short. </returns>
-        </member>
-        <member name="T:FileCabinetApp.Printers.DefaultRecordPrinter">
-            <summary>
-            Standard record printer.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Printers.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord})">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.Printers.IRecordPrinter">
-            <summary>
-            Provides a printer for displaying records.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.Printers.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord})">
-            <summary>
-            Prints the specified records.
-            </summary>
-            <param name="records">Records.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
