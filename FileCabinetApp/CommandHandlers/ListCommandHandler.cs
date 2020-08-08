@@ -1,4 +1,5 @@
 ﻿using System;
+using FileCabinetApp.Printers;
 using FileCabinetApp.Services;
 
 namespace FileCabinetApp.CommandHandlers
@@ -11,14 +12,17 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "list";
 
         private ICommandHandler nextHandler;
+        private IRecordPrinter printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
-        public ListCommandHandler(IFileCabinetService fileCabinetService)
+        /// <param name="printer">Printer.</param>
+        public ListCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
             : base(fileCabinetService)
         {
+            this.printer = printer ?? throw new ArgumentNullException(nameof(printer));
         }
 
         /// <inheritdoc/>
@@ -48,7 +52,7 @@ namespace FileCabinetApp.CommandHandlers
         private void List(string parameters)
         {
             var listOfRecords = this.fileCabinetService.GetRecords();
-            this.fileCabinetService.DisplayRecords(listOfRecords);
+            this.printer.Print(listOfRecords);
             Console.WriteLine();
         }
     }

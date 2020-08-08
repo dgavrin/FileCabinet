@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using FileCabinetApp.Printers;
 using FileCabinetApp.Records;
 using FileCabinetApp.Services;
 
@@ -13,14 +14,17 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "find";
 
         private ICommandHandler nextHandler;
+        private IRecordPrinter printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
-        public FindCommandHandler(IFileCabinetService fileCabinetService)
+        /// <param name="printer">Printer.</param>
+        public FindCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
             : base(fileCabinetService)
         {
+            this.printer = printer ?? throw new ArgumentNullException(nameof(printer));
         }
 
         /// <inheritdoc/>
@@ -90,7 +94,7 @@ namespace FileCabinetApp.CommandHandlers
                     }
                     else
                     {
-                        this.fileCabinetService.DisplayRecords(foundRecords);
+                        this.printer.Print(foundRecords);
                         Console.WriteLine();
                     }
                 }

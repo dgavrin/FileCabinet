@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using FileCabinetApp.CommandHandlers;
+using FileCabinetApp.Printers;
 using FileCabinetApp.Services;
 
 namespace FileCabinetApp
@@ -119,14 +120,16 @@ namespace FileCabinetApp
             var exitCommandHandler = new ExitCommandHandler(Program.fileCabinetService, x => isRunning = x);
             var statCommandHandler = new StatCommandHandler(Program.fileCabinetService);
             var createCommandHandler = new CreateCommandHandler(Program.fileCabinetService);
-            var listCommandHandler = new ListCommandHandler(Program.fileCabinetService);
             var editCommandHandler = new EditCommandHandler(Program.fileCabinetService);
-            var findCommandHandler = new FindCommandHandler(Program.fileCabinetService);
             var exportCommandHandler = new ExportCommandHandler(Program.fileCabinetService);
             var importCommandHandler = new ImportCommandHandler(Program.fileCabinetService);
             var removeCommandHandler = new RemoveCommandHandler(Program.fileCabinetService);
             var purgeCommandHandler = new PurgeCommandHandler(Program.fileCabinetService);
             var printMissedCommandHandler = new PrintMissedCommandHandler();
+
+            var recordPrinter = new DefaultRecordPrinter();
+            var listCommandHandler = new ListCommandHandler(Program.fileCabinetService, recordPrinter);
+            var findCommandHandler = new FindCommandHandler(Program.fileCabinetService, recordPrinter);
 
             helpCommandHandler.SetNext(exitCommandHandler);
             exitCommandHandler.SetNext(statCommandHandler);

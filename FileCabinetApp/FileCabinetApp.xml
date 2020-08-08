@@ -117,11 +117,12 @@
             Find command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService)">
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,FileCabinetApp.Printers.IRecordPrinter)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
             </summary>
             <param name="fileCabinetService">FileCabinetService.</param>
+            <param name="printer">Printer.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
@@ -179,11 +180,12 @@
             List command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService)">
+        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,FileCabinetApp.Printers.IRecordPrinter)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ListCommandHandler"/> class.
             </summary>
             <param name="fileCabinetService">FileCabinetService.</param>
+            <param name="printer">Printer.</param>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
@@ -306,6 +308,25 @@
             <param name="value"> String to convert. </param>
             <returns> True if it is possible to convert and resulting short. </returns>
         </member>
+        <member name="T:FileCabinetApp.Printers.DefaultRecordPrinter">
+            <summary>
+            Standard record printer.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Printers.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord})">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Printers.IRecordPrinter">
+            <summary>
+            Provides a printer for displaying records.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Printers.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord})">
+            <summary>
+            Prints the specified records.
+            </summary>
+            <param name="records">Records.</param>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
             The main program class.
@@ -397,6 +418,9 @@
             </summary>
             <value> The height. </value>
         </member>
+        <member name="M:FileCabinetApp.Records.FileCabinetRecord.ToString">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.Records.RecordParameters">
             <summary>
             Represents an object that stores parameters for creating and editing records in a file cabinet.
@@ -435,9 +459,6 @@
             </summary>
             <param name="fileStream"> File stream. </param>
             <param name="validationType"> The validation type. </param>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.DisplayRecords(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.Records.FileCabinetRecord})">
-            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
@@ -503,9 +524,6 @@
             Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetMemoryService"/> class.
             </summary>
             <param name="validationType"> The validation type. </param>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.DisplayRecords(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.Records.FileCabinetRecord})">
-            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.SetInformationToRecord">
             <summary>
@@ -647,12 +665,6 @@
             Creates a snapshot of a file cabinet service.
             </summary>
             <returns> A snapshot of the file cabinet service. </returns>
-        </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.DisplayRecords(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.Records.FileCabinetRecord})">
-            <summary>
-            Displays a list of entries.
-            </summary>
-            <param name="records"> Collection of entries. </param>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
             <summary>

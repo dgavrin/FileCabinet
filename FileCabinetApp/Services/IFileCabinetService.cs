@@ -68,12 +68,6 @@ namespace FileCabinetApp.Services
         public FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>
-        /// Displays a list of entries.
-        /// </summary>
-        /// <param name="records"> Collection of entries. </param>
-        public void DisplayRecords(ReadOnlyCollection<FileCabinetRecord> records);
-
-        /// <summary>
         /// Restores snapshot.
         /// </summary>
         /// <param name="fileCabinetServiceSnapshot">FileCabinetServiceSnapshot.</param>

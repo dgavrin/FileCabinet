@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace FileCabinetApp.Records
 {
@@ -48,5 +49,19 @@ namespace FileCabinetApp.Records
         /// </summary>
         /// <value> The height. </value>
         public short Height { get; set; }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            var dateOfBirth = this.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
+
+            var maritalStatus = "unmarried";
+            if (this.MaritalStatus == 'M' || this.MaritalStatus == 'm')
+            {
+                maritalStatus = "married";
+            }
+
+            return $"#{this.Id}, {this.FirstName}, {this.LastName}, {dateOfBirth}, {this.Wallet}$, {maritalStatus}, {this.Height}cm";
+        }
     }
 }

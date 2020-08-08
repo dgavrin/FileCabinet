@@ -46,28 +46,6 @@ namespace FileCabinetApp.Services
             }
         }
 
-        /// <inheritdoc/>
-        public void DisplayRecords(ReadOnlyCollection<FileCabinetRecord> records)
-        {
-            if (records == null)
-            {
-                throw new ArgumentNullException(nameof(records));
-            }
-
-            foreach (var record in records)
-            {
-                var dateOfBirth = record.DateOfBirth.ToString("yyyy-MMM-dd", new CultureInfo("en-US"));
-
-                var maritalStatus = "unmarried";
-                if (record.MaritalStatus == 'M' || record.MaritalStatus == 'm')
-                {
-                    maritalStatus = "married";
-                }
-
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {dateOfBirth}, {record.Wallet}$, {maritalStatus}, {record.Height}cm");
-            }
-        }
-
         /// <summary>
         /// Enter personal information about the person to record.
         /// </summary>
