@@ -8,7 +8,7 @@ namespace FileCabinetApp.Validators
     /// <summary>
     /// Composite validator.
     /// </summary>
-    public abstract class CompositeValidator : IRecordValidator
+    public class CompositeValidator : IRecordValidator
     {
         private List<IRecordValidator> validators;
 
@@ -16,7 +16,7 @@ namespace FileCabinetApp.Validators
         /// Initializes a new instance of the <see cref="CompositeValidator"/> class.
         /// </summary>
         /// <param name="validators">Validators.</param>
-        protected CompositeValidator(IEnumerable<IRecordValidator> validators)
+        public CompositeValidator(IEnumerable<IRecordValidator> validators)
         {
             this.validators = validators.ToList<IRecordValidator>() ?? throw new ArgumentNullException(nameof(validators));
         }

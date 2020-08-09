@@ -884,6 +884,80 @@
         <member name="M:FileCabinetApp.Validators.MaritalStatusValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
         </member>
+        <member name="T:FileCabinetApp.Validators.ValidatorBuilder">
+            <summary>
+            Validator builder.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidatorBuilder.ValidateFirstName(System.Int32,System.Int32)">
+            <summary>
+            Builds a first name validator.
+            </summary>
+            <param name="minLength">Minimum length.</param>
+            <param name="maxLength">Maximum length.</param>
+            <returns>This instance.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidatorBuilder.ValidateLastName(System.Int32,System.Int32)">
+            <summary>
+            Builds a last name validator.
+            </summary>
+            <param name="minLength">Minimum length.</param>
+            <param name="maxLength">Maximum length.</param>
+            <returns>This instance.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidatorBuilder.ValidateDateOfBirth(System.DateTime,System.DateTime)">
+            <summary>
+            Builds a date of birth validator.
+            </summary>
+            <param name="from">Minimum date of birth.</param>
+            <param name="to">Maximum date of birth.</param>
+            <returns>This instance.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidatorBuilder.ValidateWallet(System.Decimal)">
+            <summary>
+            Builds a wallet validator.
+            </summary>
+            <param name="minAmountOfMoney">Minimum amount of money.</param>
+            <returns>This instance.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidatorBuilder.ValidateMaritalStatus">
+            <summary>
+            Builds a marital status validator.
+            </summary>
+            <returns>This instance.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidatorBuilder.ValidateHeight(System.Int16)">
+            <summary>
+            Builds a height validator.
+            </summary>
+            <param name="minHeight">Minimum height.</param>
+            <returns>This. instance.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidatorBuilder.Create">
+            <summary>
+            Creates this instance.
+            </summary>
+            <returns>IRecordValidator.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Validators.ValidatorBuilderExtensions">
+            <summary>
+            Provides extension methods for ValidatorBuilder.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidatorBuilderExtensions.CreateDefault(FileCabinetApp.Validators.ValidatorBuilder)">
+            <summary>
+            Extension method for create default record validator.
+            </summary>
+            <param name="validatorBuilder">Validator builder.</param>
+            <returns>Default record validator.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidatorBuilderExtensions.CreateCustom(FileCabinetApp.Validators.ValidatorBuilder)">
+            <summary>
+            Extension method for create custom record validator.
+            </summary>
+            <param name="validatorBuilder">Validator builder.</param>
+            <returns>Custom record validator.</returns>
+        </member>
         <member name="T:FileCabinetApp.Validators.WalletValidator">
             <summary>
             Represents defualt validator for wallet.

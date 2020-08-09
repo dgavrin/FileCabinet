@@ -39,11 +39,11 @@ namespace FileCabinetApp.Services
 
             if (validationType.Equals("custom", StringComparison.InvariantCultureIgnoreCase))
             {
-                this.validator = new CustomValidator();
+                this.validator = new ValidatorBuilder().CreateCustom();
             }
             else
             {
-                this.validator = new DefaultValidator();
+                this.validator = new ValidatorBuilder().CreateDefault();
             }
         }
 

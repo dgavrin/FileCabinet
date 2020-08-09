@@ -8,7 +8,6 @@ namespace FileCabinetApp.Validators.InputValidator
     /// </summary>
     public interface IInputValidator
     {
-
         /// <summary>
         /// Validates the parameters.
         /// </summary>
