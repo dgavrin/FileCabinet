@@ -29,7 +29,7 @@ namespace FileCabinetApp.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
         /// </summary>
-        /// <param name="validationType"> The validation type. </param>
+        /// <param name="validationType">The validation type.</param>
         public FileCabinetMemoryService(string validationType)
         {
             if (validationType == null)

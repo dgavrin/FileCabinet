@@ -20,54 +20,54 @@ namespace FileCabinetApp.Services
         /// <summary>
         /// Creates a record with personal information about a person and adds it to the list.
         /// </summary>
-        /// <param name="recordParameters"> FileCabinetRecord fields. </param>
-        /// <returns> Identifier of the new record. </returns>
+        /// <param name="recordParameters">FileCabinetRecord fields.</param>
+        /// <returns>Identifier of the new record.</returns>
         public int CreateRecord(RecordParameters recordParameters);
 
         /// <summary>
         /// Gets a list of entries.
         /// </summary>
-        /// <returns> List of entries. </returns>
+        /// <returns>List of entries.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords();
 
         /// <summary>
         /// Get statistics about records.
         /// </summary>
-        /// <returns> Number of records. </returns>
+        /// <returns>Number of records.</returns>
         public (int active, int removed) GetStat();
 
         /// <summary>
         /// Edits a record by ID.
         /// </summary>
-        /// <param name="id"> The identifier. </param>
-        /// <param name="recordParameters"> FileCabinetRecord fields. </param>
+        /// <param name="id">The identifier.</param>
+        /// <param name="recordParameters">FileCabinetRecord fields.</param>
         public void EditRecord(int id, RecordParameters recordParameters);
 
         /// <summary>
         /// Gets a list of entries by first name.
         /// </summary>
-        /// <param name="firstName"> The first name. </param>
-        /// <returns> List of entries. </returns>
+        /// <param name="firstName">The first name.</param>
+        /// <returns>List of entries.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName);
 
         /// <summary>
         /// Gets a list of entries by last name.
         /// </summary>
-        /// <param name="lastName"> The last name. </param>
-        /// <returns> List of entries. </returns>
+        /// <param name="lastName">The last name.</param>
+        /// <returns>List of entries.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName);
 
         /// <summary>
         /// Gets a list of entries by date of birth.
         /// </summary>
-        /// <param name="dateOfBirth"> The date of birth. </param>
-        /// <returns> List of entries. </returns>
+        /// <param name="dateOfBirth">The date of birth.</param>
+        /// <returns>List of entries.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
 
         /// <summary>
         /// Creates a snapshot of a file cabinet service.
         /// </summary>
-        /// <returns> A snapshot of the file cabinet service. </returns>
+        /// <returns>A snapshot of the file cabinet service.</returns>
         public FileCabinetServiceSnapshot MakeSnapshot();
 
         /// <summary>

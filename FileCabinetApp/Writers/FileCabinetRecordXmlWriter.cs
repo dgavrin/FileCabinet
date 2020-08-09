@@ -16,7 +16,7 @@ namespace FileCabinetApp.Writers
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecordXmlWriter"/> class.
         /// </summary>
-        /// <param name="xmlWriter"> The xmlWriter. </param>
+        /// <param name="xmlWriter">The xmlWriter.</param>
         public FileCabinetRecordXmlWriter(XmlWriter xmlWriter)
         {
             this.writer = xmlWriter;
@@ -25,8 +25,9 @@ namespace FileCabinetApp.Writers
         /// <summary>
         /// Writes a record to a xml file.
         /// </summary>
-        /// <param name="record"> The record. </param>
-        /// <param name="xmlDoc"> Xml document. </param>
+        /// <param name="record">The record.</param>
+        /// <param name="xmlDoc">Xml document.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Пометьте члены как статические", Justification = "<Ожидание>")]
         public void Write(FileCabinetRecord record, XDocument xmlDoc)
         {
             if (record == null)

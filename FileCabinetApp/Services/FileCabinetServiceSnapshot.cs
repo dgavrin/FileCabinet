@@ -21,7 +21,7 @@ namespace FileCabinetApp.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetServiceSnapshot"/> class.
         /// </summary>
-        /// <param name="list"> List of records. </param>
+        /// <param name="list">List of records.</param>
         public FileCabinetServiceSnapshot(List<FileCabinetRecord> list)
         {
             if (list == null)
@@ -44,7 +44,7 @@ namespace FileCabinetApp.Services
         /// <summary>
         /// Saves a list of entries to a csv file.
         /// </summary>
-        /// <param name="streamWriter"> Stream for recording. </param>
+        /// <param name="streamWriter">Stream for recording.</param>
         public void SaveToCsv(StreamWriter streamWriter)
         {
             if (streamWriter == null)
@@ -108,7 +108,7 @@ namespace FileCabinetApp.Services
         /// <summary>
         /// Saves a list of entries to a xml file.
         /// </summary>
-        /// <param name="xmlWriter"> Stream fo recording.</param>
+        /// <param name="xmlWriter">Stream fo recording.</param>
         public void SaveToXml(XmlWriter xmlWriter)
         {
             if (xmlWriter == null)

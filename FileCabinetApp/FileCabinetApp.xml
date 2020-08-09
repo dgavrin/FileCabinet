@@ -283,36 +283,36 @@
             <summary>
             Convert string to string.
             </summary>
-            <param name="value"> String to convert. </param>
-            <returns> True if it is possible to convert and the resulting string. </returns>
+            <param name="value">String to convert.</param>
+            <returns>True if it is possible to convert and the resulting string.</returns>
         </member>
         <member name="M:FileCabinetApp.InputConverters.DateConverter(System.String)">
             <summary>
             Convert string to DateTime.
             </summary>
-            <param name="value"> String to convert. </param>
-            <returns> True if it is possible to convert and resulting DateTime. </returns>
+            <param name="value">String to convert.</param>
+            <returns>True if it is possible to convert and resulting DateTime.</returns>
         </member>
         <member name="M:FileCabinetApp.InputConverters.WalletConverter(System.String)">
             <summary>
             Convert string to decimal.
             </summary>
-            <param name="value"> String to convert. </param>
-            <returns> True if it is possible to convert and resulting decimal. </returns>
+            <param name="value">String to convert.</param>
+            <returns>True if it is possible to convert and resulting decimal.</returns>
         </member>
         <member name="M:FileCabinetApp.InputConverters.MaritalStatusConverter(System.String)">
             <summary>
             Convert string to char.
             </summary>
-            <param name="value"> String to convert. </param>
-            <returns> True if it is possible to convert and resulting char. </returns>
+            <param name="value">String to convert.</param>
+            <returns>True if it is possible to convert and resulting char.</returns>
         </member>
         <member name="M:FileCabinetApp.InputConverters.HeightConverter(System.String)">
             <summary>
             Convert string to short.
             </summary>
-            <param name="value"> String to convert. </param>
-            <returns> True if it is possible to convert and resulting short. </returns>
+            <param name="value">String to convert.</param>
+            <returns>True if it is possible to convert and resulting short.</returns>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
@@ -367,43 +367,43 @@
             <summary>
             Gets or sets the identifier of the record in the file cabinet.
             </summary>
-            <value> The indentifier. </value>
+            <value>The indentifier.</value>
         </member>
         <member name="P:FileCabinetApp.Records.FileCabinetRecord.FirstName">
             <summary>
             Gets or sets the first name of the record in the file cabinet.
             </summary>
-            <value> The first name. </value>
+            <value>The first name.</value>
         </member>
         <member name="P:FileCabinetApp.Records.FileCabinetRecord.LastName">
             <summary>
             Gets or sets the last name of the record in the file cabinet.
             </summary>
-            <value> The last name. </value>
+            <value>The last name.</value>
         </member>
         <member name="P:FileCabinetApp.Records.FileCabinetRecord.DateOfBirth">
             <summary>
             Gets or sets the date of birht of the record in the file cabinet.
             </summary>
-            <value> The date of birth. </value>
+            <value>The date of birth.</value>
         </member>
         <member name="P:FileCabinetApp.Records.FileCabinetRecord.Wallet">
             <summary>
             Gets or sets the wallet of the record in the file cabinet.
             </summary>
-            <value> The wallet. </value>
+            <value>The wallet.</value>
         </member>
         <member name="P:FileCabinetApp.Records.FileCabinetRecord.MaritalStatus">
             <summary>
             Gets or sets the marital status of the record in the file cabinet.
             </summary>
-            <value> The marital status. </value>
+            <value>The marital status.</value>
         </member>
         <member name="P:FileCabinetApp.Records.FileCabinetRecord.Height">
             <summary>
             Gets or sets the height of the record in the file cabinet.
             </summary>
-            <value> The height. </value>
+            <value>The height.</value>
         </member>
         <member name="M:FileCabinetApp.Records.FileCabinetRecord.ToString">
             <inheritdoc/>
@@ -444,8 +444,8 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetFileSystemService"/> class.
             </summary>
-            <param name="fileStream"> File stream. </param>
-            <param name="validationType"> The validation type. </param>
+            <param name="fileStream">File stream.</param>
+            <param name="validationType">The validation type.</param>
         </member>
         <member name="P:FileCabinetApp.Services.FileCabinetFileSystemService.InputValidator">
             <inheritdoc/>
@@ -494,7 +494,7 @@
             <summary>
             Releases fileStream, binaryReader, binaryWriter.
             </summary>
-            <param name="disposing"> Disposing. </param>
+            <param name="disposing">Disposing.</param>
         </member>
         <member name="T:FileCabinetApp.Services.FileCabinetMemoryService">
             <summary>
@@ -510,7 +510,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetMemoryService"/> class.
             </summary>
-            <param name="validationType"> The validation type. </param>
+            <param name="validationType">The validation type.</param>
         </member>
         <member name="P:FileCabinetApp.Services.FileCabinetMemoryService.InputValidator">
             <inheritdoc/>
@@ -554,7 +554,7 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetServiceSnapshot"/> class.
             </summary>
-            <param name="list"> List of records. </param>
+            <param name="list">List of records.</param>
         </member>
         <member name="P:FileCabinetApp.Services.FileCabinetServiceSnapshot.Records">
             <summary>
@@ -566,7 +566,7 @@
             <summary>
             Saves a list of entries to a csv file.
             </summary>
-            <param name="streamWriter"> Stream for recording. </param>
+            <param name="streamWriter">Stream for recording.</param>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.StreamReader)">
             <summary>
@@ -584,7 +584,7 @@
             <summary>
             Saves a list of entries to a xml file.
             </summary>
-            <param name="xmlWriter"> Stream fo recording.</param>
+            <param name="xmlWriter">Stream fo recording.</param>
         </member>
         <member name="T:FileCabinetApp.Services.IFileCabinetService">
             <summary>
@@ -603,54 +603,54 @@
             <summary>
             Creates a record with personal information about a person and adds it to the list.
             </summary>
-            <param name="recordParameters"> FileCabinetRecord fields. </param>
-            <returns> Identifier of the new record. </returns>
+            <param name="recordParameters">FileCabinetRecord fields.</param>
+            <returns>Identifier of the new record.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.GetRecords">
             <summary>
             Gets a list of entries.
             </summary>
-            <returns> List of entries. </returns>
+            <returns>List of entries.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.GetStat">
             <summary>
             Get statistics about records.
             </summary>
-            <returns> Number of records. </returns>
+            <returns>Number of records.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
             <summary>
             Edits a record by ID.
             </summary>
-            <param name="id"> The identifier. </param>
-            <param name="recordParameters"> FileCabinetRecord fields. </param>
+            <param name="id">The identifier.</param>
+            <param name="recordParameters">FileCabinetRecord fields.</param>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.FindByFirstName(System.String)">
             <summary>
             Gets a list of entries by first name.
             </summary>
-            <param name="firstName"> The first name. </param>
-            <returns> List of entries. </returns>
+            <param name="firstName">The first name.</param>
+            <returns>List of entries.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.FindByLastName(System.String)">
             <summary>
             Gets a list of entries by last name.
             </summary>
-            <param name="lastName"> The last name. </param>
-            <returns> List of entries. </returns>
+            <param name="lastName">The last name.</param>
+            <returns>List of entries.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.FindByDateOfBirth(System.String)">
             <summary>
             Gets a list of entries by date of birth.
             </summary>
-            <param name="dateOfBirth"> The date of birth. </param>
-            <returns> List of entries. </returns>
+            <param name="dateOfBirth">The date of birth.</param>
+            <returns>List of entries.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.MakeSnapshot">
             <summary>
             Creates a snapshot of a file cabinet service.
             </summary>
-            <returns> A snapshot of the file cabinet service. </returns>
+            <returns>A snapshot of the file cabinet service.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
             <summary>
@@ -981,13 +981,13 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Writers.FileCabinetRecordCsvWriter"/> class.
             </summary>
-            <param name="textWriter"> The textWriter. </param>
+            <param name="textWriter">The textWriter.</param>
         </member>
         <member name="M:FileCabinetApp.Writers.FileCabinetRecordCsvWriter.Write(FileCabinetApp.Records.FileCabinetRecord)">
             <summary>
             Writes a record to a csv file.
             </summary>
-            <param name="record"> The record. </param>
+            <param name="record">The record.</param>
         </member>
         <member name="T:FileCabinetApp.Writers.FileCabinetRecordXmlWriter">
             <summary>
@@ -998,14 +998,14 @@
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Writers.FileCabinetRecordXmlWriter"/> class.
             </summary>
-            <param name="xmlWriter"> The xmlWriter. </param>
+            <param name="xmlWriter">The xmlWriter.</param>
         </member>
         <member name="M:FileCabinetApp.Writers.FileCabinetRecordXmlWriter.Write(FileCabinetApp.Records.FileCabinetRecord,System.Xml.Linq.XDocument)">
             <summary>
             Writes a record to a xml file.
             </summary>
-            <param name="record"> The record. </param>
-            <param name="xmlDoc"> Xml document. </param>
+            <param name="record">The record.</param>
+            <param name="xmlDoc">Xml document.</param>
         </member>
     </members>
 </doc>

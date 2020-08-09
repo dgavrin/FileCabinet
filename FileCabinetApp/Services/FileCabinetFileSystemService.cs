@@ -36,8 +36,8 @@ namespace FileCabinetApp.Services
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetFileSystemService"/> class.
         /// </summary>
-        /// <param name="fileStream"> File stream. </param>
-        /// <param name="validationType"> The validation type. </param>
+        /// <param name="fileStream">File stream.</param>
+        /// <param name="validationType">The validation type.</param>
         public FileCabinetFileSystemService(FileStream fileStream, string validationType)
         {
             if (fileStream == null)
@@ -339,7 +339,7 @@ namespace FileCabinetApp.Services
         /// <summary>
         /// Releases fileStream, binaryReader, binaryWriter.
         /// </summary>
-        /// <param name="disposing"> Disposing. </param>
+        /// <param name="disposing">Disposing.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposedValue)
