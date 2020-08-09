@@ -15,7 +15,7 @@ namespace FileCabinetApp.Writers
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetRecordCsvWriter"/> class.
         /// </summary>
-        /// <param name="textWriter"> The textWriter. </param>
+        /// <param name="textWriter">The textWriter.</param>
         public FileCabinetRecordCsvWriter(TextWriter textWriter)
         {
             this.writer = textWriter;
@@ -24,7 +24,7 @@ namespace FileCabinetApp.Writers
         /// <summary>
         /// Writes a record to a csv file.
         /// </summary>
-        /// <param name="record"> The record. </param>
+        /// <param name="record">The record.</param>
         public void Write(FileCabinetRecord record)
         {
             if (record == null)

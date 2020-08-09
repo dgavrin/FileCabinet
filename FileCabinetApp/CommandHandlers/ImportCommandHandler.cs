@@ -1,0 +1,155 @@
+﻿using System;
+using System.IO;
+using FileCabinetApp.Services;
+
+namespace FileCabinetApp.CommandHandlers
+{
+    /// <summary>
+    /// Import command handler.
+    /// </summary>
+    public class ImportCommandHandler : ServiceCommandHandlerBase, ICommandHandler
+    {
+        private const string Command = "import";
+
+        private ICommandHandler nextHandler;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ImportCommandHandler"/> class.
+        /// </summary>
+        /// <param name="fileCabinetService">FileCabinetService.</param>
+        public ImportCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
+        {
+        }
+
+        /// <inheritdoc/>
+        public override void Handle(AppCommandRequest appCommandRequest)
+        {
+            if (appCommandRequest == null)
+            {
+                throw new ArgumentNullException(nameof(appCommandRequest));
+            }
+
+            if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
+            {
+                this.Import(appCommandRequest.Parameters);
+            }
+            else
+            {
+                this.nextHandler.Handle(appCommandRequest);
+            }
+        }
+
+        /// <inheritdoc/>
+        public new void SetNext(ICommandHandler commandHandler)
+        {
+            this.nextHandler = commandHandler ?? throw new ArgumentNullException(nameof(commandHandler));
+        }
+
+        private void Import(string parameters)
+        {
+            if (!string.IsNullOrEmpty(parameters))
+            {
+                string[] inputParameters = parameters.Split(' ', 2);
+
+                if (inputParameters.Length < 2)
+                {
+                    Console.WriteLine("Please try again. Enter the key. The syntax for the 'import' command is \"import csv <fileName> \".");
+                    Console.WriteLine();
+                    return;
+                }
+
+                const int commandIndex = 0;
+                const int fileNameIndex = 1;
+                var command = inputParameters[commandIndex];
+                var fileName = inputParameters[fileNameIndex];
+
+                if (string.IsNullOrEmpty(command))
+                {
+                    Console.WriteLine($"Please try again. The '{command}' is invalid parameter.");
+                    Console.WriteLine();
+                    return;
+                }
+
+                if (command.Equals("csv", StringComparison.InvariantCultureIgnoreCase) || command.Equals("xml", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    if (!File.Exists(fileName))
+                    {
+                        Console.WriteLine($"Import error: file {fileName} is not exist.");
+                        Console.WriteLine();
+                        return;
+                    }
+
+                    try
+                    {
+                        if (command.ToUpperInvariant() == "CSV")
+                        {
+                            if (fileName.EndsWith(".csv", StringComparison.InvariantCulture))
+                            {
+                                using (StreamReader streamReader = new StreamReader(fileName))
+                                {
+                                    Console.WriteLine("Please wait. Importing records may take some time.");
+                                    var fileCabinetServiceSnapshot = this.fileCabinetService.MakeSnapshot();
+                                    fileCabinetServiceSnapshot.LoadFromCsv(streamReader);
+                                    var importedRecordsCount = this.fileCabinetService.Restore(fileCabinetServiceSnapshot);
+                                    Console.WriteLine($"{importedRecordsCount} records were imported from {fileName}.");
+                                    Console.WriteLine();
+                                }
+                            }
+                            else
+                            {
+                                ReportAFileExtensionError();
+                            }
+                        }
+
+                        if (command.ToUpperInvariant() == "XML")
+                        {
+                            if (fileName.EndsWith(".xml", StringComparison.InvariantCulture))
+                            {
+                                using (StreamReader streamReader = new StreamReader(fileName))
+                                {
+                                    Console.WriteLine("Please wait. Importing records may take some time.");
+                                    var fileCabinetServiceSnapshot = this.fileCabinetService.MakeSnapshot();
+                                    fileCabinetServiceSnapshot.LoadFromXml(streamReader);
+                                    var importedRecordsCount = this.fileCabinetService.Restore(fileCabinetServiceSnapshot);
+                                    Console.WriteLine($"{importedRecordsCount} records were imported from {fileName}.");
+                                    Console.WriteLine();
+                                }
+                            }
+                            else
+                            {
+                                ReportAFileExtensionError();
+                            }
+                        }
+                    }
+                    catch (UnauthorizedAccessException)
+                    {
+                        Console.WriteLine($"Export failed: can't open file {fileName}.");
+                        Console.WriteLine();
+                    }
+                    catch (IOException)
+                    {
+                        Console.WriteLine($"Export failed: can't open file {fileName}.");
+                        Console.WriteLine();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("When using \"import\", the type of the csv command and the file extension must match.");
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Error entering parameters. The syntax for the 'import' command is \"import csv <fileName>\".");
+                Console.WriteLine();
+            }
+
+            void ReportAFileExtensionError()
+            {
+                Console.WriteLine("When using \"import\", the type of the <csv/xml> command and the file extension must match.");
+                Console.WriteLine();
+            }
+        }
+    }
+}

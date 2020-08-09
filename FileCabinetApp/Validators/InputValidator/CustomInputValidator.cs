@@ -2,18 +2,18 @@
 using System.Text;
 using FileCabinetApp.Records;
 
-namespace FileCabinetApp.Validators
+namespace FileCabinetApp.Validators.InputValidator
 {
     /// <summary>
-    /// Represents defualt validator for file cabinet service.
+    /// Represents custom validator for file cabinet service.
     /// </summary>
-    public class DefaulValidator : IRecordValidator
+    public class CustomInputValidator : IInputValidator
     {
-        private const short MinimumHeight = 0;
-        private const int MinimumLengthOfFirstAndLastName = 2;
-        private const int MaximumLengthOfFirstAndLastName = 60;
-        private const decimal MinimumAmountOfMoney = 0M;
-        private static readonly DateTime MinimalDateOfBirth = new DateTime(1950, 1, 1);
+        private const short MinimumHeight = 50;
+        private const int MinimumLengthOfFirstAndLastName = 4;
+        private const int MaximumLengthOfFirstAndLastName = 20;
+        private const decimal MinimumAmountOfMoney = 100M;
+        private static readonly DateTime MinimalDateOfBirth = new DateTime(1990, 1, 1);
 
         /// <inheritdoc/>
         public Tuple<bool, string> FirstNameValidator(string firstName)
