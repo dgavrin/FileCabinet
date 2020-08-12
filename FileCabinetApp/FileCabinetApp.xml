@@ -884,6 +884,47 @@
         <member name="M:FileCabinetApp.Validators.MaritalStatusValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
         </member>
+        <member name="T:FileCabinetApp.Validators.ValidationRulesConfigurationReader">
+            <summary>
+            Gets information about validation rules from json configuration file.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidationRulesConfigurationReader.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.ValidationRulesConfigurationReader"/> class.
+            </summary>
+            <param name="validationType">Validation type.</param>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidationRulesConfigurationReader.ReadFirstNameValidationCriteria">
+            <summary>
+            Returns the criteria for checking the first name.
+            </summary>
+            <returns>A tuple of minimum and maximum first name lengths.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidationRulesConfigurationReader.ReadLastNameValidationCriteria">
+            <summary>
+            Returns the criteria for checking the last name.
+            </summary>
+            <returns>A tuple of minimum and maximum last name lengths.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidationRulesConfigurationReader.ReadDateOfBirthValidationCriteria">
+            <summary>
+            Returns the criteria for checking the date of birth.
+            </summary>
+            <returns>A tuple of the minimum and maximum birthday dates.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidationRulesConfigurationReader.ReadWalletValidationCriteria">
+            <summary>
+            Returns the criteria for checking the wallet.
+            </summary>
+            <returns>Minimum wallet amount.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Validators.ValidationRulesConfigurationReader.ReadHeightValidationCriteria">
+            <summary>
+            Returns the criteria for checking the height.
+            </summary>
+            <returns>Minimum height.</returns>
+        </member>
         <member name="T:FileCabinetApp.Validators.ValidatorBuilder">
             <summary>
             Validator builder.
