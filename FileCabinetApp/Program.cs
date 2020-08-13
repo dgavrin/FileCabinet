@@ -20,6 +20,7 @@ namespace FileCabinetApp
         private static string storage;
         private static IFileCabinetService fileCabinetService;
         private static bool isRunning = true;
+        private static bool isServiceMeterEnable = false;
 
         /// <summary>
         /// The main method.
@@ -87,6 +88,10 @@ namespace FileCabinetApp
                         {
                             Program.storage = args[commandIndex].Split('=')[parameter];
                         }
+                        else if (args[commandIndex].Contains("--use-stopwatch", StringComparison.InvariantCulture))
+                        {
+                            Program.isServiceMeterEnable = true;
+                        }
                     }
                 }
             }
@@ -112,6 +117,11 @@ namespace FileCabinetApp
                 default:
                     Program.fileCabinetService = new FileCabinetMemoryService(Program.validationRules);
                     break;
+            }
+
+            if (isServiceMeterEnable)
+            {
+                Program.fileCabinetService = new ServiceMeter(Program.fileCabinetService);
             }
         }
 
