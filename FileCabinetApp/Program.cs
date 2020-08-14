@@ -21,6 +21,7 @@ namespace FileCabinetApp
         private static IFileCabinetService fileCabinetService;
         private static bool isRunning = true;
         private static bool isServiceMeterEnable = false;
+        private static bool isServiceLoggerEnable = false;
 
         /// <summary>
         /// The main method.
@@ -92,6 +93,10 @@ namespace FileCabinetApp
                         {
                             Program.isServiceMeterEnable = true;
                         }
+                        else if (args[commandIndex].Contains("--use-logger", StringComparison.InvariantCulture))
+                        {
+                            Program.isServiceLoggerEnable = true;
+                        }
                     }
                 }
             }
@@ -122,6 +127,11 @@ namespace FileCabinetApp
             if (isServiceMeterEnable)
             {
                 Program.fileCabinetService = new ServiceMeter(Program.fileCabinetService);
+            }
+
+            if (isServiceLoggerEnable)
+            {
+                Program.fileCabinetService = new ServiceLogger(Program.fileCabinetService);
             }
         }
 
