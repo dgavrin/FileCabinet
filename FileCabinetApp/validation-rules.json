@@ -1,0 +1,42 @@
+{
+  "default": {
+    "firstName": {
+      "min": 2,
+      "max": 60
+    },
+    "lastName": {
+      "min": 2,
+      "max": 60
+    },
+    "dateOfBirth": {
+      "from": "1/1/1950",
+      "to": "12/08/2020"
+    },
+    "wallet": {
+      "min": 0
+    },
+    "height": {
+      "min": 0
+    }
+  },
+  "custom": {
+    "firstName": {
+      "min": 4,
+      "max": 20
+    },
+    "lastName": {
+      "min": 4,
+      "max": 20
+    },
+    "dateOfBirth": {
+      "from": "1/1/1990",
+      "to": "12/08/2020"
+    },
+    "wallet": {
+      "min": 100
+    },
+    "height": {
+      "min": 50
+    }
+  }
+}

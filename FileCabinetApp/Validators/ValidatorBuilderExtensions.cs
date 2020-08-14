@@ -14,32 +14,36 @@ namespace FileCabinetApp.Validators
         /// </summary>
         /// <param name="validatorBuilder">Validator builder.</param>
         /// <returns>Default record validator.</returns>
-        public static IRecordValidator CreateDefault(this ValidatorBuilder validatorBuilder)
-        {
-            return new ValidatorBuilder()
-                .ValidateFirstName(2, 60)
-                .ValidateLastName(2, 60)
-                .ValidateDateOfBirth(new DateTime(1950, 1, 1), DateTime.Today)
-                .ValidateWallet(0M)
-                .ValidateMaritalStatus()
-                .ValidateHeight(0)
-                .Create();
-        }
+        public static IRecordValidator CreateDefault(this ValidatorBuilder validatorBuilder) => CreateValidator("default");
 
         /// <summary>
         /// Extension method for create custom record validator.
         /// </summary>
         /// <param name="validatorBuilder">Validator builder.</param>
         /// <returns>Custom record validator.</returns>
-        public static IRecordValidator CreateCustom(this ValidatorBuilder validatorBuilder)
+        public static IRecordValidator CreateCustom(this ValidatorBuilder validatorBuilder) => CreateValidator("custom");
+
+        private static IRecordValidator CreateValidator(string validationType)
         {
+            if (string.IsNullOrEmpty(validationType))
+            {
+                throw new ArgumentNullException(nameof(validationType));
+            }
+
+            var configuration = new ValidationRulesConfigurationReader(validationType);
+            (var minLenghtOfFirstName, var maxLengthOfFirstName) = configuration.ReadFirstNameValidationCriteria();
+            (var minLenghtOfLastName, var maxLengthOfLastName) = configuration.ReadLastNameValidationCriteria();
+            (var minDateOfBirth, var maxDateOfBirth) = configuration.ReadDateOfBirthValidationCriteria();
+            var minAmountOfWallet = configuration.ReadWalletValidationCriteria();
+            var minHeight = configuration.ReadHeightValidationCriteria();
+
             return new ValidatorBuilder()
-                .ValidateFirstName(4, 20)
-                .ValidateLastName(4, 20)
-                .ValidateDateOfBirth(new DateTime(1990, 1, 1), DateTime.Today)
-                .ValidateWallet(100M)
+                .ValidateFirstName(minLenghtOfFirstName, maxLengthOfFirstName)
+                .ValidateLastName(minLenghtOfLastName, maxLengthOfLastName)
+                .ValidateDateOfBirth(minDateOfBirth, maxDateOfBirth)
+                .ValidateWallet(minAmountOfWallet)
                 .ValidateMaritalStatus()
-                .ValidateHeight(50)
+                .ValidateHeight(minHeight)
                 .Create();
         }
     }
