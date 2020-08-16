@@ -29,6 +29,11 @@ namespace FileCabinetApp.Services
         private readonly FileStream fileStream;
         private readonly BinaryWriter binaryWriter;
 
+        private readonly Dictionary<int, long> identifierDictionary = new Dictionary<int, long>();
+        private readonly Dictionary<string, List<long>> firstNameDictionary = new Dictionary<string, List<long>>();
+        private readonly Dictionary<string, List<long>> lastNameDictionary = new Dictionary<string, List<long>>();
+        private readonly Dictionary<DateTime, List<long>> dateOfBirthDictionary = new Dictionary<DateTime, List<long>>();
+
         private IRecordValidator validator;
         private bool disposedValue;
         private int lastRecordId;
@@ -65,6 +70,12 @@ namespace FileCabinetApp.Services
             }
 
             this.lastRecordId = this.GetLastRecordId();
+
+            var localRecords = this.GetRecords();
+            for (int i = 0; i < localRecords.Count; i++)
+            {
+                this.AddEntryToDictionaries(localRecords[i], i * RecordSize);
+            }
         }
 
         /// <inheritdoc/>
@@ -105,6 +116,7 @@ namespace FileCabinetApp.Services
             };
             var bytesOfNewRecord = FileCabinetRecordToBytes(newRecord);
             this.fileStream.Seek(0, SeekOrigin.End);
+            this.AddEntryToDictionaries(newRecord, this.fileStream.Position);
             this.fileStream.Write(bytesOfNewRecord, 0, bytesOfNewRecord.Length);
             this.fileStream.Flush();
 
@@ -127,13 +139,14 @@ namespace FileCabinetApp.Services
             recordParameters.Id = id;
             this.validator.ValidateParameters(recordParameters);
 
-            var recordNumberToChange = -1;
-            this.TryGetIndexOfRecordWithId(id, out recordNumberToChange);
-
-            if (recordNumberToChange >= 0)
+            if (this.identifierDictionary.ContainsKey(recordParameters.Id))
             {
+                var recordForRemoveFromDictionaries = new FileCabinetRecord();
+                this.TryGetRecordWithId(recordParameters.Id, ref recordForRemoveFromDictionaries);
+                this.RemoveEntryFromDictionaries(recordForRemoveFromDictionaries, this.identifierDictionary[recordParameters.Id]);
                 var bytesOfRecordParameters = FileCabinetRecordToBytes(recordParameters);
-                this.fileStream.Seek(recordNumberToChange * RecordSize, SeekOrigin.Begin);
+                this.fileStream.Seek(this.identifierDictionary[recordParameters.Id], SeekOrigin.Begin);
+                this.AddEntryToDictionaries(recordParameters, this.fileStream.Position);
                 this.fileStream.Write(bytesOfRecordParameters, 0, bytesOfRecordParameters.Length);
                 this.fileStream.Flush();
             }
@@ -184,11 +197,17 @@ namespace FileCabinetApp.Services
                 throw new ArgumentException("Wrong date format.", nameof(dateOfBirth));
             }
 
-            var foundRecords = from record in this.GetRecords()
-                               where record.DateOfBirth.Equals(date)
-                               select record;
+            if (this.dateOfBirthDictionary.ContainsKey(date))
+            {
+                var foundRecordsOffsets = this.dateOfBirthDictionary[date];
+                var foundRecords = this.GetRecordsFromAListOfOffsets(foundRecordsOffsets);
 
-            return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>(foundRecords));
+                return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
+            }
+            else
+            {
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+            }
         }
 
         /// <inheritdoc/>
@@ -204,11 +223,17 @@ namespace FileCabinetApp.Services
                 throw new ArgumentException($"There are no entries with an empty first name.", nameof(firstName));
             }
 
-            var foundRecords = from record in this.GetRecords()
-                               where record.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase)
-                               select record;
+            if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
+            {
+                var foundRecordsOffsets = this.firstNameDictionary[firstName.ToUpperInvariant()];
+                var foundRecords = this.GetRecordsFromAListOfOffsets(foundRecordsOffsets);
 
-            return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>(foundRecords));
+                return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
+            }
+            else
+            {
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+            }
         }
 
         /// <inheritdoc/>
@@ -224,11 +249,17 @@ namespace FileCabinetApp.Services
                 throw new ArgumentException($"There are no entries with an empty last name.", nameof(lastName));
             }
 
-            var foundRecords = from record in this.GetRecords()
-                               where record.LastName.Equals(lastName, StringComparison.InvariantCultureIgnoreCase)
-                               select record;
+            if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
+            {
+                var foundRecordsOffsets = this.firstNameDictionary[lastName.ToUpperInvariant()];
+                var foundRecords = this.GetRecordsFromAListOfOffsets(foundRecordsOffsets);
 
-            return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>(foundRecords));
+                return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
+            }
+            else
+            {
+                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+            }
         }
 
         /// <inheritdoc/>
@@ -322,11 +353,15 @@ namespace FileCabinetApp.Services
                 throw new ArgumentException($"The {nameof(recordIdForRemove)} cannot be less than one.");
             }
 
-            var indexOfRecordForRemove = -1;
-            if (this.TryGetIndexOfRecordWithId(recordIdForRemove, out indexOfRecordForRemove))
+            if (this.identifierDictionary.ContainsKey(recordIdForRemove))
             {
-                this.fileStream.Seek(indexOfRecordForRemove * RecordSize, SeekOrigin.Begin);
+                var removedRecordOffset = this.identifierDictionary[recordIdForRemove];
+                this.fileStream.Seek(removedRecordOffset, SeekOrigin.Begin);
                 this.fileStream.WriteByte(1);
+
+                var removedRecord = new FileCabinetRecord();
+                this.TryGetRecordWithId(recordIdForRemove, ref removedRecord);
+                this.RemoveEntryFromDictionaries(removedRecord, removedRecordOffset);
 
                 return true;
             }
@@ -433,23 +468,19 @@ namespace FileCabinetApp.Services
             }
         }
 
-        private bool TryGetIndexOfRecordWithId(int id, out int index)
+        private bool TryGetRecordWithId(int id, ref FileCabinetRecord fileCabinetRecord)
         {
-            index = -1;
-            this.fileStream.Seek(0, SeekOrigin.Begin);
+            this.fileStream.Seek(this.identifierDictionary[id], SeekOrigin.Begin);
 
             var recordBuffer = new byte[RecordSize];
 
-            for (int position = 0, i = 0; position < this.fileStream.Length; position += RecordSize, i++)
-            {
-                this.fileStream.Read(recordBuffer, 0, RecordSize);
-                FileCabinetRecord temporaryRecord;
+            this.fileStream.Read(recordBuffer, 0, RecordSize);
+            FileCabinetRecord temporaryRecord;
 
-                if (BytesToFileCabinetRecord(recordBuffer, out temporaryRecord) && temporaryRecord.Id == id)
-                {
-                    index = i;
-                    return true;
-                }
+            if (BytesToFileCabinetRecord(recordBuffer, out temporaryRecord) && temporaryRecord.Id == id)
+            {
+                fileCabinetRecord = temporaryRecord;
+                return true;
             }
 
             return false;
@@ -469,6 +500,82 @@ namespace FileCabinetApp.Services
             }
 
             return maxRecordId;
+        }
+
+        private void RemoveEntryFromDictionaries(FileCabinetRecord fileCabinetRecord, long offset)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            if (this.identifierDictionary.ContainsKey(fileCabinetRecord.Id) &&
+                this.firstNameDictionary.ContainsKey(fileCabinetRecord.FirstName.ToUpperInvariant()) &&
+                this.lastNameDictionary.ContainsKey(fileCabinetRecord.LastName.ToUpperInvariant()) &&
+                this.dateOfBirthDictionary.ContainsKey(fileCabinetRecord.DateOfBirth))
+            {
+                this.identifierDictionary.Remove(fileCabinetRecord.Id);
+                this.firstNameDictionary[fileCabinetRecord.FirstName.ToUpperInvariant()].Remove(offset);
+                this.lastNameDictionary[fileCabinetRecord.LastName.ToUpperInvariant()].Remove(offset);
+                this.dateOfBirthDictionary[fileCabinetRecord.DateOfBirth].Remove(offset);
+            }
+        }
+
+        private void AddEntryToDictionaries(FileCabinetRecord fileCabinetRecord, long offset)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            if (!this.identifierDictionary.ContainsKey(fileCabinetRecord.Id))
+            {
+                this.identifierDictionary.Add(fileCabinetRecord.Id, offset);
+            }
+
+            if (!this.firstNameDictionary.ContainsKey(fileCabinetRecord.FirstName.ToUpperInvariant()))
+            {
+                this.firstNameDictionary.Add(fileCabinetRecord.FirstName.ToUpperInvariant(), new List<long>());
+            }
+
+            if (!this.lastNameDictionary.ContainsKey(fileCabinetRecord.LastName.ToUpperInvariant()))
+            {
+                this.lastNameDictionary.Add(fileCabinetRecord.LastName.ToUpperInvariant(), new List<long>());
+            }
+
+            if (!this.dateOfBirthDictionary.ContainsKey(fileCabinetRecord.DateOfBirth))
+            {
+                this.dateOfBirthDictionary.Add(fileCabinetRecord.DateOfBirth, new List<long>());
+            }
+
+            this.identifierDictionary[fileCabinetRecord.Id] = offset;
+            this.firstNameDictionary[fileCabinetRecord.FirstName.ToUpperInvariant()].Add(offset);
+            this.lastNameDictionary[fileCabinetRecord.LastName.ToUpperInvariant()].Add(offset);
+            this.dateOfBirthDictionary[fileCabinetRecord.DateOfBirth].Add(offset);
+        }
+
+        private ReadOnlyCollection<FileCabinetRecord> GetRecordsFromAListOfOffsets(List<long> offsets)
+        {
+            if (offsets == null)
+            {
+                throw new ArgumentNullException(nameof(offsets));
+            }
+
+            var foundRecords = new List<FileCabinetRecord>();
+
+            foreach (var offset in offsets)
+            {
+                var recordBuffer = new byte[RecordSize];
+                this.fileStream.Seek(offset, SeekOrigin.Begin);
+                this.fileStream.Read(recordBuffer, 0, recordBuffer.Length);
+                var temporaryRecord = new FileCabinetRecord();
+                if (BytesToFileCabinetRecord(recordBuffer, out temporaryRecord))
+                {
+                    foundRecords.Add(temporaryRecord);
+                }
+            }
+
+            return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
         }
     }
 }
