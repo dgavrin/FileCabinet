@@ -10,14 +10,10 @@ namespace FileCabinetApp.Iterators
     /// <summary>
     /// Record iterator for FileCabinetFilesystemService.
     /// </summary>
-    public class FilesystemIterator : IEnumerable<FileCabinetRecord>, IEnumerator<FileCabinetRecord>
+    public class FilesystemIterator : IEnumerable<FileCabinetRecord>
     {
         private readonly FileStream fileStream;
         private readonly List<long> offsets;
-
-        private int position = 0;
-        private bool disposed = false;
-        private FileCabinetRecord current;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesystemIterator"/> class.
@@ -31,87 +27,25 @@ namespace FileCabinetApp.Iterators
         }
 
         /// <inheritdoc/>
-        public FileCabinetRecord Current => this.current;
-
-        /// <inheritdoc/>
-        object IEnumerator.Current => this.Current;
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <inheritdoc/>
         public IEnumerator<FileCabinetRecord> GetEnumerator()
         {
-            return this;
-        }
-
-        /// <inheritdoc/>
-        public bool MoveNext()
-        {
-            if (this.offsets.Count == 0)
-            {
-                return false;
-            }
-
-            if (this.position < this.offsets.Count)
+            foreach (var offset in this.offsets)
             {
                 var recordBuffer = new byte[FileCabinetFileSystemService.RecordSize];
                 var nextRecord = new FileCabinetRecord();
 
-                this.fileStream.Seek(this.offsets[this.position++], SeekOrigin.Begin);
+                this.fileStream.Seek(offset, SeekOrigin.Begin);
                 this.fileStream.Read(recordBuffer, 0, recordBuffer.Length);
 
-                if (FileCabinetFileSystemService.BytesToFileCabinetRecord(recordBuffer, out nextRecord))
-                {
-                    this.current = nextRecord;
-                }
+                _ = FileCabinetFileSystemService.BytesToFileCabinetRecord(recordBuffer, out nextRecord);
+                yield return nextRecord;
             }
-            else
-            {
-                this.current = null;
-            }
-
-            if (this.current == null)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        /// <inheritdoc/>
-        public void Reset()
-        {
-            this.position = 0;
-            this.current = null;
         }
 
         /// <inheritdoc/>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "<Ожидание>")]
-        protected virtual void Dispose(bool disposing)
-        {
-            if (this.disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                this.Reset();
-            }
-
-            this.disposed = true;
         }
     }
 }

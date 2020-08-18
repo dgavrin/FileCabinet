@@ -326,22 +326,7 @@
             <param name="fileStream">FileStream.</param>
             <param name="offsets">Offsets.</param>
         </member>
-        <member name="P:FileCabinetApp.Iterators.FilesystemIterator.Current">
-            <inheritdoc/>
-        </member>
-        <member name="P:FileCabinetApp.Iterators.FilesystemIterator.System#Collections#IEnumerator#Current">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.Dispose">
-            <inheritdoc/>
-        </member>
         <member name="M:FileCabinetApp.Iterators.FilesystemIterator.GetEnumerator">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.MoveNext">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.Reset">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Iterators.FilesystemIterator.System#Collections#IEnumerable#GetEnumerator">
@@ -358,22 +343,7 @@
             </summary>
             <param name="records">Records.</param>
         </member>
-        <member name="P:FileCabinetApp.Iterators.MemoryIterator.Current">
-            <inheritdoc/>
-        </member>
-        <member name="P:FileCabinetApp.Iterators.MemoryIterator.System#Collections#IEnumerator#Current">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Iterators.MemoryIterator.Dispose">
-            <inheritdoc/>
-        </member>
         <member name="M:FileCabinetApp.Iterators.MemoryIterator.GetEnumerator">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Iterators.MemoryIterator.MoveNext">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Iterators.MemoryIterator.Reset">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Iterators.MemoryIterator.System#Collections#IEnumerable#GetEnumerator">
