@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using FileCabinetApp.Records;
 using FileCabinetApp.Services;
 
@@ -53,11 +52,11 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Find(string parameters)
         {
-            Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[]
+            Tuple<string, Func<string, IEnumerable<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, IEnumerable<FileCabinetRecord>>>[]
             {
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("firstname", this.fileCabinetService.FindByFirstName),
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("lastname", this.fileCabinetService.FindByLastName),
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("dateofbirth", this.fileCabinetService.FindByDateOfBirth),
+                new Tuple<string, Func<string, IEnumerable<FileCabinetRecord>>>("firstname", this.fileCabinetService.FindByFirstName),
+                new Tuple<string, Func<string, IEnumerable<FileCabinetRecord>>>("lastname", this.fileCabinetService.FindByLastName),
+                new Tuple<string, Func<string, IEnumerable<FileCabinetRecord>>>("dateofbirth", this.fileCabinetService.FindByDateOfBirth),
             };
 
             if (!string.IsNullOrEmpty(parameters))
@@ -87,16 +86,8 @@ namespace FileCabinetApp.CommandHandlers
                 if (index >= 0)
                 {
                     var foundRecords = searchCommands[index].Item2(argument);
-
-                    if (foundRecords.Count == 0)
-                    {
-                        Console.WriteLine($"There are no entries with parameter '{argument}'.");
-                    }
-                    else
-                    {
-                        this.printer(foundRecords);
-                        Console.WriteLine();
-                    }
+                    this.printer(foundRecords);
+                    Console.WriteLine();
                 }
                 else
                 {

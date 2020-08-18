@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators.InputValidator;
 
@@ -75,7 +77,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             if (string.IsNullOrEmpty(dateOfBirth))
             {
@@ -86,13 +88,12 @@ namespace FileCabinetApp.Services
 
             Log($"Calling {nameof(this.service.FindByDateOfBirth)}() with" +
                 $"DateOfBirth = '{dateOfBirth}'");
-            Log($"{nameof(this.service.FindByDateOfBirth)}() returned a list of '{collectionOfFoundRecords.Count}' records");
 
             return collectionOfFoundRecords;
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (string.IsNullOrEmpty(firstName))
             {
@@ -103,13 +104,12 @@ namespace FileCabinetApp.Services
 
             Log($"Calling {nameof(this.service.FindByFirstName)}() with" +
                 $"FirstName = '{firstName}'");
-            Log($"{nameof(this.service.FindByFirstName)}() returned a list of '{collectionOfFoundRecords.Count}' records");
 
             return collectionOfFoundRecords;
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (string.IsNullOrEmpty(lastName))
             {
@@ -120,7 +120,6 @@ namespace FileCabinetApp.Services
 
             Log($"Calling {nameof(this.service.FindByLastName)}() with" +
                 $"LastName = '{lastName}'");
-            Log($"{nameof(this.service.FindByLastName)}() returned a list of '{collectionOfFoundRecords.Count}' records");
 
             return collectionOfFoundRecords;
         }

@@ -314,6 +314,41 @@
             <param name="value">String to convert.</param>
             <returns>True if it is possible to convert and resulting short.</returns>
         </member>
+        <member name="T:FileCabinetApp.Iterators.FilesystemIterator">
+            <summary>
+            Record iterator for FileCabinetFilesystemService.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.#ctor(System.IO.FileStream,System.Collections.Generic.List{System.Int64})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Iterators.FilesystemIterator"/> class.
+            </summary>
+            <param name="fileStream">FileStream.</param>
+            <param name="offsets">Offsets.</param>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Iterators.MemoryIterator">
+            <summary>
+            Record iterator for FileCabinetMemoryService.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.#ctor(System.Collections.Generic.List{FileCabinetApp.Records.FileCabinetRecord})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Iterators.MemoryIterator"/> class.
+            </summary>
+            <param name="records">Records.</param>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
             The main program class.
@@ -440,6 +475,11 @@
             It is an abstract service in which records with personal information about a person in the file system are stored.
             </summary>
         </member>
+        <member name="F:FileCabinetApp.Services.FileCabinetFileSystemService.RecordSize">
+            <summary>
+            Record size in bytes.
+            </summary>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.#ctor(System.IO.FileStream,System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetFileSystemService"/> class.
@@ -449,6 +489,14 @@
         </member>
         <member name="P:FileCabinetApp.Services.FileCabinetFileSystemService.InputValidator">
             <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.BytesToFileCabinetRecord(System.Byte[],FileCabinetApp.Records.FileCabinetRecord@)">
+            <summary>
+            Converts a set of bytes to a FileCabinetRecord and returns a value indicating whether the conversion was successful.
+            </summary>
+            <param name="bytes">Record in bytes.</param>
+            <param name="fileCabinetRecord">FileCabinetRecord.</param>
+            <returns>Successful conversion.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
@@ -489,6 +537,14 @@
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Remove(System.Int32)">
             <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.TryGetRecordByOffset(System.Int64,FileCabinetApp.Records.FileCabinetRecord@)">
+            <summary>
+            Gets a record from a file and returns a value indicating whether the retrieval was successful.
+            </summary>
+            <param name="offset">Offset.</param>
+            <param name="fileCabinetRecord">FileCabinetRecord.</param>
+            <returns>Returns true if the record was retrieved.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Dispose(System.Boolean)">
             <summary>

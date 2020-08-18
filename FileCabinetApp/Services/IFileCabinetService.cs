@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators.InputValidator;
 
@@ -48,21 +49,21 @@ namespace FileCabinetApp.Services
         /// </summary>
         /// <param name="firstName">The first name.</param>
         /// <returns>List of entries.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName);
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName);
 
         /// <summary>
         /// Gets a list of entries by last name.
         /// </summary>
         /// <param name="lastName">The last name.</param>
         /// <returns>List of entries.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName);
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName);
 
         /// <summary>
         /// Gets a list of entries by date of birth.
         /// </summary>
         /// <param name="dateOfBirth">The date of birth.</param>
         /// <returns>List of entries.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
 
         /// <summary>
         /// Creates a snapshot of a file cabinet service.
