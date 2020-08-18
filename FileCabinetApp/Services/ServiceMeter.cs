@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators.InputValidator;
 
@@ -72,7 +72,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             if (string.IsNullOrEmpty(dateOfBirth))
             {
@@ -92,7 +92,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (string.IsNullOrEmpty(firstName))
             {
@@ -112,7 +112,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (string.IsNullOrEmpty(lastName))
             {

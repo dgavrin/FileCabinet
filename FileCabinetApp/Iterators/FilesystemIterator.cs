@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using FileCabinetApp.Records;
 using FileCabinetApp.Services;
 
@@ -9,46 +10,108 @@ namespace FileCabinetApp.Iterators
     /// <summary>
     /// Record iterator for FileCabinetFilesystemService.
     /// </summary>
-    public class FilesystemIterator : IRecordIterator
+    public class FilesystemIterator : IEnumerable<FileCabinetRecord>, IEnumerator<FileCabinetRecord>
     {
-        private readonly FileCabinetFileSystemService service;
+        private readonly FileStream fileStream;
+        private readonly List<long> offsets;
 
-        private int currentIndex;
-        private long[] offsets;
+        private int position = 0;
+        private bool disposed = false;
+        private FileCabinetRecord current;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilesystemIterator"/> class.
         /// </summary>
-        /// <param name="service">FileCabinetFilesystemService.</param>
+        /// <param name="fileStream">FileStream.</param>
         /// <param name="offsets">Offsets.</param>
-        public FilesystemIterator(FileCabinetFileSystemService service, IEnumerable<long> offsets)
+        public FilesystemIterator(FileStream fileStream, List<long> offsets)
         {
-            this.service = service ?? throw new ArgumentNullException(nameof(service));
-            this.offsets = offsets.ToArray() ?? throw new ArgumentNullException(nameof(offsets));
-            this.currentIndex = 0;
+            this.fileStream = fileStream ?? throw new ArgumentNullException(nameof(fileStream));
+            this.offsets = offsets ?? throw new ArgumentNullException(nameof(offsets));
         }
 
         /// <inheritdoc/>
-        public int Count => this.offsets.Length;
+        public FileCabinetRecord Current => this.current;
 
         /// <inheritdoc/>
-        public FileCabinetRecord GetNext()
+        object IEnumerator.Current => this.Current;
+
+        /// <inheritdoc/>
+        public void Dispose()
         {
-            FileCabinetRecord nextRecord = null;
-            if (this.HasMore() && this.service.TryGetRecordByOffset(this.offsets[this.currentIndex++], ref nextRecord))
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<FileCabinetRecord> GetEnumerator()
+        {
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public bool MoveNext()
+        {
+            if (this.offsets.Count == 0)
             {
-                return nextRecord;
+                return false;
+            }
+
+            if (this.position < this.offsets.Count)
+            {
+                var recordBuffer = new byte[FileCabinetFileSystemService.RecordSize];
+                var nextRecord = new FileCabinetRecord();
+
+                this.fileStream.Seek(this.offsets[this.position++], SeekOrigin.Begin);
+                this.fileStream.Read(recordBuffer, 0, recordBuffer.Length);
+
+                if (FileCabinetFileSystemService.BytesToFileCabinetRecord(recordBuffer, out nextRecord))
+                {
+                    this.current = nextRecord;
+                }
             }
             else
             {
-                return new FileCabinetRecord();
+                this.current = null;
+            }
+
+            if (this.current == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
 
         /// <inheritdoc/>
-        public bool HasMore()
+        public void Reset()
         {
-            return this.currentIndex < this.Count;
+            this.position = 0;
+            this.current = null;
+        }
+
+        /// <inheritdoc/>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1600:Elements should be documented", Justification = "<Ожидание>")]
+        protected virtual void Dispose(bool disposing)
+        {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                this.Reset();
+            }
+
+            this.disposed = true;
         }
     }
 }

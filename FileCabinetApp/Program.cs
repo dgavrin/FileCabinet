@@ -178,18 +178,5 @@ namespace FileCabinetApp
                 Console.WriteLine(record.ToString());
             }
         }
-
-        private static void DefaultRecordPrint(IRecordIterator records)
-        {
-            if (records == null)
-            {
-                throw new ArgumentNullException(nameof(records));
-            }
-
-            for (; records.HasMore();)
-            {
-                Console.WriteLine(records.GetNext().ToString());
-            }
-        }
     }
 }

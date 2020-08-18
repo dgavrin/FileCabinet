@@ -117,7 +117,7 @@
             Find command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,System.Action{FileCabinetApp.Iterators.IRecordIterator})">
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord}})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
             </summary>
@@ -319,65 +319,64 @@
             Record iterator for FileCabinetFilesystemService.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.#ctor(FileCabinetApp.Services.FileCabinetFileSystemService,System.Collections.Generic.IEnumerable{System.Int64})">
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.#ctor(System.IO.FileStream,System.Collections.Generic.List{System.Int64})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Iterators.FilesystemIterator"/> class.
             </summary>
-            <param name="service">FileCabinetFilesystemService.</param>
+            <param name="fileStream">FileStream.</param>
             <param name="offsets">Offsets.</param>
         </member>
-        <member name="P:FileCabinetApp.Iterators.FilesystemIterator.Count">
+        <member name="P:FileCabinetApp.Iterators.FilesystemIterator.Current">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.GetNext">
+        <member name="P:FileCabinetApp.Iterators.FilesystemIterator.System#Collections#IEnumerator#Current">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.HasMore">
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.Dispose">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.Iterators.IRecordIterator">
-            <summary>
-            Record iterator interface.
-            </summary>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.GetEnumerator">
+            <inheritdoc/>
         </member>
-        <member name="P:FileCabinetApp.Iterators.IRecordIterator.Count">
-            <summary>
-            Gets the number of records.
-            </summary>
-            <value>
-            The number of records.
-            </value>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.MoveNext">
+            <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Iterators.IRecordIterator.GetNext">
-            <summary>
-            Gets the next item in the collection.
-            </summary>
-            <returns>The next item in the collection.</returns>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.Reset">
+            <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Iterators.IRecordIterator.HasMore">
-            <summary>
-            Displays the presence of the next item in the collection.
-            </summary>
-            <returns>Returns true if there is another item in the collection.</returns>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.System#Collections#IEnumerable#GetEnumerator">
+            <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Iterators.MemoryIterator">
             <summary>
             Record iterator for FileCabinetMemoryService.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Iterators.MemoryIterator.#ctor(System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord})">
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.#ctor(System.Collections.Generic.List{FileCabinetApp.Records.FileCabinetRecord})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Iterators.MemoryIterator"/> class.
             </summary>
-            <param name="records">FileCabinetMemoryService.</param>
+            <param name="records">Records.</param>
         </member>
-        <member name="P:FileCabinetApp.Iterators.MemoryIterator.Count">
+        <member name="P:FileCabinetApp.Iterators.MemoryIterator.Current">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Iterators.MemoryIterator.GetNext">
+        <member name="P:FileCabinetApp.Iterators.MemoryIterator.System#Collections#IEnumerator#Current">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Iterators.MemoryIterator.HasMore">
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.Dispose">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.MoveNext">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.Reset">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.System#Collections#IEnumerable#GetEnumerator">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.Program">
@@ -506,6 +505,11 @@
             It is an abstract service in which records with personal information about a person in the file system are stored.
             </summary>
         </member>
+        <member name="F:FileCabinetApp.Services.FileCabinetFileSystemService.RecordSize">
+            <summary>
+            Record size in bytes.
+            </summary>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.#ctor(System.IO.FileStream,System.String)">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.Services.FileCabinetFileSystemService"/> class.
@@ -515,6 +519,14 @@
         </member>
         <member name="P:FileCabinetApp.Services.FileCabinetFileSystemService.InputValidator">
             <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.BytesToFileCabinetRecord(System.Byte[],FileCabinetApp.Records.FileCabinetRecord@)">
+            <summary>
+            Converts a set of bytes to a FileCabinetRecord and returns a value indicating whether the conversion was successful.
+            </summary>
+            <param name="bytes">Record in bytes.</param>
+            <param name="fileCabinetRecord">FileCabinetRecord.</param>
+            <returns>Successful conversion.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>

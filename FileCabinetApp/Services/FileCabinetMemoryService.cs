@@ -145,7 +145,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -168,7 +168,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -191,7 +191,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)
             {

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
@@ -16,8 +15,10 @@ namespace FileCabinetApp.Services
     /// </summary>
     public class FileCabinetFileSystemService : IFileCabinetService, IDisposable
     {
-        private const int MaximumLengthOfFirstAndLastName = 60;
-        private const int RecordSize = sizeof(short) // Status
+        /// <summary>
+        /// Record size in bytes.
+        /// </summary>
+        public const int RecordSize = sizeof(short) // Status
                                      + sizeof(int) // Id
                                      + (4 * MaximumLengthOfFirstAndLastName) // FirstName and LastName
                                      + sizeof(int) // DateOfBirth: Year
@@ -26,6 +27,8 @@ namespace FileCabinetApp.Services
                                      + sizeof(decimal) // Wallet
                                      + sizeof(char) // MaritalStatus
                                      + sizeof(short); // Height
+
+        private const int MaximumLengthOfFirstAndLastName = 60;
 
         private readonly FileStream fileStream;
         private readonly BinaryWriter binaryWriter;
@@ -91,6 +94,58 @@ namespace FileCabinetApp.Services
                 else
                 {
                     return new DefaultInputValidator();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Converts a set of bytes to a FileCabinetRecord and returns a value indicating whether the conversion was successful.
+        /// </summary>
+        /// <param name="bytes">Record in bytes.</param>
+        /// <param name="fileCabinetRecord">FileCabinetRecord.</param>
+        /// <returns>Successful conversion.</returns>
+        public static bool BytesToFileCabinetRecord(byte[] bytes, out FileCabinetRecord fileCabinetRecord)
+        {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
+            if (bytes.Length < RecordSize)
+            {
+                throw new ArgumentException("Error. Record is corrupted.", nameof(bytes));
+            }
+
+            fileCabinetRecord = new FileCabinetRecord();
+
+            using (var memoryStream = new MemoryStream(bytes))
+            using (var binaryReader = new BinaryReader(memoryStream))
+            {
+                short status = binaryReader.ReadInt16();
+
+                if (status == 0)
+                {
+                    fileCabinetRecord.Id = binaryReader.ReadInt32();
+
+                    fileCabinetRecord.FirstName = binaryReader.ReadString().Trim(' ');
+                    fileCabinetRecord.LastName = binaryReader.ReadString().Trim(' ');
+
+                    fileCabinetRecord.DateOfBirth = new DateTime(
+                        binaryReader.ReadInt32(),
+                        binaryReader.ReadInt32(),
+                        binaryReader.ReadInt32());
+
+                    fileCabinetRecord.Wallet = binaryReader.ReadDecimal();
+
+                    fileCabinetRecord.MaritalStatus = binaryReader.ReadChar();
+
+                    fileCabinetRecord.Height = binaryReader.ReadInt16();
+
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
         }
@@ -180,7 +235,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)
             {
@@ -200,16 +255,16 @@ namespace FileCabinetApp.Services
 
             if (this.dateOfBirthDictionary.ContainsKey(date))
             {
-                return new FilesystemIterator(this, this.dateOfBirthDictionary[date]);
+                return new FilesystemIterator(this.fileStream, this.dateOfBirthDictionary[date]);
             }
             else
             {
-                return new FilesystemIterator(this, new List<long>());
+                return new FilesystemIterator(this.fileStream, new List<long>());
             }
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -223,16 +278,16 @@ namespace FileCabinetApp.Services
 
             if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
-                return new FilesystemIterator(this, this.firstNameDictionary[firstName.ToUpperInvariant()]);
+                return new FilesystemIterator(this.fileStream, this.firstNameDictionary[firstName.ToUpperInvariant()]);
             }
             else
             {
-                return new FilesystemIterator(this, new List<long>());
+                return new FilesystemIterator(this.fileStream, new List<long>());
             }
         }
 
         /// <inheritdoc/>
-        public IRecordIterator FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -246,11 +301,11 @@ namespace FileCabinetApp.Services
 
             if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
             {
-                return new FilesystemIterator(this, this.lastNameDictionary[lastName.ToUpperInvariant()]);
+                return new FilesystemIterator(this.fileStream, this.lastNameDictionary[lastName.ToUpperInvariant()]);
             }
             else
             {
-                return new FilesystemIterator(this, new List<long>());
+                return new FilesystemIterator(this.fileStream, new List<long>());
             }
         }
 
@@ -440,52 +495,6 @@ namespace FileCabinetApp.Services
             }
 
             return bytes;
-        }
-
-        private static bool BytesToFileCabinetRecord(byte[] bytes, out FileCabinetRecord fileCabinetRecord)
-        {
-            if (bytes == null)
-            {
-                throw new ArgumentNullException(nameof(bytes));
-            }
-
-            if (bytes.Length < RecordSize)
-            {
-                throw new ArgumentException("Error. Record is corrupted.", nameof(bytes));
-            }
-
-            fileCabinetRecord = new FileCabinetRecord();
-
-            using (var memoryStream = new MemoryStream(bytes))
-            using (var binaryReader = new BinaryReader(memoryStream))
-            {
-                short status = binaryReader.ReadInt16();
-
-                if (status == 0)
-                {
-                    fileCabinetRecord.Id = binaryReader.ReadInt32();
-
-                    fileCabinetRecord.FirstName = binaryReader.ReadString().Trim(' ');
-                    fileCabinetRecord.LastName = binaryReader.ReadString().Trim(' ');
-
-                    fileCabinetRecord.DateOfBirth = new DateTime(
-                        binaryReader.ReadInt32(),
-                        binaryReader.ReadInt32(),
-                        binaryReader.ReadInt32());
-
-                    fileCabinetRecord.Wallet = binaryReader.ReadDecimal();
-
-                    fileCabinetRecord.MaritalStatus = binaryReader.ReadChar();
-
-                    fileCabinetRecord.Height = binaryReader.ReadInt16();
-
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
         }
 
         private bool TryGetRecordWithId(int id, ref FileCabinetRecord fileCabinetRecord)
