@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using FileCabinetApp.CommandHandlers;
+using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Services;
 
@@ -142,7 +143,7 @@ namespace FileCabinetApp
             var statCommandHandler = new StatCommandHandler(Program.fileCabinetService);
             var createCommandHandler = new CreateCommandHandler(Program.fileCabinetService);
             var listCommandHandler = new ListCommandHandler(Program.fileCabinetService, records => DefaultRecordPrint(records));
-            var findCommandHandler = new FindCommandHandler(Program.fileCabinetService, records => DefaultRecordPrint(records));
+            var findCommandHandler = new FindCommandHandler(Program.fileCabinetService, iterator => DefaultRecordPrint(iterator));
             var editCommandHandler = new EditCommandHandler(Program.fileCabinetService);
             var exportCommandHandler = new ExportCommandHandler(Program.fileCabinetService);
             var importCommandHandler = new ImportCommandHandler(Program.fileCabinetService);
@@ -175,6 +176,19 @@ namespace FileCabinetApp
             foreach (var record in records)
             {
                 Console.WriteLine(record.ToString());
+            }
+        }
+
+        private static void DefaultRecordPrint(IRecordIterator records)
+        {
+            if (records == null)
+            {
+                throw new ArgumentNullException(nameof(records));
+            }
+
+            for (; records.HasMore();)
+            {
+                Console.WriteLine(records.GetNext().ToString());
             }
         }
     }

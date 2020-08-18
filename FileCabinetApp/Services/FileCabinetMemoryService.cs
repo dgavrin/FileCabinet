@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
 using FileCabinetApp.Validators.InputValidator;
@@ -144,7 +145,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IRecordIterator FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -158,16 +159,16 @@ namespace FileCabinetApp.Services
 
             if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
-                return new ReadOnlyCollection<FileCabinetRecord>(this.firstNameDictionary[firstName.ToUpperInvariant()]);
+                return new MemoryIterator(this.firstNameDictionary[firstName.ToUpperInvariant()]);
             }
             else
             {
-                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+                return new MemoryIterator(new List<FileCabinetRecord>());
             }
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IRecordIterator FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -181,16 +182,16 @@ namespace FileCabinetApp.Services
 
             if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
             {
-                return new ReadOnlyCollection<FileCabinetRecord>(this.lastNameDictionary[lastName.ToUpperInvariant()]);
+                return new MemoryIterator(this.lastNameDictionary[lastName.ToUpperInvariant()]);
             }
             else
             {
-                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+                return new MemoryIterator(new List<FileCabinetRecord>());
             }
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)
             {
@@ -210,11 +211,11 @@ namespace FileCabinetApp.Services
 
             if (this.dateOfBirthDictionary.ContainsKey(date))
             {
-                return new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[date]);
+                return new MemoryIterator(this.dateOfBirthDictionary[date]);
             }
             else
             {
-                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+                return new MemoryIterator(new List<FileCabinetRecord>());
             }
         }
 

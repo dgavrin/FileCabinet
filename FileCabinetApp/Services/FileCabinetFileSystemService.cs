@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
 using FileCabinetApp.Validators.InputValidator;
@@ -179,7 +180,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IRecordIterator FindByDateOfBirth(string dateOfBirth)
         {
             if (dateOfBirth == null)
             {
@@ -199,19 +200,16 @@ namespace FileCabinetApp.Services
 
             if (this.dateOfBirthDictionary.ContainsKey(date))
             {
-                var foundRecordsOffsets = this.dateOfBirthDictionary[date];
-                var foundRecords = this.GetRecordsFromAListOfOffsets(foundRecordsOffsets);
-
-                return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
+                return new FilesystemIterator(this, this.dateOfBirthDictionary[date]);
             }
             else
             {
-                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+                return new FilesystemIterator(this, new List<long>());
             }
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IRecordIterator FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -225,19 +223,16 @@ namespace FileCabinetApp.Services
 
             if (this.firstNameDictionary.ContainsKey(firstName.ToUpperInvariant()))
             {
-                var foundRecordsOffsets = this.firstNameDictionary[firstName.ToUpperInvariant()];
-                var foundRecords = this.GetRecordsFromAListOfOffsets(foundRecordsOffsets);
-
-                return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
+                return new FilesystemIterator(this, this.firstNameDictionary[firstName.ToUpperInvariant()]);
             }
             else
             {
-                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+                return new FilesystemIterator(this, new List<long>());
             }
         }
 
         /// <inheritdoc/>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IRecordIterator FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -251,14 +246,11 @@ namespace FileCabinetApp.Services
 
             if (this.lastNameDictionary.ContainsKey(lastName.ToUpperInvariant()))
             {
-                var foundRecordsOffsets = this.firstNameDictionary[lastName.ToUpperInvariant()];
-                var foundRecords = this.GetRecordsFromAListOfOffsets(foundRecordsOffsets);
-
-                return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
+                return new FilesystemIterator(this, this.lastNameDictionary[lastName.ToUpperInvariant()]);
             }
             else
             {
-                return new ReadOnlyCollection<FileCabinetRecord>(new List<FileCabinetRecord>());
+                return new FilesystemIterator(this, new List<long>());
             }
         }
 
@@ -372,6 +364,34 @@ namespace FileCabinetApp.Services
         }
 
         /// <summary>
+        /// Gets a record from a file and returns a value indicating whether the retrieval was successful.
+        /// </summary>
+        /// <param name="offset">Offset.</param>
+        /// <param name="fileCabinetRecord">FileCabinetRecord.</param>
+        /// <returns>Returns true if the record was retrieved.</returns>
+        public bool TryGetRecordByOffset(long offset, ref FileCabinetRecord fileCabinetRecord)
+        {
+            if (offset % RecordSize != 0)
+            {
+                throw new ArgumentException($"The offset must be a multiple of {RecordSize}", nameof(offset));
+            }
+
+            var recordBuffer = new byte[RecordSize];
+            FileCabinetRecord receivedRecord;
+
+            this.fileStream.Seek(offset, SeekOrigin.Begin);
+            this.fileStream.Read(recordBuffer, 0, RecordSize);
+
+            if (BytesToFileCabinetRecord(recordBuffer, out receivedRecord))
+            {
+                fileCabinetRecord = receivedRecord;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Releases fileStream, binaryReader, binaryWriter.
         /// </summary>
         /// <param name="disposing">Disposing.</param>
@@ -470,20 +490,19 @@ namespace FileCabinetApp.Services
 
         private bool TryGetRecordWithId(int id, ref FileCabinetRecord fileCabinetRecord)
         {
-            this.fileStream.Seek(this.identifierDictionary[id], SeekOrigin.Begin);
+            var isSuccess = false;
 
-            var recordBuffer = new byte[RecordSize];
-
-            this.fileStream.Read(recordBuffer, 0, RecordSize);
-            FileCabinetRecord temporaryRecord;
-
-            if (BytesToFileCabinetRecord(recordBuffer, out temporaryRecord) && temporaryRecord.Id == id)
+            if (this.identifierDictionary.ContainsKey(id))
             {
-                fileCabinetRecord = temporaryRecord;
-                return true;
+                FileCabinetRecord receivedRecord = null;
+                isSuccess = this.TryGetRecordByOffset(this.identifierDictionary[id], ref receivedRecord);
+                if (receivedRecord.Id == id)
+                {
+                    return isSuccess;
+                }
             }
 
-            return false;
+            return isSuccess;
         }
 
         private int GetLastRecordId()

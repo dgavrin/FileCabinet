@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Services;
 
@@ -14,14 +15,14 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "find";
 
         private ICommandHandler nextHandler;
-        private Action<IEnumerable<FileCabinetRecord>> printer;
+        private Action<IRecordIterator> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FindCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
         /// <param name="printer">Printer.</param>
-        public FindCommandHandler(IFileCabinetService fileCabinetService, Action<IEnumerable<FileCabinetRecord>> printer)
+        public FindCommandHandler(IFileCabinetService fileCabinetService, Action<IRecordIterator> printer)
             : base(fileCabinetService)
         {
             this.printer = printer ?? throw new ArgumentNullException(nameof(printer));
@@ -53,11 +54,11 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Find(string parameters)
         {
-            Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[] searchCommands = new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>[]
+            Tuple<string, Func<string, IRecordIterator>>[] searchCommands = new Tuple<string, Func<string, IRecordIterator>>[]
             {
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("firstname", this.fileCabinetService.FindByFirstName),
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("lastname", this.fileCabinetService.FindByLastName),
-            new Tuple<string, Func<string, ReadOnlyCollection<FileCabinetRecord>>>("dateofbirth", this.fileCabinetService.FindByDateOfBirth),
+                new Tuple<string, Func<string, IRecordIterator>>("firstname", this.fileCabinetService.FindByFirstName),
+                new Tuple<string, Func<string, IRecordIterator>>("lastname", this.fileCabinetService.FindByLastName),
+                new Tuple<string, Func<string, IRecordIterator>>("dateofbirth", this.fileCabinetService.FindByDateOfBirth),
             };
 
             if (!string.IsNullOrEmpty(parameters))

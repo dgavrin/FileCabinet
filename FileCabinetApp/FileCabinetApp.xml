@@ -117,7 +117,7 @@
             Find command handler.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord}})">
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,System.Action{FileCabinetApp.Iterators.IRecordIterator})">
             <summary>
             Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
             </summary>
@@ -314,6 +314,72 @@
             <param name="value">String to convert.</param>
             <returns>True if it is possible to convert and resulting short.</returns>
         </member>
+        <member name="T:FileCabinetApp.Iterators.FilesystemIterator">
+            <summary>
+            Record iterator for FileCabinetFilesystemService.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.#ctor(FileCabinetApp.Services.FileCabinetFileSystemService,System.Collections.Generic.IEnumerable{System.Int64})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Iterators.FilesystemIterator"/> class.
+            </summary>
+            <param name="service">FileCabinetFilesystemService.</param>
+            <param name="offsets">Offsets.</param>
+        </member>
+        <member name="P:FileCabinetApp.Iterators.FilesystemIterator.Count">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.GetNext">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.FilesystemIterator.HasMore">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Iterators.IRecordIterator">
+            <summary>
+            Record iterator interface.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Iterators.IRecordIterator.Count">
+            <summary>
+            Gets the number of records.
+            </summary>
+            <value>
+            The number of records.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.IRecordIterator.GetNext">
+            <summary>
+            Gets the next item in the collection.
+            </summary>
+            <returns>The next item in the collection.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.IRecordIterator.HasMore">
+            <summary>
+            Displays the presence of the next item in the collection.
+            </summary>
+            <returns>Returns true if there is another item in the collection.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Iterators.MemoryIterator">
+            <summary>
+            Record iterator for FileCabinetMemoryService.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.#ctor(System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Iterators.MemoryIterator"/> class.
+            </summary>
+            <param name="records">FileCabinetMemoryService.</param>
+        </member>
+        <member name="P:FileCabinetApp.Iterators.MemoryIterator.Count">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.GetNext">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Iterators.MemoryIterator.HasMore">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
             The main program class.
@@ -489,6 +555,14 @@
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Remove(System.Int32)">
             <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.TryGetRecordByOffset(System.Int64,FileCabinetApp.Records.FileCabinetRecord@)">
+            <summary>
+            Gets a record from a file and returns a value indicating whether the retrieval was successful.
+            </summary>
+            <param name="offset">Offset.</param>
+            <param name="fileCabinetRecord">FileCabinetRecord.</param>
+            <returns>Returns true if the record was retrieved.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Dispose(System.Boolean)">
             <summary>
