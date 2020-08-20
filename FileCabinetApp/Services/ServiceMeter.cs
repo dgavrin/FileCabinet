@@ -34,7 +34,7 @@ namespace FileCabinetApp.Services
         public IInputValidator InputValidator => this.service.InputValidator;
 
         /// <inheritdoc/>
-        public int CreateRecord(RecordParameters recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters)
         {
             if (recordParameters == null)
             {
@@ -48,6 +48,26 @@ namespace FileCabinetApp.Services
 
             this.watch.Stop();
             Console.WriteLine($"Create method execution duration is {this.watch.ElapsedTicks} ticks.");
+            Console.WriteLine();
+
+            return newRecordId;
+        }
+
+        /// <inheritdoc/>
+        public int Insert(FileCabinetRecord fileCabinetRecord)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            this.watch.Reset();
+            this.watch.Start();
+
+            var newRecordId = this.service.Insert(fileCabinetRecord);
+
+            this.watch.Stop();
+            Console.WriteLine($"Insert method execution duration is {this.watch.ElapsedTicks} ticks.");
             Console.WriteLine();
 
             return newRecordId;

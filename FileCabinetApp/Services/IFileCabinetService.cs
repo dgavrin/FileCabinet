@@ -23,7 +23,14 @@ namespace FileCabinetApp.Services
         /// </summary>
         /// <param name="recordParameters">FileCabinetRecord fields.</param>
         /// <returns>Identifier of the new record.</returns>
-        public int CreateRecord(RecordParameters recordParameters);
+        public int CreateRecord(FileCabinetRecord recordParameters);
+
+        /// <summary>
+        /// Inserts a record with personal information about a person into the list.
+        /// </summary>
+        /// <param name="fileCabinetRecord">FileCabinetRecord.</param>
+        /// <returns>The identifier of the inserted record.</returns>
+        public int Insert(FileCabinetRecord fileCabinetRecord);
 
         /// <summary>
         /// Gets a list of entries.

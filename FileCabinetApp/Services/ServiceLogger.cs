@@ -36,7 +36,7 @@ namespace FileCabinetApp.Services
         public IInputValidator InputValidator => this.service.InputValidator;
 
         /// <inheritdoc/>
-        public int CreateRecord(RecordParameters recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters)
         {
             if (recordParameters == null)
             {
@@ -52,6 +52,28 @@ namespace FileCabinetApp.Services
                 $"Wallet = '{recordParameters.Wallet}', " +
                 $"MaritalStatus = '{recordParameters.MaritalStatus}', " +
                 $"Height = '{recordParameters.Height}'");
+            Log($"{nameof(this.service.CreateRecord)}() returned '{newRecordId}'");
+
+            return newRecordId;
+        }
+
+        /// <inheritdoc/>
+        public int Insert(FileCabinetRecord fileCabinetRecord)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            var newRecordId = this.service.Insert(fileCabinetRecord);
+
+            Log($"Calling {nameof(this.service.Insert)}() with" +
+                $"FirstName = '{fileCabinetRecord.FirstName}', " +
+                $"LastName = '{fileCabinetRecord.LastName}', " +
+                $"DateOfBirth = '{fileCabinetRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}', " +
+                $"Wallet = '{fileCabinetRecord.Wallet}', " +
+                $"MaritalStatus = '{fileCabinetRecord.MaritalStatus}', " +
+                $"Height = '{fileCabinetRecord.Height}'");
             Log($"{nameof(this.service.CreateRecord)}() returned '{newRecordId}'");
 
             return newRecordId;

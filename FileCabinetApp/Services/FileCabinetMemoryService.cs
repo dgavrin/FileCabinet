@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
@@ -25,7 +26,7 @@ namespace FileCabinetApp.Services
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         private IRecordValidator validator;
-        private int lastRecordId = 1;
+        private int lastRecordId = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
@@ -71,7 +72,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(RecordParameters recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters)
         {
             if (recordParameters == null)
             {
@@ -82,7 +83,7 @@ namespace FileCabinetApp.Services
 
             var record = new FileCabinetRecord
             {
-                Id = this.lastRecordId++,
+                Id = ++this.lastRecordId,
                 FirstName = recordParameters.FirstName,
                 LastName = recordParameters.LastName,
                 DateOfBirth = recordParameters.DateOfBirth,
@@ -96,6 +97,77 @@ namespace FileCabinetApp.Services
             this.AddEntryToDictionaries(record);
 
             return record.Id;
+        }
+
+        /// <summary>
+        /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
+        /// </summary>
+        /// <param name="recordParameters">FileCabinetRecord fields.</param>
+        /// <param name="id">Identifier.</param>
+        /// <returns>Identifier of the new record.</returns>
+        public int CreateRecord(FileCabinetRecord recordParameters, int id)
+        {
+            if (recordParameters == null)
+            {
+                throw new ArgumentNullException(nameof(recordParameters));
+            }
+
+            if (id < 0)
+            {
+                throw new ArgumentException("The record ID must be greater than zero.", nameof(id));
+            }
+
+            this.validator.ValidateParameters(recordParameters);
+
+            var record = new FileCabinetRecord
+            {
+                Id = id,
+                FirstName = recordParameters.FirstName,
+                LastName = recordParameters.LastName,
+                DateOfBirth = recordParameters.DateOfBirth,
+                Wallet = recordParameters.Wallet,
+                MaritalStatus = recordParameters.MaritalStatus,
+                Height = recordParameters.Height,
+            };
+
+            this.list.Add(record);
+
+            this.AddEntryToDictionaries(record);
+
+            return record.Id;
+        }
+
+        /// <inheritdoc/>
+        public int Insert(FileCabinetRecord fileCabinetRecord)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            this.validator.ValidateParameters(fileCabinetRecord);
+
+            if (fileCabinetRecord.Id > 0)
+            {
+                var recordsWithThisId = from record in this.list
+                                        where record.Id == fileCabinetRecord.Id
+                                        select record;
+
+                if (recordsWithThisId.ToList().Count < 1)
+                {
+                    var insertedRecordId = this.CreateRecord(fileCabinetRecord, fileCabinetRecord.Id);
+                    this.UpdateLastRecordId();
+                    return insertedRecordId;
+                }
+                else
+                {
+                    throw new ArgumentException("A record with the given ID already exists.", nameof(fileCabinetRecord));
+                }
+            }
+            else
+            {
+                return this.CreateRecord(fileCabinetRecord);
+            }
         }
 
         /// <inheritdoc/>
@@ -331,6 +403,11 @@ namespace FileCabinetApp.Services
             this.firstNameDictionary[record.FirstName.ToUpperInvariant()].Add(record);
             this.lastNameDictionary[record.LastName.ToUpperInvariant()].Add(record);
             this.dateOfBirthDictionary[record.DateOfBirth].Add(record);
+        }
+
+        private void UpdateLastRecordId()
+        {
+            this.lastRecordId = this.list.Max(record => record.Id);
         }
     }
 }

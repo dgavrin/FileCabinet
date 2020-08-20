@@ -25,6 +25,7 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "import", "imports a list of records from the csv file at the specified path", "The 'import csv' command imports a list of records from the csv file at the specified path" },
             new string[] { "remove", "removal record by id", "The 'remove' command removes a record by id." },
             new string[] { "purge", "defragments the data file", "The 'purge' command defragments the data file." },
+            new string[] { "insert", "inserts a new record", "The 'insert' command inserts a new record"},
         };
 
         private ICommandHandler nextHandler;

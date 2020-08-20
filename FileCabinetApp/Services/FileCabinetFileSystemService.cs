@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
@@ -151,7 +152,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(RecordParameters recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters)
         {
             if (recordParameters == null)
             {
@@ -177,6 +178,73 @@ namespace FileCabinetApp.Services
             this.fileStream.Flush();
 
             return newRecord.Id;
+        }
+
+        /// <summary>
+        /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
+        /// </summary>
+        /// <param name="recordParameters">FileCabinetRecord fields.</param>
+        /// <param name="id">Identifier.</param>
+        /// <returns>Identifier of the new record.</returns>
+        public int CreateRecord(FileCabinetRecord recordParameters, int id)
+        {
+            if (recordParameters == null)
+            {
+                throw new ArgumentNullException(nameof(recordParameters));
+            }
+
+            if (id < 0)
+            {
+                throw new ArgumentException("The record ID must be greater than zero.", nameof(id));
+            }
+
+            this.validator.ValidateParameters(recordParameters);
+
+            var newRecord = new FileCabinetRecord
+            {
+                Id = id,
+                FirstName = recordParameters.FirstName,
+                LastName = recordParameters.LastName,
+                DateOfBirth = recordParameters.DateOfBirth,
+                Wallet = recordParameters.Wallet,
+                MaritalStatus = recordParameters.MaritalStatus,
+                Height = recordParameters.Height,
+            };
+            var bytesOfNewRecord = FileCabinetRecordToBytes(newRecord);
+            this.fileStream.Seek(0, SeekOrigin.End);
+            this.AddEntryToDictionaries(newRecord, this.fileStream.Position);
+            this.fileStream.Write(bytesOfNewRecord, 0, bytesOfNewRecord.Length);
+            this.fileStream.Flush();
+            this.UpdateLastRecordId();
+
+            return newRecord.Id;
+        }
+
+        /// <inheritdoc/>
+        public int Insert(FileCabinetRecord fileCabinetRecord)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            this.validator.ValidateParameters(fileCabinetRecord);
+
+            if (fileCabinetRecord.Id > 0)
+            {
+                if (!this.identifierDictionary.ContainsKey(fileCabinetRecord.Id))
+                {
+                    return this.CreateRecord(fileCabinetRecord, fileCabinetRecord.Id);
+                }
+                else
+                {
+                    throw new ArgumentException("A record with the given ID already exists.", nameof(fileCabinetRecord));
+                }
+            }
+            else
+            {
+                return this.CreateRecord(fileCabinetRecord);
+            }
         }
 
         /// <inheritdoc/>
@@ -604,6 +672,11 @@ namespace FileCabinetApp.Services
             }
 
             return new ReadOnlyCollection<FileCabinetRecord>(foundRecords);
+        }
+
+        private void UpdateLastRecordId()
+        {
+            this.lastRecordId = this.identifierDictionary.Keys.Max();
         }
     }
 }
