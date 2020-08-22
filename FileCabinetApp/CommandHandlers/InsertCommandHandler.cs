@@ -157,12 +157,13 @@ namespace FileCabinetApp.CommandHandlers
                 }
                 else
                 {
+                    throw new ArgumentException("Incorrect syntax for 'insert' command.");
                 }
             }
             catch (ArgumentException ex)
             {
                 Console.WriteLine($"No entry has been inserted. {ex.Message}");
-                Console.WriteLine("Example 'insert' command: insert (id, firstname, lastname, dateofbirth, wallet, maritalstatus, height) values (1, string, string, 11.11.1990, 100, u, 180)");
+                Console.WriteLine("Example 'insert' command: insert (id, firstname, lastname, dateofbirth, wallet, maritalstatus, height) values (1, Salvador, Harris, 11.11.1990, 100, u, 180)");
                 Console.WriteLine();
             }
 
