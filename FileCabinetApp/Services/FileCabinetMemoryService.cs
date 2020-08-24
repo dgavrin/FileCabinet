@@ -350,6 +350,113 @@ namespace FileCabinetApp.Services
             }
         }
 
+        /// <inheritdoc/>
+        public List<int> Delete(string key, string value)
+        {
+            const string noRecordsFoundMessage = "No records were found with the specified key.";
+            const string invalidValueMessage = "Invalid value for the specified key.";
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            List<FileCabinetRecord> recordsToDelete = new List<FileCabinetRecord>();
+            List<int> identifiersOfRecordsToDelete = new List<int>();
+
+            switch (key)
+            {
+                case "ID":
+                    if (int.TryParse(value, out int id))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.Id == id);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "FIRSTNAME":
+                    recordsToDelete = this.list.FindAll(record => record.FirstName == value);
+
+                    break;
+                case "LASTNAME":
+                    recordsToDelete = this.list.FindAll(record => record.LastName == value);
+
+                    break;
+                case "DATEOFBIRTH":
+                    if (DateTime.TryParse(value, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime dateOfBirth))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.DateOfBirth == dateOfBirth);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "WALLET":
+                    if (decimal.TryParse(value, out decimal wallet))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.Wallet == wallet);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "MARITALSTATUS":
+                    if (char.TryParse(value, out char maritalStatus))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.MaritalStatus == maritalStatus);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "HEIGHT":
+                    if (short.TryParse(value, out short height))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.Height == height);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentException("Invalid key to delete the record.");
+            }
+
+            if (recordsToDelete.Count > 0)
+            {
+                recordsToDelete.ForEach(delegate(FileCabinetRecord fileCabinetRecord)
+                {
+                    identifiersOfRecordsToDelete.Add(fileCabinetRecord.Id);
+                    this.RemoveEntryFromDictionaries(fileCabinetRecord);
+                    this.list.Remove(fileCabinetRecord);
+                });
+
+                this.UpdateLastRecordId();
+
+                return identifiersOfRecordsToDelete;
+            }
+            else
+            {
+                throw new ArgumentException(noRecordsFoundMessage);
+            }
+        }
+
         private bool TryGetIndexOfRecordWithId(int id, out int index)
         {
             index = -1;

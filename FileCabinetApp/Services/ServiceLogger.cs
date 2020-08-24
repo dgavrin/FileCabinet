@@ -188,6 +188,16 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public List<int> Delete(string key, string value)
+        {
+            var identifiersOfDeletedRecords = this.service.Delete(key, value);
+
+            Log($"Calling {nameof(this.service.Delete)}()");
+
+            return identifiersOfDeletedRecords;
+        }
+
+        /// <inheritdoc/>
         public int Restore(FileCabinetServiceSnapshot fileCabinetServiceSnapshot)
         {
             if (fileCabinetServiceSnapshot == null)

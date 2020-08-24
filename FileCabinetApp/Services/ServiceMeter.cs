@@ -212,6 +212,21 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public List<int> Delete(string key, string value)
+        {
+            this.watch.Reset();
+            this.watch.Start();
+
+            var identifiersOfDeletedRecords = this.service.Delete(key, value);
+
+            this.watch.Stop();
+            Console.WriteLine($"Delete method execution duration is {this.watch.ElapsedTicks} ticks.");
+            Console.WriteLine();
+
+            return identifiersOfDeletedRecords;
+        }
+
+        /// <inheritdoc/>
         public int Restore(FileCabinetServiceSnapshot fileCabinetServiceSnapshot)
         {
             if (fileCabinetServiceSnapshot == null)

@@ -34,10 +34,13 @@ namespace FileCabinetApp.Services
         private readonly FileStream fileStream;
         private readonly BinaryWriter binaryWriter;
 
-        private readonly Dictionary<int, long> identifierDictionary = new Dictionary<int, long>();
-        private readonly Dictionary<string, List<long>> firstNameDictionary = new Dictionary<string, List<long>>();
-        private readonly Dictionary<string, List<long>> lastNameDictionary = new Dictionary<string, List<long>>();
-        private readonly Dictionary<DateTime, List<long>> dateOfBirthDictionary = new Dictionary<DateTime, List<long>>();
+        private Dictionary<int, long> identifierDictionary = new Dictionary<int, long>();
+        private Dictionary<string, List<long>> firstNameDictionary = new Dictionary<string, List<long>>();
+        private Dictionary<string, List<long>> lastNameDictionary = new Dictionary<string, List<long>>();
+        private Dictionary<DateTime, List<long>> dateOfBirthDictionary = new Dictionary<DateTime, List<long>>();
+        private Dictionary<decimal, List<long>> walletDictionary = new Dictionary<decimal, List<long>>();
+        private Dictionary<char, List<long>> maritalStatusDictonary = new Dictionary<char, List<long>>();
+        private Dictionary<short, List<long>> heightDictionary = new Dictionary<short, List<long>>();
 
         private IRecordValidator validator;
         private bool disposedValue;
@@ -75,12 +78,7 @@ namespace FileCabinetApp.Services
             }
 
             this.lastRecordId = this.GetLastRecordId();
-
-            var localRecords = this.GetRecords();
-            for (int i = 0; i < localRecords.Count; i++)
-            {
-                this.AddEntryToDictionaries(localRecords[i], i * RecordSize);
-            }
+            this.UpdateDictionaries();
         }
 
         /// <inheritdoc/>
@@ -283,7 +281,8 @@ namespace FileCabinetApp.Services
         /// <summary>
         /// Defragments the data file.
         /// </summary>
-        public void Purge()
+        /// <param name="isDisplayResult">Is the result dispalyed.</param>
+        public void Purge(bool isDisplayResult = true)
         {
             var totalNumberOfRecords = (int)(this.fileStream.Length / RecordSize);
             var records = this.GetRecords();
@@ -298,8 +297,11 @@ namespace FileCabinetApp.Services
             this.fileStream.Flush();
             this.fileStream.SetLength(this.fileStream.Position);
 
-            Console.WriteLine($"Data file processing is completed: {totalNumberOfRecords - records.Count} of {totalNumberOfRecords} records were purged.");
-            Console.WriteLine();
+            if (isDisplayResult)
+            {
+                Console.WriteLine($"Data file processing is completed: {totalNumberOfRecords - records.Count} of {totalNumberOfRecords} records were purged.");
+                Console.WriteLine();
+            }
         }
 
         /// <inheritdoc/>
@@ -486,6 +488,158 @@ namespace FileCabinetApp.Services
             }
         }
 
+        /// <inheritdoc/>
+        public List<int> Delete(string key, string value)
+        {
+            const string noRecordsFoundMessage = "No records were found with the specified key.";
+            const string invalidValueMessage = "Invalid value for the specified key.";
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            List<long> offsetsOfRecordsToDelete = null;
+            List<int> identifiersOfRecordsToDelete = new List<int>();
+
+            switch (key)
+            {
+                case "ID":
+                    if (int.TryParse(value, out int id))
+                    {
+                        var offsetOfRecordToDelete = this.identifierDictionary[id];
+                        offsetsOfRecordsToDelete = new List<long>();
+                        offsetsOfRecordsToDelete.Add(offsetOfRecordToDelete);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(noRecordsFoundMessage);
+                    }
+
+                    break;
+                case "FIRSTNAME":
+                    if (this.firstNameDictionary.ContainsKey(value.ToUpperInvariant()))
+                    {
+                        offsetsOfRecordsToDelete = new List<long>(this.firstNameDictionary[value.ToUpperInvariant()]);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(noRecordsFoundMessage);
+                    }
+
+                    break;
+                case "LASTNAME":
+                    if (this.lastNameDictionary.ContainsKey(value.ToUpperInvariant()))
+                    {
+                        offsetsOfRecordsToDelete = new List<long>(this.lastNameDictionary[value.ToUpperInvariant()]);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(noRecordsFoundMessage);
+                    }
+
+                    break;
+                case "DATEOFBIRTH":
+                    if (DateTime.TryParse(value, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime dateOfBirth))
+                    {
+                        if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+                        {
+                            offsetsOfRecordsToDelete = new List<long>(this.dateOfBirthDictionary[dateOfBirth]);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(noRecordsFoundMessage);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "WALLET":
+                    if (decimal.TryParse(value, out decimal wallet))
+                    {
+                        if (this.walletDictionary.ContainsKey(wallet))
+                        {
+                            offsetsOfRecordsToDelete = new List<long>(this.walletDictionary[wallet]);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(noRecordsFoundMessage);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "MARITALSTATUS":
+                    if (char.TryParse(value, out char maritalStatus))
+                    {
+                        if (this.maritalStatusDictonary.ContainsKey(maritalStatus))
+                        {
+                            offsetsOfRecordsToDelete = new List<long>(this.maritalStatusDictonary[maritalStatus]);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(noRecordsFoundMessage);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "HEIGHT":
+                    if (short.TryParse(value, out short height))
+                    {
+                        if (this.heightDictionary.ContainsKey(height))
+                        {
+                            offsetsOfRecordsToDelete = new List<long>(this.heightDictionary[height]);
+                        }
+                        else
+                        {
+                            throw new ArgumentException(noRecordsFoundMessage);
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentException("Invalid key to delete the record.");
+            }
+
+            offsetsOfRecordsToDelete.ForEach(delegate(long offset)
+            {
+                var deletedRecord = new FileCabinetRecord();
+                if (this.TryGetRecordByOffset(offset, ref deletedRecord))
+                {
+                    identifiersOfRecordsToDelete.Add(deletedRecord.Id);
+                    this.RemoveEntryFromDictionaries(deletedRecord, offset);
+
+                    this.fileStream.Seek(offset, SeekOrigin.Begin);
+                    this.fileStream.WriteByte(1);
+                }
+            });
+
+            this.Purge(false);
+            this.UpdateLastRecordId();
+            this.UpdateDictionaries();
+
+            return identifiersOfRecordsToDelete;
+        }
+
         /// <summary>
         /// Gets a record from a file and returns a value indicating whether the retrieval was successful.
         /// </summary>
@@ -608,12 +762,18 @@ namespace FileCabinetApp.Services
             if (this.identifierDictionary.ContainsKey(fileCabinetRecord.Id) &&
                 this.firstNameDictionary.ContainsKey(fileCabinetRecord.FirstName.ToUpperInvariant()) &&
                 this.lastNameDictionary.ContainsKey(fileCabinetRecord.LastName.ToUpperInvariant()) &&
-                this.dateOfBirthDictionary.ContainsKey(fileCabinetRecord.DateOfBirth))
+                this.dateOfBirthDictionary.ContainsKey(fileCabinetRecord.DateOfBirth) &&
+                this.walletDictionary.ContainsKey(fileCabinetRecord.Wallet) &&
+                this.maritalStatusDictonary.ContainsKey(fileCabinetRecord.MaritalStatus) &&
+                this.heightDictionary.ContainsKey(fileCabinetRecord.Height))
             {
                 this.identifierDictionary.Remove(fileCabinetRecord.Id);
                 this.firstNameDictionary[fileCabinetRecord.FirstName.ToUpperInvariant()].Remove(offset);
                 this.lastNameDictionary[fileCabinetRecord.LastName.ToUpperInvariant()].Remove(offset);
                 this.dateOfBirthDictionary[fileCabinetRecord.DateOfBirth].Remove(offset);
+                this.walletDictionary[fileCabinetRecord.Wallet].Remove(offset);
+                this.maritalStatusDictonary[fileCabinetRecord.MaritalStatus].Remove(offset);
+                this.heightDictionary[fileCabinetRecord.Height].Remove(offset);
             }
         }
 
@@ -644,10 +804,28 @@ namespace FileCabinetApp.Services
                 this.dateOfBirthDictionary.Add(fileCabinetRecord.DateOfBirth, new List<long>());
             }
 
+            if (!this.walletDictionary.ContainsKey(fileCabinetRecord.Wallet))
+            {
+                this.walletDictionary.Add(fileCabinetRecord.Wallet, new List<long>());
+            }
+
+            if (!this.maritalStatusDictonary.ContainsKey(fileCabinetRecord.MaritalStatus))
+            {
+                this.maritalStatusDictonary.Add(fileCabinetRecord.MaritalStatus, new List<long>());
+            }
+
+            if (!this.heightDictionary.ContainsKey(fileCabinetRecord.Height))
+            {
+                this.heightDictionary.Add(fileCabinetRecord.Height, new List<long>());
+            }
+
             this.identifierDictionary[fileCabinetRecord.Id] = offset;
             this.firstNameDictionary[fileCabinetRecord.FirstName.ToUpperInvariant()].Add(offset);
             this.lastNameDictionary[fileCabinetRecord.LastName.ToUpperInvariant()].Add(offset);
             this.dateOfBirthDictionary[fileCabinetRecord.DateOfBirth].Add(offset);
+            this.walletDictionary[fileCabinetRecord.Wallet].Add(offset);
+            this.maritalStatusDictonary[fileCabinetRecord.MaritalStatus].Add(offset);
+            this.heightDictionary[fileCabinetRecord.Height].Add(offset);
         }
 
         private ReadOnlyCollection<FileCabinetRecord> GetRecordsFromAListOfOffsets(List<long> offsets)
@@ -676,7 +854,27 @@ namespace FileCabinetApp.Services
 
         private void UpdateLastRecordId()
         {
-            this.lastRecordId = this.identifierDictionary.Keys.Max();
+            if (this.identifierDictionary.Count > 0)
+            {
+                this.lastRecordId = this.identifierDictionary.Keys.Max();
+            }
+        }
+
+        private void UpdateDictionaries()
+        {
+            this.identifierDictionary = new Dictionary<int, long>();
+            this.firstNameDictionary = new Dictionary<string, List<long>>();
+            this.lastNameDictionary = new Dictionary<string, List<long>>();
+            this.dateOfBirthDictionary = new Dictionary<DateTime, List<long>>();
+            this.walletDictionary = new Dictionary<decimal, List<long>>();
+            this.maritalStatusDictonary = new Dictionary<char, List<long>>();
+            this.heightDictionary = new Dictionary<short, List<long>>();
+
+            var localRecords = this.GetRecords();
+            for (int i = 0; i < localRecords.Count; i++)
+            {
+                this.AddEntryToDictionaries(localRecords[i], i * RecordSize);
+            }
         }
     }
 }
