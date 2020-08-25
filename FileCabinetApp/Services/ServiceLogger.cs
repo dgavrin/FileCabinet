@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators.InputValidator;
@@ -96,6 +97,26 @@ namespace FileCabinetApp.Services
                 $"Wallet = '{recordParameters.Wallet}', " +
                 $"MaritalStatus = '{recordParameters.MaritalStatus}', " +
                 $"Height = '{recordParameters.Height}'");
+        }
+
+        /// <inheritdoc/>
+        public List<int> Update(List<KeyValuePair<string, string>> newRecordParameters, List<KeyValuePair<string, string>> searchOptions)
+        {
+            if (newRecordParameters == null)
+            {
+                throw new ArgumentNullException(nameof(newRecordParameters));
+            }
+
+            if (searchOptions == null)
+            {
+                throw new ArgumentNullException(nameof(searchOptions));
+            }
+
+            var identifiersOfUpdatedRecords = this.service.Update(newRecordParameters, searchOptions);
+
+            Log($"Calling {nameof(this.service.Update)}()");
+
+            return identifiersOfUpdatedRecords;
         }
 
         /// <inheritdoc/>

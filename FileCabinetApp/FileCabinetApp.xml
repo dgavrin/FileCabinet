@@ -308,6 +308,23 @@
         <member name="M:FileCabinetApp.CommandHandlers.StatCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
             <inheritdoc/>
         </member>
+        <member name="T:FileCabinetApp.CommandHandlers.UpdateCommandHandler">
+            <summary>
+            Update command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.UpdateCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.UpdateCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">FileCabinetService.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.UpdateCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.UpdateCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.InputConverters">
             <summary>
             Provides methods for converting input.
@@ -432,6 +449,17 @@
             Presentation of a record in a file cabinet.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.Records.FileCabinetRecord.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Records.FileCabinetRecord"/> class.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Records.FileCabinetRecord.#ctor(FileCabinetApp.Records.FileCabinetRecord)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Records.FileCabinetRecord"/> class.
+            </summary>
+            <param name="fileCabinetRecord">FileCabinetRecord.</param>
+        </member>
         <member name="P:FileCabinetApp.Records.FileCabinetRecord.Id">
             <summary>
             Gets or sets the identifier of the record in the file cabinet.
@@ -549,6 +577,9 @@
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Purge(System.Boolean)">
             <summary>
             Defragments the data file.
@@ -644,6 +675,9 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByFirstName(System.String)">
@@ -751,6 +785,14 @@
             <param name="id">The identifier.</param>
             <param name="recordParameters">FileCabinetRecord fields.</param>
         </member>
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Updates a records with specified parameters.
+            </summary>
+            <param name="newRecordParameters">A set of new recording parameters.</param>
+            <param name="searchOptions">A set of record search parameters.</param>
+            <returns>The list of updated records identifiers.</returns>
+        </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.FindByFirstName(System.String)">
             <summary>
             Gets a list of entries by first name.
@@ -823,6 +865,9 @@
         <member name="M:FileCabinetApp.Services.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
             <inheritdoc/>
         </member>
+        <member name="M:FileCabinetApp.Services.ServiceLogger.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Services.ServiceLogger.FindByDateOfBirth(System.String)">
             <inheritdoc/>
         </member>
@@ -871,6 +916,9 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.EditRecord(System.Int32,FileCabinetApp.Records.RecordParameters)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.Services.ServiceMeter.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.FindByDateOfBirth(System.String)">

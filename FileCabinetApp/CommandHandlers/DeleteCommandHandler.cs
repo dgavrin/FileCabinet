@@ -50,21 +50,23 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Delete(string parameters)
         {
-            const string invalidCommandSyntaxMessage = "incorrect syntax for 'delete' command.";
+            const int keyIndex = 1;
+            const int valueIndex = 2;
+            const string invalidCommandSyntaxMessage = "Incorrect syntax for 'delete' command.";
 
             try
             {
                 if (string.IsNullOrEmpty(parameters))
                 {
-                    throw new ArgumentNullException(nameof(parameters), "The list of parameters for the 'insert' command cannot be empty.");
+                    throw new ArgumentNullException(nameof(parameters), "The list of parameters for the 'delete' command cannot be empty.");
                 }
 
                 var parametersRegex = new Regex(@"where (.*)=(.*)", RegexOptions.IgnoreCase);
                 if (parametersRegex.IsMatch(parameters))
                 {
                     var matchParameters = parametersRegex.Match(parameters);
-                    var key = matchParameters.Groups[1].Value.ToUpperInvariant().Trim(' ');
-                    var value = Regex.Match(matchParameters.Groups[2].Value, @"'(.*?)'").Groups[1].Value.Trim(' ');
+                    var key = matchParameters.Groups[keyIndex].Value.ToUpperInvariant().Trim(' ');
+                    var value = Regex.Match(matchParameters.Groups[valueIndex].Value, @"'(.*?)'").Groups[1].Value.Trim(' ');
 
                     if (!(string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)))
                     {

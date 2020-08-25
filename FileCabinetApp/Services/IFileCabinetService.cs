@@ -52,6 +52,14 @@ namespace FileCabinetApp.Services
         public void EditRecord(int id, RecordParameters recordParameters);
 
         /// <summary>
+        /// Updates a records with specified parameters.
+        /// </summary>
+        /// <param name="newRecordParameters">A set of new recording parameters.</param>
+        /// <param name="searchOptions">A set of record search parameters.</param>
+        /// <returns>The list of updated records identifiers.</returns>
+        public List<int> Update(List<KeyValuePair<string, string>> newRecordParameters, List<KeyValuePair<string, string>> searchOptions);
+
+        /// <summary>
         /// Gets a list of entries by first name.
         /// </summary>
         /// <param name="firstName">The first name.</param>

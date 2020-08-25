@@ -92,6 +92,31 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public List<int> Update(List<KeyValuePair<string, string>> newRecordParameters, List<KeyValuePair<string, string>> searchOptions)
+        {
+            if (newRecordParameters == null)
+            {
+                throw new ArgumentNullException(nameof(newRecordParameters));
+            }
+
+            if (searchOptions == null)
+            {
+                throw new ArgumentNullException(nameof(searchOptions));
+            }
+
+            this.watch.Reset();
+            this.watch.Start();
+
+            var identifiersOfUpdatedRecords = this.service.Update(newRecordParameters, searchOptions);
+
+            this.watch.Stop();
+            Console.WriteLine($"Edit method execution duration is {this.watch.ElapsedTicks} ticks.");
+            Console.WriteLine();
+
+            return identifiersOfUpdatedRecords;
+        }
+
+        /// <inheritdoc/>
         public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
         {
             if (string.IsNullOrEmpty(dateOfBirth))
