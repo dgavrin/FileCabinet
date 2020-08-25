@@ -696,7 +696,10 @@ namespace FileCabinetApp.Services
 
         private void UpdateLastRecordId()
         {
-            this.lastRecordId = this.list.Max(record => record.Id);
+            if (this.list.Count > 0)
+            {
+                this.lastRecordId = this.list.Max(record => record.Id);
+            }
         }
     }
 }

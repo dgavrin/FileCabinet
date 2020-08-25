@@ -77,23 +77,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.DeleteCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.EditCommandHandler">
-            <summary>
-            Edit command handler.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.EditCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">FileCabinetService.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ExitCommandHandler">
             <summary>
             Exit command handler.
@@ -250,23 +233,6 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
-            <inheritdoc/>
-        </member>
-        <member name="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler">
-            <summary>
-            Remove command handler.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.RemoveCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">FileCabinetService.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.RemoveCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase">
