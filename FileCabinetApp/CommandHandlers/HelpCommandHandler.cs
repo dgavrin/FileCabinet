@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -29,6 +30,22 @@ namespace FileCabinetApp.CommandHandlers
         };
 
         private ICommandHandler nextHandler;
+
+        /// <summary>
+        /// Gets a list of existing commands.
+        /// </summary>
+        /// <returns>List of existing commands.</returns>
+        public static string[] GetListOfExistCommands()
+        {
+            var existscommnads = new List<string>();
+
+            foreach (var commands in helpMessages)
+            {
+                existscommnads.Add(commands[0]);
+            }
+
+            return existscommnads.ToArray();
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)

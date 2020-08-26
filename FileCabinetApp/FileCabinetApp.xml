@@ -135,6 +135,12 @@
             Help command handler.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.CommandHandlers.HelpCommandHandler.GetListOfExistCommands">
+            <summary>
+            Gets a list of existing commands.
+            </summary>
+            <returns>List of existing commands.</returns>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.HelpCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
@@ -210,12 +216,12 @@
         <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.PrintMissedCommandHandler">
+        <member name="T:FileCabinetApp.CommandHandlers.MissingCommandHandler">
             <summary>
             Handler for a non-existent command.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.PrintMissedCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+        <member name="M:FileCabinetApp.CommandHandlers.MissingCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <inheritdoc/>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.PurgeCommandHandler">

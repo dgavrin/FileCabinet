@@ -150,7 +150,7 @@ namespace FileCabinetApp
             var deleteCommandHandler = new DeleteCommandHandler(Program.fileCabinetService);
             var purgeCommandHandler = new PurgeCommandHandler(Program.fileCabinetService);
             var insertCommandHandler = new InsertCommandHandler(Program.fileCabinetService);
-            var printMissedCommandHandler = new PrintMissedCommandHandler();
+            var missingCommandHandler = new MissingCommandHandler();
 
             helpCommandHandler.SetNext(exitCommandHandler);
             exitCommandHandler.SetNext(statCommandHandler);
@@ -163,7 +163,7 @@ namespace FileCabinetApp
             importCommandHandler.SetNext(deleteCommandHandler);
             deleteCommandHandler.SetNext(purgeCommandHandler);
             purgeCommandHandler.SetNext(insertCommandHandler);
-            insertCommandHandler.SetNext(printMissedCommandHandler);
+            insertCommandHandler.SetNext(missingCommandHandler);
 
             return helpCommandHandler;
         }
