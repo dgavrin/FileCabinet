@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators.InputValidator;
@@ -36,7 +37,7 @@ namespace FileCabinetApp.Services
         public IInputValidator InputValidator => this.service.InputValidator;
 
         /// <inheritdoc/>
-        public int CreateRecord(RecordParameters recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters)
         {
             if (recordParameters == null)
             {
@@ -52,6 +53,28 @@ namespace FileCabinetApp.Services
                 $"Wallet = '{recordParameters.Wallet}', " +
                 $"MaritalStatus = '{recordParameters.MaritalStatus}', " +
                 $"Height = '{recordParameters.Height}'");
+            Log($"{nameof(this.service.CreateRecord)}() returned '{newRecordId}'");
+
+            return newRecordId;
+        }
+
+        /// <inheritdoc/>
+        public int Insert(FileCabinetRecord fileCabinetRecord)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            var newRecordId = this.service.Insert(fileCabinetRecord);
+
+            Log($"Calling {nameof(this.service.Insert)}() with" +
+                $"FirstName = '{fileCabinetRecord.FirstName}', " +
+                $"LastName = '{fileCabinetRecord.LastName}', " +
+                $"DateOfBirth = '{fileCabinetRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}', " +
+                $"Wallet = '{fileCabinetRecord.Wallet}', " +
+                $"MaritalStatus = '{fileCabinetRecord.MaritalStatus}', " +
+                $"Height = '{fileCabinetRecord.Height}'");
             Log($"{nameof(this.service.CreateRecord)}() returned '{newRecordId}'");
 
             return newRecordId;
@@ -74,6 +97,26 @@ namespace FileCabinetApp.Services
                 $"Wallet = '{recordParameters.Wallet}', " +
                 $"MaritalStatus = '{recordParameters.MaritalStatus}', " +
                 $"Height = '{recordParameters.Height}'");
+        }
+
+        /// <inheritdoc/>
+        public List<int> Update(List<KeyValuePair<string, string>> newRecordParameters, List<KeyValuePair<string, string>> searchOptions)
+        {
+            if (newRecordParameters == null)
+            {
+                throw new ArgumentNullException(nameof(newRecordParameters));
+            }
+
+            if (searchOptions == null)
+            {
+                throw new ArgumentNullException(nameof(searchOptions));
+            }
+
+            var identifiersOfUpdatedRecords = this.service.Update(newRecordParameters, searchOptions);
+
+            Log($"Calling {nameof(this.service.Update)}()");
+
+            return identifiersOfUpdatedRecords;
         }
 
         /// <inheritdoc/>
@@ -163,6 +206,16 @@ namespace FileCabinetApp.Services
             Log($"Calling {nameof(this.service.Remove)}()");
 
             return resultOfRemove;
+        }
+
+        /// <inheritdoc/>
+        public List<int> Delete(string key, string value)
+        {
+            var identifiersOfDeletedRecords = this.service.Delete(key, value);
+
+            Log($"Calling {nameof(this.service.Delete)}()");
+
+            return identifiersOfDeletedRecords;
         }
 
         /// <inheritdoc/>

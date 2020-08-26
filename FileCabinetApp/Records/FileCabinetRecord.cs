@@ -9,6 +9,33 @@ namespace FileCabinetApp.Records
     public class FileCabinetRecord
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetRecord"/> class.
+        /// </summary>
+        public FileCabinetRecord()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileCabinetRecord"/> class.
+        /// </summary>
+        /// <param name="fileCabinetRecord">FileCabinetRecord.</param>
+        public FileCabinetRecord(FileCabinetRecord fileCabinetRecord)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            this.Id = fileCabinetRecord.Id;
+            this.FirstName = fileCabinetRecord.FirstName;
+            this.LastName = fileCabinetRecord.LastName;
+            this.DateOfBirth = fileCabinetRecord.DateOfBirth;
+            this.Wallet = fileCabinetRecord.Wallet;
+            this.MaritalStatus = fileCabinetRecord.MaritalStatus;
+            this.Height = fileCabinetRecord.Height;
+        }
+
+        /// <summary>
         /// Gets or sets the identifier of the record in the file cabinet.
         /// </summary>
         /// <value>The indentifier.</value>

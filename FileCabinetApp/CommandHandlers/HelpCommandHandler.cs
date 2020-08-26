@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -19,15 +20,32 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "stat", "prints the statistics by records", "The 'stat' command prints the statistics by records." },
             new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
             new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service." },
-            new string[] { "edit", "edits a record", "The 'edit' command edits a record." },
             new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
             new string[] { "export", "exports the list of records to a <csv/xml> file at the specified path", "The 'export' command exports the list of records to a <csv/xml> file at the specified path" },
             new string[] { "import", "imports a list of records from the csv file at the specified path", "The 'import csv' command imports a list of records from the csv file at the specified path" },
-            new string[] { "remove", "removal record by id", "The 'remove' command removes a record by id." },
             new string[] { "purge", "defragments the data file", "The 'purge' command defragments the data file." },
+            new string[] { "insert", "inserts a new record", "The 'insert' command inserts a new record" },
+            new string[] { "delete", "deletes entries with the specified key", "The 'delete' command deletes entries with the specified key" },
+            new string[] { "update", "updates entries with the specified key", "The 'update' command updates entries with the specified key" },
         };
 
         private ICommandHandler nextHandler;
+
+        /// <summary>
+        /// Gets a list of existing commands.
+        /// </summary>
+        /// <returns>List of existing commands.</returns>
+        public static string[] GetListOfExistCommands()
+        {
+            var existscommnads = new List<string>();
+
+            foreach (var commands in helpMessages)
+            {
+                existscommnads.Add(commands[0]);
+            }
+
+            return existscommnads.ToArray();
+        }
 
         /// <inheritdoc/>
         public override void Handle(AppCommandRequest appCommandRequest)

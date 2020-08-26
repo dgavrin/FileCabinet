@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
+using System.Linq;
 using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators;
@@ -25,7 +26,7 @@ namespace FileCabinetApp.Services
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         private IRecordValidator validator;
-        private int lastRecordId = 1;
+        private int lastRecordId = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.
@@ -71,7 +72,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(RecordParameters recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters)
         {
             if (recordParameters == null)
             {
@@ -82,7 +83,7 @@ namespace FileCabinetApp.Services
 
             var record = new FileCabinetRecord
             {
-                Id = this.lastRecordId++,
+                Id = ++this.lastRecordId,
                 FirstName = recordParameters.FirstName,
                 LastName = recordParameters.LastName,
                 DateOfBirth = recordParameters.DateOfBirth,
@@ -96,6 +97,77 @@ namespace FileCabinetApp.Services
             this.AddEntryToDictionaries(record);
 
             return record.Id;
+        }
+
+        /// <summary>
+        /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
+        /// </summary>
+        /// <param name="recordParameters">FileCabinetRecord fields.</param>
+        /// <param name="id">Identifier.</param>
+        /// <returns>Identifier of the new record.</returns>
+        public int CreateRecord(FileCabinetRecord recordParameters, int id)
+        {
+            if (recordParameters == null)
+            {
+                throw new ArgumentNullException(nameof(recordParameters));
+            }
+
+            if (id < 0)
+            {
+                throw new ArgumentException("The record ID must be greater than zero.", nameof(id));
+            }
+
+            this.validator.ValidateParameters(recordParameters);
+
+            var record = new FileCabinetRecord
+            {
+                Id = id,
+                FirstName = recordParameters.FirstName,
+                LastName = recordParameters.LastName,
+                DateOfBirth = recordParameters.DateOfBirth,
+                Wallet = recordParameters.Wallet,
+                MaritalStatus = recordParameters.MaritalStatus,
+                Height = recordParameters.Height,
+            };
+
+            this.list.Add(record);
+
+            this.AddEntryToDictionaries(record);
+
+            return record.Id;
+        }
+
+        /// <inheritdoc/>
+        public int Insert(FileCabinetRecord fileCabinetRecord)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            this.validator.ValidateParameters(fileCabinetRecord);
+
+            if (fileCabinetRecord.Id > 0)
+            {
+                var recordsWithThisId = from record in this.list
+                                        where record.Id == fileCabinetRecord.Id
+                                        select record;
+
+                if (recordsWithThisId.ToList().Count < 1)
+                {
+                    var insertedRecordId = this.CreateRecord(fileCabinetRecord, fileCabinetRecord.Id);
+                    this.UpdateLastRecordId();
+                    return insertedRecordId;
+                }
+                else
+                {
+                    throw new ArgumentException("A record with the given ID already exists.", nameof(fileCabinetRecord));
+                }
+            }
+            else
+            {
+                return this.CreateRecord(fileCabinetRecord);
+            }
         }
 
         /// <inheritdoc/>
@@ -142,6 +214,188 @@ namespace FileCabinetApp.Services
             }
 
             throw new ArgumentException($"#{id} record is not found.", nameof(id));
+        }
+
+        /// <inheritdoc/>
+        public List<int> Update(List<KeyValuePair<string, string>> newRecordParameters, List<KeyValuePair<string, string>> searchOptions)
+        {
+            const string invalidValueForSearchOptionMessage = "Invalid search parameter value.";
+            const string invalidValueForNewRecordParameterMessage = "Invalid value for new record parameter.";
+            const string noRecordsFoundMessage = "No records were found with the specified keys.";
+
+            if (newRecordParameters == null)
+            {
+                throw new ArgumentNullException(nameof(newRecordParameters));
+            }
+
+            if (searchOptions == null)
+            {
+                throw new ArgumentNullException(nameof(searchOptions));
+            }
+
+            var identifiersOfRecordsToUpdate = new List<int>();
+            var recordsToUpdate = this.list.FindAll(delegate(FileCabinetRecord fileCabinetRecord)
+            {
+                bool isRecordToUpdate = false;
+
+                searchOptions.ForEach(delegate(KeyValuePair<string, string> searchOptionPair)
+                {
+                    switch (searchOptionPair.Key)
+                    {
+                        case "ID":
+                            if (int.TryParse(searchOptionPair.Value, out int id))
+                            {
+                                isRecordToUpdate = fileCabinetRecord.Id == id ? true : false;
+                            }
+                            else
+                            {
+                                throw new ArgumentException(invalidValueForSearchOptionMessage);
+                            }
+
+                            break;
+                        case "FIRSTNAME":
+                            isRecordToUpdate = fileCabinetRecord.FirstName == searchOptionPair.Value ? true : false;
+
+                            break;
+                        case "LASTNAME":
+                            isRecordToUpdate = fileCabinetRecord.LastName == searchOptionPair.Value ? true : false;
+
+                            break;
+                        case "DATEOFBIRTH":
+                            if (DateTime.TryParse(searchOptionPair.Value, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime dateOfBirth))
+                            {
+                                isRecordToUpdate = fileCabinetRecord.DateOfBirth == dateOfBirth ? true : false;
+                            }
+                            else
+                            {
+                                throw new ArgumentException(invalidValueForSearchOptionMessage);
+                            }
+
+                            break;
+                        case "WALLET":
+                            if (decimal.TryParse(searchOptionPair.Value, out decimal wallet))
+                            {
+                                isRecordToUpdate = fileCabinetRecord.Wallet == wallet ? true : false;
+                            }
+                            else
+                            {
+                                throw new ArgumentException(invalidValueForSearchOptionMessage);
+                            }
+
+                            break;
+                        case "MARITALSTATUS":
+                            if (char.TryParse(searchOptionPair.Value, out char maritalStatus))
+                            {
+                                isRecordToUpdate = fileCabinetRecord.MaritalStatus == maritalStatus ? true : false;
+                            }
+                            else
+                            {
+                                throw new ArgumentException(invalidValueForSearchOptionMessage);
+                            }
+
+                            break;
+                        case "HEIGHT":
+                            if (short.TryParse(searchOptionPair.Value, out short height))
+                            {
+                                isRecordToUpdate = fileCabinetRecord.Height == height ? true : false;
+                            }
+                            else
+                            {
+                                throw new ArgumentException(invalidValueForSearchOptionMessage);
+                            }
+
+                            break;
+                        default:
+                            throw new ArgumentException("Invalid key to update the record.");
+                    }
+                });
+
+                return isRecordToUpdate;
+            });
+
+            if (recordsToUpdate.Count > 0)
+            {
+                recordsToUpdate.ForEach(delegate(FileCabinetRecord fileCabinetRecord)
+                {
+                    identifiersOfRecordsToUpdate.Add(fileCabinetRecord.Id);
+
+                    newRecordParameters.ForEach(delegate(KeyValuePair<string, string> newRecordParameter)
+                    {
+                        switch (newRecordParameter.Key)
+                        {
+                            case "ID":
+                                throw new ArgumentException("Id update is not supported.");
+
+                            case "FIRSTNAME":
+                                this.RemoveEntryFromDictionaries(fileCabinetRecord);
+                                fileCabinetRecord.FirstName = newRecordParameter.Value;
+                                this.AddEntryToDictionaries(fileCabinetRecord);
+
+                                break;
+                            case "LASTNAME":
+                                this.RemoveEntryFromDictionaries(fileCabinetRecord);
+                                fileCabinetRecord.LastName = newRecordParameter.Value;
+                                this.AddEntryToDictionaries(fileCabinetRecord);
+
+                                break;
+                            case "DATEOFBIRTH":
+                                if (DateTime.TryParse(newRecordParameter.Value, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime dateOfBirth))
+                                {
+                                    this.RemoveEntryFromDictionaries(fileCabinetRecord);
+                                    fileCabinetRecord.DateOfBirth = dateOfBirth;
+                                    this.AddEntryToDictionaries(fileCabinetRecord);
+                                }
+                                else
+                                {
+                                    throw new ArgumentException(invalidValueForNewRecordParameterMessage);
+                                }
+
+                                break;
+                            case "WALLET":
+                                if (decimal.TryParse(newRecordParameter.Value, out decimal wallet))
+                                {
+                                    fileCabinetRecord.Wallet = wallet;
+                                }
+                                else
+                                {
+                                    throw new ArgumentException(invalidValueForNewRecordParameterMessage);
+                                }
+
+                                break;
+                            case "MARITALSTATUS":
+                                if (char.TryParse(newRecordParameter.Value, out char maritalStatus))
+                                {
+                                    fileCabinetRecord.MaritalStatus = maritalStatus;
+                                }
+                                else
+                                {
+                                    throw new ArgumentException(invalidValueForNewRecordParameterMessage);
+                                }
+
+                                break;
+                            case "HEIGHT":
+                                if (short.TryParse(newRecordParameter.Value, out short height))
+                                {
+                                    fileCabinetRecord.Height = height;
+                                }
+                                else
+                                {
+                                    throw new ArgumentException(invalidValueForNewRecordParameterMessage);
+                                }
+
+                                break;
+                            default:
+                                throw new ArgumentException("Invalid key to delete the record.");
+                        }
+                    });
+                });
+
+                return identifiersOfRecordsToUpdate;
+            }
+            else
+            {
+                throw new ArgumentException(noRecordsFoundMessage);
+            }
         }
 
         /// <inheritdoc/>
@@ -278,6 +532,113 @@ namespace FileCabinetApp.Services
             }
         }
 
+        /// <inheritdoc/>
+        public List<int> Delete(string key, string value)
+        {
+            const string noRecordsFoundMessage = "No records were found with the specified key.";
+            const string invalidValueMessage = "Invalid value for the specified key.";
+
+            if (string.IsNullOrEmpty(key))
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            List<FileCabinetRecord> recordsToDelete = new List<FileCabinetRecord>();
+            List<int> identifiersOfRecordsToDelete = new List<int>();
+
+            switch (key)
+            {
+                case "ID":
+                    if (int.TryParse(value, out int id))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.Id == id);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "FIRSTNAME":
+                    recordsToDelete = this.list.FindAll(record => record.FirstName == value);
+
+                    break;
+                case "LASTNAME":
+                    recordsToDelete = this.list.FindAll(record => record.LastName == value);
+
+                    break;
+                case "DATEOFBIRTH":
+                    if (DateTime.TryParse(value, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime dateOfBirth))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.DateOfBirth == dateOfBirth);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "WALLET":
+                    if (decimal.TryParse(value, out decimal wallet))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.Wallet == wallet);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "MARITALSTATUS":
+                    if (char.TryParse(value, out char maritalStatus))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.MaritalStatus == maritalStatus);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                case "HEIGHT":
+                    if (short.TryParse(value, out short height))
+                    {
+                        recordsToDelete = this.list.FindAll(record => record.Height == height);
+                    }
+                    else
+                    {
+                        throw new ArgumentException(invalidValueMessage);
+                    }
+
+                    break;
+                default:
+                    throw new ArgumentException("Invalid key to delete the record.");
+            }
+
+            if (recordsToDelete.Count > 0)
+            {
+                recordsToDelete.ForEach(delegate(FileCabinetRecord fileCabinetRecord)
+                {
+                    identifiersOfRecordsToDelete.Add(fileCabinetRecord.Id);
+                    this.RemoveEntryFromDictionaries(fileCabinetRecord);
+                    this.list.Remove(fileCabinetRecord);
+                });
+
+                this.UpdateLastRecordId();
+
+                return identifiersOfRecordsToDelete;
+            }
+            else
+            {
+                throw new ArgumentException(noRecordsFoundMessage);
+            }
+        }
+
         private bool TryGetIndexOfRecordWithId(int id, out int index)
         {
             index = -1;
@@ -331,6 +692,14 @@ namespace FileCabinetApp.Services
             this.firstNameDictionary[record.FirstName.ToUpperInvariant()].Add(record);
             this.lastNameDictionary[record.LastName.ToUpperInvariant()].Add(record);
             this.dateOfBirthDictionary[record.DateOfBirth].Add(record);
+        }
+
+        private void UpdateLastRecordId()
+        {
+            if (this.list.Count > 0)
+            {
+                this.lastRecordId = this.list.Max(record => record.Id);
+            }
         }
     }
 }

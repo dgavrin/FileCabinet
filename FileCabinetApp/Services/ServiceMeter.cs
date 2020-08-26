@@ -34,7 +34,7 @@ namespace FileCabinetApp.Services
         public IInputValidator InputValidator => this.service.InputValidator;
 
         /// <inheritdoc/>
-        public int CreateRecord(RecordParameters recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters)
         {
             if (recordParameters == null)
             {
@@ -48,6 +48,26 @@ namespace FileCabinetApp.Services
 
             this.watch.Stop();
             Console.WriteLine($"Create method execution duration is {this.watch.ElapsedTicks} ticks.");
+            Console.WriteLine();
+
+            return newRecordId;
+        }
+
+        /// <inheritdoc/>
+        public int Insert(FileCabinetRecord fileCabinetRecord)
+        {
+            if (fileCabinetRecord == null)
+            {
+                throw new ArgumentNullException(nameof(fileCabinetRecord));
+            }
+
+            this.watch.Reset();
+            this.watch.Start();
+
+            var newRecordId = this.service.Insert(fileCabinetRecord);
+
+            this.watch.Stop();
+            Console.WriteLine($"Insert method execution duration is {this.watch.ElapsedTicks} ticks.");
             Console.WriteLine();
 
             return newRecordId;
@@ -69,6 +89,31 @@ namespace FileCabinetApp.Services
             this.watch.Stop();
             Console.WriteLine($"Edit method execution duration is {this.watch.ElapsedTicks} ticks.");
             Console.WriteLine();
+        }
+
+        /// <inheritdoc/>
+        public List<int> Update(List<KeyValuePair<string, string>> newRecordParameters, List<KeyValuePair<string, string>> searchOptions)
+        {
+            if (newRecordParameters == null)
+            {
+                throw new ArgumentNullException(nameof(newRecordParameters));
+            }
+
+            if (searchOptions == null)
+            {
+                throw new ArgumentNullException(nameof(searchOptions));
+            }
+
+            this.watch.Reset();
+            this.watch.Start();
+
+            var identifiersOfUpdatedRecords = this.service.Update(newRecordParameters, searchOptions);
+
+            this.watch.Stop();
+            Console.WriteLine($"Edit method execution duration is {this.watch.ElapsedTicks} ticks.");
+            Console.WriteLine();
+
+            return identifiersOfUpdatedRecords;
         }
 
         /// <inheritdoc/>
@@ -189,6 +234,21 @@ namespace FileCabinetApp.Services
             Console.WriteLine();
 
             return resultOfRemove;
+        }
+
+        /// <inheritdoc/>
+        public List<int> Delete(string key, string value)
+        {
+            this.watch.Reset();
+            this.watch.Start();
+
+            var identifiersOfDeletedRecords = this.service.Delete(key, value);
+
+            this.watch.Stop();
+            Console.WriteLine($"Delete method execution duration is {this.watch.ElapsedTicks} ticks.");
+            Console.WriteLine();
+
+            return identifiersOfDeletedRecords;
         }
 
         /// <inheritdoc/>

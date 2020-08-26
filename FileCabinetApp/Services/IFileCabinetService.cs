@@ -23,7 +23,14 @@ namespace FileCabinetApp.Services
         /// </summary>
         /// <param name="recordParameters">FileCabinetRecord fields.</param>
         /// <returns>Identifier of the new record.</returns>
-        public int CreateRecord(RecordParameters recordParameters);
+        public int CreateRecord(FileCabinetRecord recordParameters);
+
+        /// <summary>
+        /// Inserts a record with personal information about a person into the list.
+        /// </summary>
+        /// <param name="fileCabinetRecord">FileCabinetRecord.</param>
+        /// <returns>The identifier of the inserted record.</returns>
+        public int Insert(FileCabinetRecord fileCabinetRecord);
 
         /// <summary>
         /// Gets a list of entries.
@@ -43,6 +50,14 @@ namespace FileCabinetApp.Services
         /// <param name="id">The identifier.</param>
         /// <param name="recordParameters">FileCabinetRecord fields.</param>
         public void EditRecord(int id, RecordParameters recordParameters);
+
+        /// <summary>
+        /// Updates a records with specified parameters.
+        /// </summary>
+        /// <param name="newRecordParameters">A set of new recording parameters.</param>
+        /// <param name="searchOptions">A set of record search parameters.</param>
+        /// <returns>The list of updated records identifiers.</returns>
+        public List<int> Update(List<KeyValuePair<string, string>> newRecordParameters, List<KeyValuePair<string, string>> searchOptions);
 
         /// <summary>
         /// Gets a list of entries by first name.
@@ -84,5 +99,13 @@ namespace FileCabinetApp.Services
         /// <param name="recordIdForRemove">The identifier of the entry to be deleted.</param>
         /// <returns>A value used to determine if the deletion was successful.</returns>
         public bool Remove(int recordIdForRemove);
+
+        /// <summary>
+        /// Delete record with specified key and value.
+        /// </summary>
+        /// <param name="key">Key.</param>
+        /// <param name="value">Value.</param>
+        /// <returns>The list of deleted records indentifiers.</returns>
+        public List<int> Delete(string key, string value);
     }
 }
