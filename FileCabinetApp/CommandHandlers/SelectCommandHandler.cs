@@ -163,7 +163,7 @@ namespace FileCabinetApp.CommandHandlers
                     }
                     else
                     {
-                        selectedRecords = this.fileCabinetService.SelectByCriteria(searchCriteria, logicalOperation);
+                        selectedRecords = Memoizer.GetMemoizer(this.fileCabinetService).Select(searchCriteria, logicalOperation);
                     }
 
                     TablePrinter.Print(selectedRecords, selectedAttributes);

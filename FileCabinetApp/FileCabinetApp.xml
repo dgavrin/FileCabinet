@@ -360,6 +360,39 @@
         <member name="M:FileCabinetApp.Iterators.MemoryIterator.System#Collections#IEnumerable#GetEnumerator">
             <inheritdoc/>
         </member>
+        <member name="T:FileCabinetApp.Memoizer">
+            <summary>
+            The memoizer class.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Memoizer.RequestCache">
+            <summary>
+            Gets a collection of records for a custom request.
+            </summary>
+            <value>
+            A collection of records for a custom request.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.Memoizer.GetMemoizer(FileCabinetApp.Services.IFileCabinetService)">
+            <summary>
+            Gets the memoizer.
+            </summary>
+            <param name="fileCabinetService">FileCabinetService.</param>
+            <returns>Memoizer object.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Memoizer.Clear">
+            <summary>
+            Clears cached requests.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Memoizer.Select(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+            <summary>
+            Selects records by the specified key-value pairs.
+            </summary>
+            <param name="keyValuePairs">SearchCriteria.</param>
+            <param name="logicalOperation">Logical operation.</param>
+            <returns>Enumerable collection of records.</returns>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
             The main program class.
