@@ -19,14 +19,13 @@ namespace FileCabinetApp.CommandHandlers
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "prints the statistics by records", "The 'stat' command prints the statistics by records." },
             new string[] { "create", "creates a new record", "The 'create' command creates a new record." },
-            new string[] { "list", "returns a list of records added to the service", "The 'list' command returns a list of records added to the service." },
-            new string[] { "find", "finds records for the specified key", "The 'find' command finds records for the specified key" },
-            new string[] { "export", "exports the list of records to a <csv/xml> file at the specified path", "The 'export' command exports the list of records to a <csv/xml> file at the specified path" },
-            new string[] { "import", "imports a list of records from the csv file at the specified path", "The 'import csv' command imports a list of records from the csv file at the specified path" },
+            new string[] { "export", "exports the list of records to a <csv/xml> file at the specified path", "The 'export' command exports the list of records to a <csv/xml> file at the specified path." },
+            new string[] { "import", "imports a list of records from the csv file at the specified path", "The 'import csv' command imports a list of records from the csv file at the specified path." },
             new string[] { "purge", "defragments the data file", "The 'purge' command defragments the data file." },
-            new string[] { "insert", "inserts a new record", "The 'insert' command inserts a new record" },
-            new string[] { "delete", "deletes entries with the specified key", "The 'delete' command deletes entries with the specified key" },
-            new string[] { "update", "updates entries with the specified key", "The 'update' command updates entries with the specified key" },
+            new string[] { "insert", "inserts a new record", "The 'insert' command inserts a new record." },
+            new string[] { "delete", "deletes entries with the specified key", "The 'delete' command deletes entries with the specified key." },
+            new string[] { "update", "updates entries with the specified key", "The 'update' command updates entries with the specified key." },
+            new string[] { "select", "gets a selection of records", "The 'select' command gets a selection of records." },
         };
 
         private ICommandHandler nextHandler;

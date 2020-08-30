@@ -120,51 +120,39 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator)
         {
-            if (string.IsNullOrEmpty(dateOfBirth))
+            if (searchCriteria == null)
             {
-                throw new ArgumentNullException(nameof(dateOfBirth));
+                throw new ArgumentNullException(nameof(searchCriteria));
             }
 
-            var collectionOfFoundRecords = this.service.FindByDateOfBirth(dateOfBirth);
-
-            Log($"Calling {nameof(this.service.FindByDateOfBirth)}() with" +
-                $"DateOfBirth = '{dateOfBirth}'");
-
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            if (string.IsNullOrEmpty(firstName))
+            if (string.IsNullOrEmpty(logicalOperator))
             {
-                throw new ArgumentNullException(nameof(firstName));
+                throw new ArgumentNullException(nameof(logicalOperator));
             }
 
-            var collectionOfFoundRecords = this.service.FindByFirstName(firstName);
+            var selectedRecords = this.service.SelectByCriteria(searchCriteria, logicalOperator);
+            var searchCriteriaString = new StringBuilder();
 
-            Log($"Calling {nameof(this.service.FindByFirstName)}() with" +
-                $"FirstName = '{firstName}'");
-
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            if (string.IsNullOrEmpty(lastName))
+            if (searchCriteria.Count > 0)
             {
-                throw new ArgumentNullException(nameof(lastName));
+                foreach (var criterion in searchCriteria)
+                {
+                    searchCriteriaString.Append($" {criterion.Key} = '{criterion.Value}' {logicalOperator}");
+                }
+
+                var numberOfInterferingCharacters = logicalOperator.Length + 1;
+                searchCriteriaString.Remove(searchCriteriaString.Length - numberOfInterferingCharacters - 1, numberOfInterferingCharacters);
+            }
+            else
+            {
+                searchCriteriaString.Append("out search criteria");
             }
 
-            var collectionOfFoundRecords = this.service.FindByLastName(lastName);
+            Log($"Calling {nameof(this.service.SelectByCriteria)}() with{searchCriteriaString}");
 
-            Log($"Calling {nameof(this.service.FindByLastName)}() with" +
-                $"LastName = '{lastName}'");
-
-            return collectionOfFoundRecords;
+            return selectedRecords;
         }
 
         /// <inheritdoc/>

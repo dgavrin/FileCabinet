@@ -112,24 +112,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.ExportCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.FindCommandHandler">
-            <summary>
-            Find command handler.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">FileCabinetService.</param>
-            <param name="printer">Printer.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.HelpCommandHandler">
             <summary>
             Help command handler.
@@ -198,24 +180,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.InsertCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
             <inheritdoc/>
         </member>
-        <member name="T:FileCabinetApp.CommandHandlers.ListCommandHandler">
-            <summary>
-            List command handler.
-            </summary>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService,System.Action{System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ListCommandHandler"/> class.
-            </summary>
-            <param name="fileCabinetService">FileCabinetService.</param>
-            <param name="printer">Printer.</param>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
-            <inheritdoc/>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.MissingCommandHandler">
             <summary>
             Handler for a non-existent command.
@@ -240,6 +204,30 @@
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.PurgeCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
             <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.SelectCommandHandler">
+            <summary>
+            Select command handler.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.#ctor(FileCabinetApp.Services.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.SelectCommandHandler"/> class.
+            </summary>
+            <param name="fileCabinetService">FileCabinetService.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.TablePrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord},System.Collections.Generic.List{System.String})">
+            <summary>
+            Prints the records with specified fields in table view.
+            </summary>
+            <param name="records">The records to be printed.</param>
+            <param name="recordFields">The fields of records to print.</param>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase">
             <summary>
@@ -371,6 +359,39 @@
         </member>
         <member name="M:FileCabinetApp.Iterators.MemoryIterator.System#Collections#IEnumerable#GetEnumerator">
             <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.Memoizer">
+            <summary>
+            The memoizer class.
+            </summary>
+        </member>
+        <member name="P:FileCabinetApp.Memoizer.RequestCache">
+            <summary>
+            Gets a collection of records for a custom request.
+            </summary>
+            <value>
+            A collection of records for a custom request.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.Memoizer.GetMemoizer(FileCabinetApp.Services.IFileCabinetService)">
+            <summary>
+            Gets the memoizer.
+            </summary>
+            <param name="fileCabinetService">FileCabinetService.</param>
+            <returns>Memoizer object.</returns>
+        </member>
+        <member name="M:FileCabinetApp.Memoizer.Clear">
+            <summary>
+            Clears cached requests.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Memoizer.Select(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+            <summary>
+            Selects records by the specified key-value pairs.
+            </summary>
+            <param name="keyValuePairs">SearchCriteria.</param>
+            <param name="logicalOperation">Logical operation.</param>
+            <returns>Enumerable collection of records.</returns>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>
@@ -558,13 +579,7 @@
             </summary>
             <param name="isDisplayResult">Is the result dispalyed.</param>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.FindByDateOfBirth(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.FindByLastName(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.GetRecords">
@@ -652,13 +667,7 @@
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByLastName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.FindByDateOfBirth(System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
@@ -765,26 +774,13 @@
             <param name="searchOptions">A set of record search parameters.</param>
             <returns>The list of updated records identifiers.</returns>
         </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.FindByFirstName(System.String)">
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
             <summary>
-            Gets a list of entries by first name.
+            Returns a selection of records based on the specified criteria.
             </summary>
-            <param name="firstName">The first name.</param>
-            <returns>List of entries.</returns>
-        </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.FindByLastName(System.String)">
-            <summary>
-            Gets a list of entries by last name.
-            </summary>
-            <param name="lastName">The last name.</param>
-            <returns>List of entries.</returns>
-        </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.FindByDateOfBirth(System.String)">
-            <summary>
-            Gets a list of entries by date of birth.
-            </summary>
-            <param name="dateOfBirth">The date of birth.</param>
-            <returns>List of entries.</returns>
+            <param name="searchCriteria">Search criteria.</param>
+            <param name="logicalOperator">Logical operator.</param>
+            <returns>Selection of records based on specified criteria.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.MakeSnapshot">
             <summary>
@@ -840,13 +836,7 @@
         <member name="M:FileCabinetApp.Services.ServiceLogger.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.FindByDateOfBirth(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.FindByLastName(System.String)">
+        <member name="M:FileCabinetApp.Services.ServiceLogger.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceLogger.GetRecords">
@@ -893,13 +883,7 @@
         <member name="M:FileCabinetApp.Services.ServiceMeter.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.FindByDateOfBirth(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.FindByFirstName(System.String)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.FindByLastName(System.String)">
+        <member name="M:FileCabinetApp.Services.ServiceMeter.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.GetRecords">

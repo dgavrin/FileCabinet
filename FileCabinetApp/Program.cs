@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.Iterators;
 using FileCabinetApp.Records;
@@ -142,8 +143,7 @@ namespace FileCabinetApp
             var exitCommandHandler = new ExitCommandHandler(Program.fileCabinetService, x => isRunning = x);
             var statCommandHandler = new StatCommandHandler(Program.fileCabinetService);
             var createCommandHandler = new CreateCommandHandler(Program.fileCabinetService);
-            var listCommandHandler = new ListCommandHandler(Program.fileCabinetService, records => DefaultRecordPrint(records));
-            var findCommandHandler = new FindCommandHandler(Program.fileCabinetService, iterator => DefaultRecordPrint(iterator));
+            var selectCommandHandler = new SelectCommandHandler(Program.fileCabinetService);
             var updateCommandHandler = new UpdateCommandHandler(Program.fileCabinetService);
             var exportCommandHandler = new ExportCommandHandler(Program.fileCabinetService);
             var importCommandHandler = new ImportCommandHandler(Program.fileCabinetService);
@@ -155,10 +155,9 @@ namespace FileCabinetApp
             helpCommandHandler.SetNext(exitCommandHandler);
             exitCommandHandler.SetNext(statCommandHandler);
             statCommandHandler.SetNext(createCommandHandler);
-            createCommandHandler.SetNext(listCommandHandler);
-            listCommandHandler.SetNext(updateCommandHandler);
-            updateCommandHandler.SetNext(findCommandHandler);
-            findCommandHandler.SetNext(exportCommandHandler);
+            createCommandHandler.SetNext(updateCommandHandler);
+            updateCommandHandler.SetNext(selectCommandHandler);
+            selectCommandHandler.SetNext(exportCommandHandler);
             exportCommandHandler.SetNext(importCommandHandler);
             importCommandHandler.SetNext(deleteCommandHandler);
             deleteCommandHandler.SetNext(purgeCommandHandler);
@@ -166,19 +165,6 @@ namespace FileCabinetApp
             insertCommandHandler.SetNext(missingCommandHandler);
 
             return helpCommandHandler;
-        }
-
-        private static void DefaultRecordPrint(IEnumerable<FileCabinetRecord> records)
-        {
-            if (records == null)
-            {
-                throw new ArgumentNullException(nameof(records));
-            }
-
-            foreach (var record in records)
-            {
-                Console.WriteLine(record.ToString());
-            }
         }
     }
 }

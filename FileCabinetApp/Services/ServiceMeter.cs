@@ -117,63 +117,28 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
+        public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator)
         {
-            if (string.IsNullOrEmpty(dateOfBirth))
+            if (searchCriteria == null)
             {
-                throw new ArgumentNullException(nameof(dateOfBirth));
+                throw new ArgumentNullException(nameof(searchCriteria));
+            }
+
+            if (string.IsNullOrEmpty(logicalOperator))
+            {
+                throw new ArgumentNullException(nameof(logicalOperator));
             }
 
             this.watch.Reset();
             this.watch.Start();
 
-            var collectionOfFoundRecords = this.service.FindByDateOfBirth(dateOfBirth);
+            var selectedRecords = this.service.SelectByCriteria(searchCriteria, logicalOperator);
 
             this.watch.Stop();
-            Console.WriteLine($"Find method execution duration is {this.watch.ElapsedTicks} ticks.");
+            Console.WriteLine($"Select method execution duration is {this.watch.ElapsedTicks} ticks.");
             Console.WriteLine();
 
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            if (string.IsNullOrEmpty(firstName))
-            {
-                throw new ArgumentNullException(nameof(firstName));
-            }
-
-            this.watch.Reset();
-            this.watch.Start();
-
-            var collectionOfFoundRecords = this.service.FindByFirstName(firstName);
-
-            this.watch.Stop();
-            Console.WriteLine($"Find method execution duration is {this.watch.ElapsedTicks} ticks.");
-            Console.WriteLine();
-
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            if (string.IsNullOrEmpty(lastName))
-            {
-                throw new ArgumentNullException(nameof(lastName));
-            }
-
-            this.watch.Reset();
-            this.watch.Start();
-
-            var collectionOfFoundRecords = this.service.FindByLastName(lastName);
-
-            this.watch.Stop();
-            Console.WriteLine($"Find method execution duration is {this.watch.ElapsedTicks} ticks.");
-            Console.WriteLine();
-
-            return collectionOfFoundRecords;
+            return selectedRecords;
         }
 
         /// <inheritdoc/>

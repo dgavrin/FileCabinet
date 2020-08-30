@@ -37,6 +37,7 @@ namespace FileCabinetApp.CommandHandlers
             if (appCommandRequest.Command.Equals(Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Insert(appCommandRequest.Parameters);
+                Memoizer.GetMemoizer(this.fileCabinetService).Clear();
             }
             else
             {
