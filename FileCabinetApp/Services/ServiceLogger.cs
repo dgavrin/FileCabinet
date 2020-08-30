@@ -168,6 +168,42 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator)
+        {
+            if (searchCriteria == null)
+            {
+                throw new ArgumentNullException(nameof(searchCriteria));
+            }
+
+            if (string.IsNullOrEmpty(logicalOperator))
+            {
+                throw new ArgumentNullException(nameof(logicalOperator));
+            }
+
+            var selectedRecords = this.service.SelectByCriteria(searchCriteria, logicalOperator);
+            var searchCriteriaString = new StringBuilder();
+
+            if (searchCriteria.Count > 0)
+            {
+                foreach (var criterion in searchCriteria)
+                {
+                    searchCriteriaString.Append($" {criterion.Key} = '{criterion.Value}' {logicalOperator}");
+                }
+
+                var numberOfInterferingCharacters = logicalOperator.Length + 1;
+                searchCriteriaString.Remove(searchCriteriaString.Length - numberOfInterferingCharacters - 1, numberOfInterferingCharacters);
+            }
+            else
+            {
+                searchCriteriaString.Append("out search criteria");
+            }
+
+            Log($"Calling {nameof(this.service.SelectByCriteria)}() with{searchCriteriaString}");
+
+            return selectedRecords;
+        }
+
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             var collectionOfReceivedRecods = this.service.GetRecords();

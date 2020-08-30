@@ -81,6 +81,14 @@ namespace FileCabinetApp.Services
         public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
 
         /// <summary>
+        /// Returns a selection of records based on the specified criteria.
+        /// </summary>
+        /// <param name="searchCriteria">Search criteria.</param>
+        /// <param name="logicalOperator">Logical operator.</param>
+        /// <returns>Selection of records based on specified criteria.</returns>
+        public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator);
+
+        /// <summary>
         /// Creates a snapshot of a file cabinet service.
         /// </summary>
         /// <returns>A snapshot of the file cabinet service.</returns>

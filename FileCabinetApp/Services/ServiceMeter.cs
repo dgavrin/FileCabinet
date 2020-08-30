@@ -177,6 +177,31 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
+        public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator)
+        {
+            if (searchCriteria == null)
+            {
+                throw new ArgumentNullException(nameof(searchCriteria));
+            }
+
+            if (string.IsNullOrEmpty(logicalOperator))
+            {
+                throw new ArgumentNullException(nameof(logicalOperator));
+            }
+
+            this.watch.Reset();
+            this.watch.Start();
+
+            var selectedRecords = this.service.SelectByCriteria(searchCriteria, logicalOperator);
+
+            this.watch.Stop();
+            Console.WriteLine($"Select method execution duration is {this.watch.ElapsedTicks} ticks.");
+            Console.WriteLine();
+
+            return selectedRecords;
+        }
+
+        /// <inheritdoc/>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             this.watch.Reset();
