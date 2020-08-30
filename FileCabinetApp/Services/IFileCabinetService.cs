@@ -60,27 +60,6 @@ namespace FileCabinetApp.Services
         public List<int> Update(List<KeyValuePair<string, string>> newRecordParameters, List<KeyValuePair<string, string>> searchOptions);
 
         /// <summary>
-        /// Gets a list of entries by first name.
-        /// </summary>
-        /// <param name="firstName">The first name.</param>
-        /// <returns>List of entries.</returns>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName);
-
-        /// <summary>
-        /// Gets a list of entries by last name.
-        /// </summary>
-        /// <param name="lastName">The last name.</param>
-        /// <returns>List of entries.</returns>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName);
-
-        /// <summary>
-        /// Gets a list of entries by date of birth.
-        /// </summary>
-        /// <param name="dateOfBirth">The date of birth.</param>
-        /// <returns>List of entries.</returns>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth);
-
-        /// <summary>
         /// Returns a selection of records based on the specified criteria.
         /// </summary>
         /// <param name="searchCriteria">Search criteria.</param>

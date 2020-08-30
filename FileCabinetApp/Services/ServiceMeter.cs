@@ -117,66 +117,6 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
-        {
-            if (string.IsNullOrEmpty(dateOfBirth))
-            {
-                throw new ArgumentNullException(nameof(dateOfBirth));
-            }
-
-            this.watch.Reset();
-            this.watch.Start();
-
-            var collectionOfFoundRecords = this.service.FindByDateOfBirth(dateOfBirth);
-
-            this.watch.Stop();
-            Console.WriteLine($"Find method execution duration is {this.watch.ElapsedTicks} ticks.");
-            Console.WriteLine();
-
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            if (string.IsNullOrEmpty(firstName))
-            {
-                throw new ArgumentNullException(nameof(firstName));
-            }
-
-            this.watch.Reset();
-            this.watch.Start();
-
-            var collectionOfFoundRecords = this.service.FindByFirstName(firstName);
-
-            this.watch.Stop();
-            Console.WriteLine($"Find method execution duration is {this.watch.ElapsedTicks} ticks.");
-            Console.WriteLine();
-
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            if (string.IsNullOrEmpty(lastName))
-            {
-                throw new ArgumentNullException(nameof(lastName));
-            }
-
-            this.watch.Reset();
-            this.watch.Start();
-
-            var collectionOfFoundRecords = this.service.FindByLastName(lastName);
-
-            this.watch.Stop();
-            Console.WriteLine($"Find method execution duration is {this.watch.ElapsedTicks} ticks.");
-            Console.WriteLine();
-
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
         public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator)
         {
             if (searchCriteria == null)

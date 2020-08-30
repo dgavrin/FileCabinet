@@ -17,17 +17,14 @@ namespace FileCabinetApp.CommandHandlers
         private const string Command = "select";
 
         private ICommandHandler nextHandler;
-        private Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SelectCommandHandler"/> class.
         /// </summary>
         /// <param name="fileCabinetService">FileCabinetService.</param>
-        /// <param name="printer">Printer.</param>
-        public SelectCommandHandler(IFileCabinetService fileCabinetService, Action<IEnumerable<FileCabinetRecord>> printer)
+        public SelectCommandHandler(IFileCabinetService fileCabinetService)
             : base(fileCabinetService)
         {
-            this.printer = printer ?? throw new ArgumentNullException(nameof(printer));
         }
 
         /// <inheritdoc/>
@@ -397,6 +394,11 @@ namespace FileCabinetApp.CommandHandlers
             private static Dictionary<string, int> GetMaxFieldsLength(IEnumerable<FileCabinetRecord> records)
             {
                 var maxFieldsLength = new Dictionary<string, int>();
+
+                if (!records.Any())
+                {
+                    return MinimalFieldsLength;
+                }
 
                 foreach (var nameOfRecordField in NamesOfRecordFields)
                 {

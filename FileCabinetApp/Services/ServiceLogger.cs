@@ -120,54 +120,6 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(string dateOfBirth)
-        {
-            if (string.IsNullOrEmpty(dateOfBirth))
-            {
-                throw new ArgumentNullException(nameof(dateOfBirth));
-            }
-
-            var collectionOfFoundRecords = this.service.FindByDateOfBirth(dateOfBirth);
-
-            Log($"Calling {nameof(this.service.FindByDateOfBirth)}() with" +
-                $"DateOfBirth = '{dateOfBirth}'");
-
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
-        {
-            if (string.IsNullOrEmpty(firstName))
-            {
-                throw new ArgumentNullException(nameof(firstName));
-            }
-
-            var collectionOfFoundRecords = this.service.FindByFirstName(firstName);
-
-            Log($"Calling {nameof(this.service.FindByFirstName)}() with" +
-                $"FirstName = '{firstName}'");
-
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
-        {
-            if (string.IsNullOrEmpty(lastName))
-            {
-                throw new ArgumentNullException(nameof(lastName));
-            }
-
-            var collectionOfFoundRecords = this.service.FindByLastName(lastName);
-
-            Log($"Calling {nameof(this.service.FindByLastName)}() with" +
-                $"LastName = '{lastName}'");
-
-            return collectionOfFoundRecords;
-        }
-
-        /// <inheritdoc/>
         public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator)
         {
             if (searchCriteria == null)
