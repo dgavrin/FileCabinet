@@ -182,21 +182,6 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public bool Remove(int recordIdForRemove)
-        {
-            this.watch.Reset();
-            this.watch.Start();
-
-            var resultOfRemove = this.service.Remove(recordIdForRemove);
-
-            this.watch.Stop();
-            Console.WriteLine($"Remove method execution duration is {this.watch.ElapsedTicks} ticks.");
-            Console.WriteLine();
-
-            return resultOfRemove;
-        }
-
-        /// <inheritdoc/>
         public List<int> Delete(string key, string value)
         {
             this.watch.Reset();

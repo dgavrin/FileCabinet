@@ -81,13 +81,6 @@ namespace FileCabinetApp.Services
         public int Restore(FileCabinetServiceSnapshot fileCabinetServiceSnapshot);
 
         /// <summary>
-        /// Deletes the record with the specified ID and returns and returns a value indicating whether the deletion was successful.
-        /// </summary>
-        /// <param name="recordIdForRemove">The identifier of the entry to be deleted.</param>
-        /// <returns>A value used to determine if the deletion was successful.</returns>
-        public bool Remove(int recordIdForRemove);
-
-        /// <summary>
         /// Delete record with specified key and value.
         /// </summary>
         /// <param name="key">Key.</param>

@@ -599,9 +599,6 @@
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Remove(System.Int32)">
-            <inheritdoc/>
-        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Delete(System.String,System.String)">
             <inheritdoc/>
         </member>
@@ -671,9 +668,6 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Remove(System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Delete(System.String,System.String)">
@@ -795,13 +789,6 @@
             <param name="fileCabinetServiceSnapshot">FileCabinetServiceSnapshot.</param>
             <returns>Number of imported records.</returns>
         </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.Remove(System.Int32)">
-            <summary>
-            Deletes the record with the specified ID and returns and returns a value indicating whether the deletion was successful.
-            </summary>
-            <param name="recordIdForRemove">The identifier of the entry to be deleted.</param>
-            <returns>A value used to determine if the deletion was successful.</returns>
-        </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.Delete(System.String,System.String)">
             <summary>
             Delete record with specified key and value.
@@ -848,9 +835,6 @@
         <member name="M:FileCabinetApp.Services.ServiceLogger.MakeSnapshot">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.Remove(System.Int32)">
-            <inheritdoc/>
-        </member>
         <member name="M:FileCabinetApp.Services.ServiceLogger.Delete(System.String,System.String)">
             <inheritdoc/>
         </member>
@@ -893,9 +877,6 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.MakeSnapshot">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.Remove(System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.Delete(System.String,System.String)">

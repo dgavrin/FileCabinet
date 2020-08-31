@@ -587,28 +587,6 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public bool Remove(int recordIdForRemove)
-        {
-            if (recordIdForRemove < 1)
-            {
-                throw new ArgumentException($"The {nameof(recordIdForRemove)} cannot be less than one.");
-            }
-
-            var indexOfRecordForRemove = -1;
-            if (this.TryGetIndexOfRecordWithId(recordIdForRemove, out indexOfRecordForRemove))
-            {
-                this.RemoveEntryFromDictionaries(this.list[indexOfRecordForRemove]);
-                this.list.RemoveAt(indexOfRecordForRemove);
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <inheritdoc/>
         public List<int> Delete(string key, string value)
         {
             const string noRecordsFoundMessage = "No records were found with the specified key.";
@@ -713,22 +691,6 @@ namespace FileCabinetApp.Services
             {
                 throw new ArgumentException(noRecordsFoundMessage);
             }
-        }
-
-        private bool TryGetIndexOfRecordWithId(int id, out int index)
-        {
-            index = -1;
-
-            for (int i = 0; i < this.list.Count; i++)
-            {
-                if (this.list[i].Id == id)
-                {
-                    index = i;
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private void RemoveEntryFromDictionaries(FileCabinetRecord fileCabinetRecord)

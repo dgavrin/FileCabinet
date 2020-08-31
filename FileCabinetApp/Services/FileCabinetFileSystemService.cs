@@ -718,32 +718,6 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public bool Remove(int recordIdForRemove)
-        {
-            if (recordIdForRemove < 1)
-            {
-                throw new ArgumentException($"The {nameof(recordIdForRemove)} cannot be less than one.");
-            }
-
-            if (this.identifierDictionary.ContainsKey(recordIdForRemove))
-            {
-                var removedRecordOffset = this.identifierDictionary[recordIdForRemove];
-                this.fileStream.Seek(removedRecordOffset, SeekOrigin.Begin);
-                this.fileStream.WriteByte(1);
-
-                var removedRecord = new FileCabinetRecord();
-                this.TryGetRecordWithId(recordIdForRemove, ref removedRecord);
-                this.RemoveEntryFromDictionaries(removedRecord, removedRecordOffset);
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <inheritdoc/>
         public List<int> Delete(string key, string value)
         {
             const string noRecordsFoundMessage = "No records were found with the specified key.";

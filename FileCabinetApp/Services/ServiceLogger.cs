@@ -182,16 +182,6 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public bool Remove(int recordIdForRemove)
-        {
-            var resultOfRemove = this.service.Remove(recordIdForRemove);
-
-            Log($"Calling {nameof(this.service.Remove)}()");
-
-            return resultOfRemove;
-        }
-
-        /// <inheritdoc/>
         public List<int> Delete(string key, string value)
         {
             var identifiersOfDeletedRecords = this.service.Delete(key, value);
