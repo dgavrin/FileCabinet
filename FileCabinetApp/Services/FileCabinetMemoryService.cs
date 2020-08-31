@@ -37,7 +37,7 @@ namespace FileCabinetApp.Services
         /// <param name="validationType">The validation type.</param>
         public FileCabinetMemoryService(string validationType)
         {
-            if (validationType == null)
+            if (string.IsNullOrEmpty(validationType))
             {
                 throw new ArgumentNullException(nameof(validationType));
             }

@@ -21,12 +21,7 @@ namespace FileCabinetApp.Services
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public ServiceMeter(IFileCabinetService fileCabinetService)
         {
-            if (fileCabinetService == null)
-            {
-                throw new ArgumentNullException(nameof(fileCabinetService));
-            }
-
-            this.service = fileCabinetService;
+            this.service = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
             this.watch = new Stopwatch();
         }
 

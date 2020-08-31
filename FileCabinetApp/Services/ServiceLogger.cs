@@ -25,12 +25,7 @@ namespace FileCabinetApp.Services
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public ServiceLogger(IFileCabinetService fileCabinetService)
         {
-            if (fileCabinetService == null)
-            {
-                throw new ArgumentNullException(nameof(fileCabinetService));
-            }
-
-            this.service = fileCabinetService;
+            this.service = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>

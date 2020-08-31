@@ -19,7 +19,7 @@ namespace FileCabinetApp.Writers
         /// <param name="xmlWriter">The xmlWriter.</param>
         public FileCabinetRecordXmlWriter(XmlWriter xmlWriter)
         {
-            this.writer = xmlWriter;
+            this.writer = xmlWriter ?? throw new ArgumentNullException(nameof(xmlWriter));
         }
 
         /// <summary>

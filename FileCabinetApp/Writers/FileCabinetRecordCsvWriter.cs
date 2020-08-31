@@ -18,7 +18,7 @@ namespace FileCabinetApp.Writers
         /// <param name="textWriter">The textWriter.</param>
         public FileCabinetRecordCsvWriter(TextWriter textWriter)
         {
-            this.writer = textWriter;
+            this.writer = textWriter ?? throw new ArgumentNullException(nameof(textWriter));
         }
 
         /// <summary>

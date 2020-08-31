@@ -13,6 +13,8 @@ namespace FileCabinetApp.CommandHandlers
         /// <summary>
         /// FileCabinetService.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1051:Не объявляйте видимые поля экземпляров", Justification = "<Ожидание>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "<Ожидание>")]
         protected IFileCabinetService fileCabinetService;
 
         /// <summary>

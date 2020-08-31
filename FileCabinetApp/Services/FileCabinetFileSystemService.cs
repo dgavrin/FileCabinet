@@ -53,17 +53,7 @@ namespace FileCabinetApp.Services
         /// <param name="validationType">The validation type.</param>
         public FileCabinetFileSystemService(FileStream fileStream, string validationType)
         {
-            if (fileStream == null)
-            {
-                throw new ArgumentNullException(nameof(fileStream));
-            }
-            else
-            {
-                this.fileStream = fileStream;
-                this.binaryWriter = new BinaryWriter(this.fileStream);
-            }
-
-            if (validationType == null)
+            if (string.IsNullOrEmpty(validationType))
             {
                 throw new ArgumentNullException(nameof(validationType));
             }
@@ -76,6 +66,9 @@ namespace FileCabinetApp.Services
             {
                 this.validator = new ValidatorBuilder().CreateDefault();
             }
+
+            this.fileStream = fileStream ?? throw new ArgumentNullException(nameof(fileStream));
+            this.binaryWriter = new BinaryWriter(this.fileStream);
 
             this.lastRecordId = this.GetLastRecordId();
             this.UpdateDictionaries();
