@@ -21,12 +21,7 @@ namespace FileCabinetApp.Services
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public ServiceMeter(IFileCabinetService fileCabinetService)
         {
-            if (fileCabinetService == null)
-            {
-                throw new ArgumentNullException(nameof(fileCabinetService));
-            }
-
-            this.service = fileCabinetService;
+            this.service = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
             this.watch = new Stopwatch();
         }
 
@@ -34,7 +29,7 @@ namespace FileCabinetApp.Services
         public IInputValidator InputValidator => this.service.InputValidator;
 
         /// <inheritdoc/>
-        public int CreateRecord(FileCabinetRecord recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue)
         {
             if (recordParameters == null)
             {
@@ -44,7 +39,7 @@ namespace FileCabinetApp.Services
             this.watch.Reset();
             this.watch.Start();
 
-            var newRecordId = this.service.CreateRecord(recordParameters);
+            var newRecordId = this.service.CreateRecord(recordParameters, id);
 
             this.watch.Stop();
             Console.WriteLine($"Create method execution duration is {this.watch.ElapsedTicks} ticks.");
@@ -184,21 +179,6 @@ namespace FileCabinetApp.Services
             Console.WriteLine();
 
             return snapshot;
-        }
-
-        /// <inheritdoc/>
-        public bool Remove(int recordIdForRemove)
-        {
-            this.watch.Reset();
-            this.watch.Start();
-
-            var resultOfRemove = this.service.Remove(recordIdForRemove);
-
-            this.watch.Stop();
-            Console.WriteLine($"Remove method execution duration is {this.watch.ElapsedTicks} ticks.");
-            Console.WriteLine();
-
-            return resultOfRemove;
         }
 
         /// <inheritdoc/>

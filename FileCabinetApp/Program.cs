@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using FileCabinetApp.CommandHandlers;
-using FileCabinetApp.Iterators;
-using FileCabinetApp.Records;
 using FileCabinetApp.Services;
 
 namespace FileCabinetApp

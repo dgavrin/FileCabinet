@@ -19,11 +19,12 @@ namespace FileCabinetApp.Services
         public IInputValidator InputValidator { get; }
 
         /// <summary>
-        /// Creates a record with personal information about a person and adds it to the list.
+        /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
         /// </summary>
         /// <param name="recordParameters">FileCabinetRecord fields.</param>
+        /// <param name="id">Identifier.</param>
         /// <returns>Identifier of the new record.</returns>
-        public int CreateRecord(FileCabinetRecord recordParameters);
+        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue);
 
         /// <summary>
         /// Inserts a record with personal information about a person into the list.
@@ -79,13 +80,6 @@ namespace FileCabinetApp.Services
         /// <param name="fileCabinetServiceSnapshot">FileCabinetServiceSnapshot.</param>
         /// <returns>Number of imported records.</returns>
         public int Restore(FileCabinetServiceSnapshot fileCabinetServiceSnapshot);
-
-        /// <summary>
-        /// Deletes the record with the specified ID and returns and returns a value indicating whether the deletion was successful.
-        /// </summary>
-        /// <param name="recordIdForRemove">The identifier of the entry to be deleted.</param>
-        /// <returns>A value used to determine if the deletion was successful.</returns>
-        public bool Remove(int recordIdForRemove);
 
         /// <summary>
         /// Delete record with specified key and value.

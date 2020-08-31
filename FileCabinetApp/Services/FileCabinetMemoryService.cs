@@ -37,7 +37,7 @@ namespace FileCabinetApp.Services
         /// <param name="validationType">The validation type.</param>
         public FileCabinetMemoryService(string validationType)
         {
-            if (validationType == null)
+            if (string.IsNullOrEmpty(validationType))
             {
                 throw new ArgumentNullException(nameof(validationType));
             }
@@ -75,69 +75,33 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(FileCabinetRecord recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue)
         {
             if (recordParameters == null)
             {
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            this.validator.ValidateParameters(recordParameters);
-
-            var record = new FileCabinetRecord
-            {
-                Id = ++this.lastRecordId,
-                FirstName = recordParameters.FirstName,
-                LastName = recordParameters.LastName,
-                DateOfBirth = recordParameters.DateOfBirth,
-                Wallet = recordParameters.Wallet,
-                MaritalStatus = recordParameters.MaritalStatus,
-                Height = recordParameters.Height,
-            };
-
-            this.list.Add(record);
-
-            this.AddEntryToDictionaries(record);
-
-            return record.Id;
-        }
-
-        /// <summary>
-        /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
-        /// </summary>
-        /// <param name="recordParameters">FileCabinetRecord fields.</param>
-        /// <param name="id">Identifier.</param>
-        /// <returns>Identifier of the new record.</returns>
-        public int CreateRecord(FileCabinetRecord recordParameters, int id)
-        {
-            if (recordParameters == null)
-            {
-                throw new ArgumentNullException(nameof(recordParameters));
-            }
-
-            if (id < 0)
+            if (id != int.MinValue && id < 0)
             {
                 throw new ArgumentException("The record ID must be greater than zero.", nameof(id));
             }
 
             this.validator.ValidateParameters(recordParameters);
 
-            var record = new FileCabinetRecord
+            if (id == int.MinValue)
             {
-                Id = id,
-                FirstName = recordParameters.FirstName,
-                LastName = recordParameters.LastName,
-                DateOfBirth = recordParameters.DateOfBirth,
-                Wallet = recordParameters.Wallet,
-                MaritalStatus = recordParameters.MaritalStatus,
-                Height = recordParameters.Height,
-            };
+                recordParameters.Id = ++this.lastRecordId;
+            }
+            else
+            {
+                recordParameters.Id = id;
+            }
 
-            this.list.Add(record);
+            this.list.Add(recordParameters);
+            this.AddEntryToDictionaries(recordParameters);
 
-            this.AddEntryToDictionaries(record);
-
-            return record.Id;
+            return recordParameters.Id;
         }
 
         /// <inheritdoc/>
@@ -587,28 +551,6 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public bool Remove(int recordIdForRemove)
-        {
-            if (recordIdForRemove < 1)
-            {
-                throw new ArgumentException($"The {nameof(recordIdForRemove)} cannot be less than one.");
-            }
-
-            var indexOfRecordForRemove = -1;
-            if (this.TryGetIndexOfRecordWithId(recordIdForRemove, out indexOfRecordForRemove))
-            {
-                this.RemoveEntryFromDictionaries(this.list[indexOfRecordForRemove]);
-                this.list.RemoveAt(indexOfRecordForRemove);
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <inheritdoc/>
         public List<int> Delete(string key, string value)
         {
             const string noRecordsFoundMessage = "No records were found with the specified key.";
@@ -713,22 +655,6 @@ namespace FileCabinetApp.Services
             {
                 throw new ArgumentException(noRecordsFoundMessage);
             }
-        }
-
-        private bool TryGetIndexOfRecordWithId(int id, out int index)
-        {
-            index = -1;
-
-            for (int i = 0; i < this.list.Count; i++)
-            {
-                if (this.list[i].Id == id)
-                {
-                    index = i;
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private void RemoveEntryFromDictionaries(FileCabinetRecord fileCabinetRecord)

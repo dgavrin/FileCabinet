@@ -25,26 +25,21 @@ namespace FileCabinetApp.Services
         /// <param name="fileCabinetService">FileCabinetService.</param>
         public ServiceLogger(IFileCabinetService fileCabinetService)
         {
-            if (fileCabinetService == null)
-            {
-                throw new ArgumentNullException(nameof(fileCabinetService));
-            }
-
-            this.service = fileCabinetService;
+            this.service = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <inheritdoc/>
         public IInputValidator InputValidator => this.service.InputValidator;
 
         /// <inheritdoc/>
-        public int CreateRecord(FileCabinetRecord recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue)
         {
             if (recordParameters == null)
             {
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            var newRecordId = this.service.CreateRecord(recordParameters);
+            var newRecordId = this.service.CreateRecord(recordParameters, id);
 
             Log($"Calling {nameof(this.service.CreateRecord)}() with" +
                 $"FirstName = '{recordParameters.FirstName}', " +
@@ -184,16 +179,6 @@ namespace FileCabinetApp.Services
             Log($"Calling {nameof(this.service.MakeSnapshot)}()");
 
             return snapshot;
-        }
-
-        /// <inheritdoc/>
-        public bool Remove(int recordIdForRemove)
-        {
-            var resultOfRemove = this.service.Remove(recordIdForRemove);
-
-            Log($"Calling {nameof(this.service.Remove)}()");
-
-            return resultOfRemove;
         }
 
         /// <inheritdoc/>

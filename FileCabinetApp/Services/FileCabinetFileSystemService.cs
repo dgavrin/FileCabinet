@@ -53,17 +53,7 @@ namespace FileCabinetApp.Services
         /// <param name="validationType">The validation type.</param>
         public FileCabinetFileSystemService(FileStream fileStream, string validationType)
         {
-            if (fileStream == null)
-            {
-                throw new ArgumentNullException(nameof(fileStream));
-            }
-            else
-            {
-                this.fileStream = fileStream;
-                this.binaryWriter = new BinaryWriter(this.fileStream);
-            }
-
-            if (validationType == null)
+            if (string.IsNullOrEmpty(validationType))
             {
                 throw new ArgumentNullException(nameof(validationType));
             }
@@ -76,6 +66,9 @@ namespace FileCabinetApp.Services
             {
                 this.validator = new ValidatorBuilder().CreateDefault();
             }
+
+            this.fileStream = fileStream ?? throw new ArgumentNullException(nameof(fileStream));
+            this.binaryWriter = new BinaryWriter(this.fileStream);
 
             this.lastRecordId = this.GetLastRecordId();
             this.UpdateDictionaries();
@@ -150,41 +143,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(FileCabinetRecord recordParameters)
-        {
-            if (recordParameters == null)
-            {
-                throw new ArgumentNullException(nameof(recordParameters));
-            }
-
-            this.validator.ValidateParameters(recordParameters);
-
-            var newRecord = new FileCabinetRecord
-            {
-                Id = ++this.lastRecordId,
-                FirstName = recordParameters.FirstName,
-                LastName = recordParameters.LastName,
-                DateOfBirth = recordParameters.DateOfBirth,
-                Wallet = recordParameters.Wallet,
-                MaritalStatus = recordParameters.MaritalStatus,
-                Height = recordParameters.Height,
-            };
-            var bytesOfNewRecord = FileCabinetRecordToBytes(newRecord);
-            this.fileStream.Seek(0, SeekOrigin.End);
-            this.AddEntryToDictionaries(newRecord, this.fileStream.Position);
-            this.fileStream.Write(bytesOfNewRecord, 0, bytesOfNewRecord.Length);
-            this.fileStream.Flush();
-
-            return newRecord.Id;
-        }
-
-        /// <summary>
-        /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
-        /// </summary>
-        /// <param name="recordParameters">FileCabinetRecord fields.</param>
-        /// <param name="id">Identifier.</param>
-        /// <returns>Identifier of the new record.</returns>
-        public int CreateRecord(FileCabinetRecord recordParameters, int id)
+        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue)
         {
             if (recordParameters == null)
             {
@@ -198,24 +157,23 @@ namespace FileCabinetApp.Services
 
             this.validator.ValidateParameters(recordParameters);
 
-            var newRecord = new FileCabinetRecord
+            if (id == int.MinValue)
             {
-                Id = id,
-                FirstName = recordParameters.FirstName,
-                LastName = recordParameters.LastName,
-                DateOfBirth = recordParameters.DateOfBirth,
-                Wallet = recordParameters.Wallet,
-                MaritalStatus = recordParameters.MaritalStatus,
-                Height = recordParameters.Height,
-            };
-            var bytesOfNewRecord = FileCabinetRecordToBytes(newRecord);
+                recordParameters.Id = ++this.lastRecordId;
+            }
+            else
+            {
+                recordParameters.Id = id;
+            }
+
+            var bytesOfNewRecord = FileCabinetRecordToBytes(recordParameters);
             this.fileStream.Seek(0, SeekOrigin.End);
-            this.AddEntryToDictionaries(newRecord, this.fileStream.Position);
+            this.AddEntryToDictionaries(recordParameters, this.fileStream.Position);
             this.fileStream.Write(bytesOfNewRecord, 0, bytesOfNewRecord.Length);
             this.fileStream.Flush();
             this.UpdateLastRecordId();
 
-            return newRecord.Id;
+            return recordParameters.Id;
         }
 
         /// <inheritdoc/>
@@ -722,32 +680,6 @@ namespace FileCabinetApp.Services
             }
 
             return importedRecordsCount;
-        }
-
-        /// <inheritdoc/>
-        public bool Remove(int recordIdForRemove)
-        {
-            if (recordIdForRemove < 1)
-            {
-                throw new ArgumentException($"The {nameof(recordIdForRemove)} cannot be less than one.");
-            }
-
-            if (this.identifierDictionary.ContainsKey(recordIdForRemove))
-            {
-                var removedRecordOffset = this.identifierDictionary[recordIdForRemove];
-                this.fileStream.Seek(removedRecordOffset, SeekOrigin.Begin);
-                this.fileStream.WriteByte(1);
-
-                var removedRecord = new FileCabinetRecord();
-                this.TryGetRecordWithId(recordIdForRemove, ref removedRecord);
-                this.RemoveEntryFromDictionaries(removedRecord, removedRecordOffset);
-
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         /// <inheritdoc/>

@@ -553,16 +553,8 @@
             <param name="fileCabinetRecord">FileCabinetRecord.</param>
             <returns>Successful conversion.</returns>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.CreateRecord(FileCabinetApp.Records.FileCabinetRecord,System.Int32)">
-            <summary>
-            Creates a record with personal information about the person and with the specified identifier and adds it to the list.
-            </summary>
-            <param name="recordParameters">FileCabinetRecord fields.</param>
-            <param name="id">Identifier.</param>
-            <returns>Identifier of the new record.</returns>
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Insert(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
@@ -597,9 +589,6 @@
             </summary>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Remove(System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.Delete(System.String,System.String)">
@@ -641,16 +630,8 @@
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.MakeSnapshot">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.CreateRecord(FileCabinetApp.Records.FileCabinetRecord)">
-            <inheritdoc/>
-        </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.CreateRecord(FileCabinetApp.Records.FileCabinetRecord,System.Int32)">
-            <summary>
-            Creates a record with personal information about the person and with the specified identifier and adds it to the list.
-            </summary>
-            <param name="recordParameters">FileCabinetRecord fields.</param>
-            <param name="id">Identifier.</param>
-            <returns>Identifier of the new record.</returns>
+            <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Insert(FileCabinetApp.Records.FileCabinetRecord)">
             <inheritdoc/>
@@ -671,9 +652,6 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Remove(System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Delete(System.String,System.String)">
@@ -733,11 +711,12 @@
             Input validator.
             </value>
         </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.CreateRecord(FileCabinetApp.Records.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.CreateRecord(FileCabinetApp.Records.FileCabinetRecord,System.Int32)">
             <summary>
-            Creates a record with personal information about a person and adds it to the list.
+            Creates a record with personal information about the person and with the specified identifier and adds it to the list.
             </summary>
             <param name="recordParameters">FileCabinetRecord fields.</param>
+            <param name="id">Identifier.</param>
             <returns>Identifier of the new record.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.Insert(FileCabinetApp.Records.FileCabinetRecord)">
@@ -795,13 +774,6 @@
             <param name="fileCabinetServiceSnapshot">FileCabinetServiceSnapshot.</param>
             <returns>Number of imported records.</returns>
         </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.Remove(System.Int32)">
-            <summary>
-            Deletes the record with the specified ID and returns and returns a value indicating whether the deletion was successful.
-            </summary>
-            <param name="recordIdForRemove">The identifier of the entry to be deleted.</param>
-            <returns>A value used to determine if the deletion was successful.</returns>
-        </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.Delete(System.String,System.String)">
             <summary>
             Delete record with specified key and value.
@@ -824,7 +796,7 @@
         <member name="P:FileCabinetApp.Services.ServiceLogger.InputValidator">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.CreateRecord(FileCabinetApp.Records.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Services.ServiceLogger.CreateRecord(FileCabinetApp.Records.FileCabinetRecord,System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceLogger.Insert(FileCabinetApp.Records.FileCabinetRecord)">
@@ -848,9 +820,6 @@
         <member name="M:FileCabinetApp.Services.ServiceLogger.MakeSnapshot">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.Remove(System.Int32)">
-            <inheritdoc/>
-        </member>
         <member name="M:FileCabinetApp.Services.ServiceLogger.Delete(System.String,System.String)">
             <inheritdoc/>
         </member>
@@ -871,7 +840,7 @@
         <member name="P:FileCabinetApp.Services.ServiceMeter.InputValidator">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.CreateRecord(FileCabinetApp.Records.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.Services.ServiceMeter.CreateRecord(FileCabinetApp.Records.FileCabinetRecord,System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.Insert(FileCabinetApp.Records.FileCabinetRecord)">
@@ -893,9 +862,6 @@
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.MakeSnapshot">
-            <inheritdoc/>
-        </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.Remove(System.Int32)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.Delete(System.String,System.String)">

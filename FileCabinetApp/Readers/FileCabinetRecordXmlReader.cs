@@ -20,7 +20,7 @@ namespace FileCabinetApp.Readers
         /// <param name="streamReader">StreamReader.</param>
         public FileCabinetRecordXmlReader(StreamReader streamReader)
         {
-            this.reader = streamReader;
+            this.reader = streamReader ?? throw new ArgumentNullException(nameof(streamReader));
         }
 
         /// <summary>

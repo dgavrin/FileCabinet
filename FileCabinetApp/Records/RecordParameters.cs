@@ -37,8 +37,8 @@ namespace FileCabinetApp.Records
             : base()
         {
             this.Id = 0;
-            this.FirstName = firstName;
-            this.LastName = lastName;
+            this.FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
+            this.LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
             this.DateOfBirth = dateOfBirth;
             this.Wallet = wallet;
             this.MaritalStatus = maritalStatus;
