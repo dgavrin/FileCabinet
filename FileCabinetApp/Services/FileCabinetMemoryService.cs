@@ -75,69 +75,33 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(FileCabinetRecord recordParameters)
+        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue)
         {
             if (recordParameters == null)
             {
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            this.validator.ValidateParameters(recordParameters);
-
-            var record = new FileCabinetRecord
-            {
-                Id = ++this.lastRecordId,
-                FirstName = recordParameters.FirstName,
-                LastName = recordParameters.LastName,
-                DateOfBirth = recordParameters.DateOfBirth,
-                Wallet = recordParameters.Wallet,
-                MaritalStatus = recordParameters.MaritalStatus,
-                Height = recordParameters.Height,
-            };
-
-            this.list.Add(record);
-
-            this.AddEntryToDictionaries(record);
-
-            return record.Id;
-        }
-
-        /// <summary>
-        /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
-        /// </summary>
-        /// <param name="recordParameters">FileCabinetRecord fields.</param>
-        /// <param name="id">Identifier.</param>
-        /// <returns>Identifier of the new record.</returns>
-        public int CreateRecord(FileCabinetRecord recordParameters, int id)
-        {
-            if (recordParameters == null)
-            {
-                throw new ArgumentNullException(nameof(recordParameters));
-            }
-
-            if (id < 0)
+            if (id != int.MinValue && id < 0)
             {
                 throw new ArgumentException("The record ID must be greater than zero.", nameof(id));
             }
 
             this.validator.ValidateParameters(recordParameters);
 
-            var record = new FileCabinetRecord
+            if (id == int.MinValue)
             {
-                Id = id,
-                FirstName = recordParameters.FirstName,
-                LastName = recordParameters.LastName,
-                DateOfBirth = recordParameters.DateOfBirth,
-                Wallet = recordParameters.Wallet,
-                MaritalStatus = recordParameters.MaritalStatus,
-                Height = recordParameters.Height,
-            };
+                recordParameters.Id = ++this.lastRecordId;
+            }
+            else
+            {
+                recordParameters.Id = id;
+            }
 
-            this.list.Add(record);
+            this.list.Add(recordParameters);
+            this.AddEntryToDictionaries(recordParameters);
 
-            this.AddEntryToDictionaries(record);
-
-            return record.Id;
+            return recordParameters.Id;
         }
 
         /// <inheritdoc/>

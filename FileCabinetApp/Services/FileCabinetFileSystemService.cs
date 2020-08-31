@@ -143,41 +143,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(FileCabinetRecord recordParameters)
-        {
-            if (recordParameters == null)
-            {
-                throw new ArgumentNullException(nameof(recordParameters));
-            }
-
-            this.validator.ValidateParameters(recordParameters);
-
-            var newRecord = new FileCabinetRecord
-            {
-                Id = ++this.lastRecordId,
-                FirstName = recordParameters.FirstName,
-                LastName = recordParameters.LastName,
-                DateOfBirth = recordParameters.DateOfBirth,
-                Wallet = recordParameters.Wallet,
-                MaritalStatus = recordParameters.MaritalStatus,
-                Height = recordParameters.Height,
-            };
-            var bytesOfNewRecord = FileCabinetRecordToBytes(newRecord);
-            this.fileStream.Seek(0, SeekOrigin.End);
-            this.AddEntryToDictionaries(newRecord, this.fileStream.Position);
-            this.fileStream.Write(bytesOfNewRecord, 0, bytesOfNewRecord.Length);
-            this.fileStream.Flush();
-
-            return newRecord.Id;
-        }
-
-        /// <summary>
-        /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
-        /// </summary>
-        /// <param name="recordParameters">FileCabinetRecord fields.</param>
-        /// <param name="id">Identifier.</param>
-        /// <returns>Identifier of the new record.</returns>
-        public int CreateRecord(FileCabinetRecord recordParameters, int id)
+        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue)
         {
             if (recordParameters == null)
             {
@@ -191,24 +157,23 @@ namespace FileCabinetApp.Services
 
             this.validator.ValidateParameters(recordParameters);
 
-            var newRecord = new FileCabinetRecord
+            if (id == int.MinValue)
             {
-                Id = id,
-                FirstName = recordParameters.FirstName,
-                LastName = recordParameters.LastName,
-                DateOfBirth = recordParameters.DateOfBirth,
-                Wallet = recordParameters.Wallet,
-                MaritalStatus = recordParameters.MaritalStatus,
-                Height = recordParameters.Height,
-            };
-            var bytesOfNewRecord = FileCabinetRecordToBytes(newRecord);
+                recordParameters.Id = ++this.lastRecordId;
+            }
+            else
+            {
+                recordParameters.Id = id;
+            }
+
+            var bytesOfNewRecord = FileCabinetRecordToBytes(recordParameters);
             this.fileStream.Seek(0, SeekOrigin.End);
-            this.AddEntryToDictionaries(newRecord, this.fileStream.Position);
+            this.AddEntryToDictionaries(recordParameters, this.fileStream.Position);
             this.fileStream.Write(bytesOfNewRecord, 0, bytesOfNewRecord.Length);
             this.fileStream.Flush();
             this.UpdateLastRecordId();
 
-            return newRecord.Id;
+            return recordParameters.Id;
         }
 
         /// <inheritdoc/>

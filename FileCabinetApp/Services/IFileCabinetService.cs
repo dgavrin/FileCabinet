@@ -19,11 +19,12 @@ namespace FileCabinetApp.Services
         public IInputValidator InputValidator { get; }
 
         /// <summary>
-        /// Creates a record with personal information about a person and adds it to the list.
+        /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
         /// </summary>
         /// <param name="recordParameters">FileCabinetRecord fields.</param>
+        /// <param name="id">Identifier.</param>
         /// <returns>Identifier of the new record.</returns>
-        public int CreateRecord(FileCabinetRecord recordParameters);
+        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue);
 
         /// <summary>
         /// Inserts a record with personal information about a person into the list.
