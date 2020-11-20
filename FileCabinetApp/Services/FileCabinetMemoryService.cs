@@ -75,31 +75,28 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue)
+        public int CreateRecord(FileCabinetRecord recordParameters, bool useId = false)
         {
             if (recordParameters == null)
             {
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            if (id != int.MinValue && id < 0)
+            if (recordParameters.Id < 0)
             {
-                throw new ArgumentException("The record ID must be greater than zero.", nameof(id));
+                throw new ArgumentException("The record ID must be greater than zero.", nameof(recordParameters));
             }
 
             this.validator.ValidateParameters(recordParameters);
 
-            if (id == int.MinValue)
+            if (!useId)
             {
                 recordParameters.Id = ++this.lastRecordId;
-            }
-            else
-            {
-                recordParameters.Id = id;
             }
 
             this.list.Add(recordParameters);
             this.AddEntryToDictionaries(recordParameters);
+            this.UpdateLastRecordId();
 
             return recordParameters.Id;
         }
@@ -116,13 +113,11 @@ namespace FileCabinetApp.Services
 
             if (fileCabinetRecord.Id > 0)
             {
-                var recordsWithThisId = from record in this.list
-                                        where record.Id == fileCabinetRecord.Id
-                                        select record;
+                var recordsWithThisId = this.list.Where(record => record.Id == fileCabinetRecord.Id).ToList();
 
-                if (recordsWithThisId.ToList().Count < 1)
+                if (recordsWithThisId.Count == 0)
                 {
-                    var insertedRecordId = this.CreateRecord(fileCabinetRecord, fileCabinetRecord.Id);
+                    var insertedRecordId = this.CreateRecord(fileCabinetRecord, true);
                     this.UpdateLastRecordId();
                     return insertedRecordId;
                 }
@@ -147,7 +142,7 @@ namespace FileCabinetApp.Services
         public (int active, int removed) GetStat() => (this.list.Count, 0);
 
         /// <inheritdoc/>
-        public void EditRecord(int id, RecordParameters recordParameters)
+        public void EditRecord(int id, FileCabinetRecord recordParameters)
         {
             if (id < 0)
             {
@@ -521,24 +516,22 @@ namespace FileCabinetApp.Services
                 throw new ArgumentNullException(nameof(fileCabinetServiceSnapshot));
             }
 
-            var loadedRecords = fileCabinetServiceSnapshot.Records;
             var importedRecordsCount = 0;
 
-            foreach (var importedRecord in loadedRecords)
+            foreach (var importedRecord in fileCabinetServiceSnapshot.Records)
             {
                 var inputValidator = this.InputValidator;
                 var validationResult = inputValidator.ValidateParameters(importedRecord);
                 if (validationResult.Item1)
                 {
-                    var importedRecordParameters = new RecordParameters(importedRecord);
                     importedRecordsCount++;
                     try
                     {
-                        this.EditRecord(importedRecord.Id, importedRecordParameters);
+                        this.EditRecord(importedRecord.Id, importedRecord);
                     }
                     catch (ArgumentException)
                     {
-                        this.CreateRecord(importedRecordParameters);
+                        this.CreateRecord(importedRecord, true);
                     }
                 }
                 else

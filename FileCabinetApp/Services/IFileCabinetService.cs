@@ -22,9 +22,9 @@ namespace FileCabinetApp.Services
         /// Creates a record with personal information about the person and with the specified identifier and adds it to the list.
         /// </summary>
         /// <param name="recordParameters">FileCabinetRecord fields.</param>
-        /// <param name="id">Identifier.</param>
+        /// <param name="useId">True to use the passed record ID; false to use internal assignment. The default is false.</param>
         /// <returns>Identifier of the new record.</returns>
-        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue);
+        public int CreateRecord(FileCabinetRecord recordParameters, bool useId = false);
 
         /// <summary>
         /// Inserts a record with personal information about a person into the list.
@@ -50,7 +50,7 @@ namespace FileCabinetApp.Services
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="recordParameters">FileCabinetRecord fields.</param>
-        public void EditRecord(int id, RecordParameters recordParameters);
+        public void EditRecord(int id, FileCabinetRecord recordParameters);
 
         /// <summary>
         /// Updates a records with specified parameters.

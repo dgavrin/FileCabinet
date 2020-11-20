@@ -143,27 +143,23 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue)
+        public int CreateRecord(FileCabinetRecord recordParameters, bool useId = false)
         {
             if (recordParameters == null)
             {
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            if (id < 0)
+            if (recordParameters.Id < 0)
             {
-                throw new ArgumentException("The record ID must be greater than zero.", nameof(id));
+                throw new ArgumentException("The record ID must be greater than zero.", nameof(recordParameters));
             }
 
             this.validator.ValidateParameters(recordParameters);
 
-            if (id == int.MinValue)
+            if (!useId)
             {
                 recordParameters.Id = ++this.lastRecordId;
-            }
-            else
-            {
-                recordParameters.Id = id;
             }
 
             var bytesOfNewRecord = FileCabinetRecordToBytes(recordParameters);
@@ -190,7 +186,7 @@ namespace FileCabinetApp.Services
             {
                 if (!this.identifierDictionary.ContainsKey(fileCabinetRecord.Id))
                 {
-                    return this.CreateRecord(fileCabinetRecord, fileCabinetRecord.Id);
+                    return this.CreateRecord(fileCabinetRecord, true);
                 }
                 else
                 {
@@ -204,7 +200,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public void EditRecord(int id, RecordParameters recordParameters)
+        public void EditRecord(int id, FileCabinetRecord recordParameters)
         {
             if (id < 0)
             {
@@ -662,15 +658,14 @@ namespace FileCabinetApp.Services
                 var validationResult = inputValidator.ValidateParameters(importedRecord);
                 if (validationResult.Item1)
                 {
-                    var importedRecordParameters = new RecordParameters(importedRecord);
                     importedRecordsCount++;
                     try
                     {
-                        this.EditRecord(importedRecord.Id, importedRecordParameters);
+                        this.EditRecord(importedRecord.Id, importedRecord);
                     }
                     catch (ArgumentException)
                     {
-                        this.CreateRecord(importedRecordParameters);
+                        this.CreateRecord(importedRecord, true);
                     }
                 }
                 else
