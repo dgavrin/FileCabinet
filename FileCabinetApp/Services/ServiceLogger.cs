@@ -32,14 +32,14 @@ namespace FileCabinetApp.Services
         public IInputValidator InputValidator => this.service.InputValidator;
 
         /// <inheritdoc/>
-        public int CreateRecord(FileCabinetRecord recordParameters, int id = int.MinValue)
+        public int CreateRecord(FileCabinetRecord recordParameters, bool useId = false)
         {
             if (recordParameters == null)
             {
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            var newRecordId = this.service.CreateRecord(recordParameters, id);
+            var newRecordId = this.service.CreateRecord(recordParameters, useId);
 
             Log($"Calling {nameof(this.service.CreateRecord)}() with" +
                 $"FirstName = '{recordParameters.FirstName}', " +
@@ -76,7 +76,7 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public void EditRecord(int id, RecordParameters recordParameters)
+        public void EditRecord(int id, FileCabinetRecord recordParameters)
         {
             if (recordParameters == null)
             {
