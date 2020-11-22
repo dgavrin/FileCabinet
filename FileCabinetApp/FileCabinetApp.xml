@@ -953,6 +953,9 @@
             Represents custom validator for file cabinet service.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.Validators.InputValidator.CustomInputValidator.IdentifierValidator(System.Int32)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Validators.InputValidator.CustomInputValidator.FirstNameValidator(System.String)">
             <inheritdoc/>
         </member>
@@ -979,6 +982,9 @@
             Represents defualt validator for input.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.IdentifierValidator(System.Int32)">
+            <inheritdoc/>
+        </member>
         <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.FirstNameValidator(System.String)">
             <inheritdoc/>
         </member>
@@ -1004,6 +1010,13 @@
             <summary>
             Input validator.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.InputValidator.IInputValidator.IdentifierValidator(System.Int32)">
+            <summary>
+            Checks the validity of the identifier.
+            </summary>
+            <param name="firstName">The FileCabinetRecord identifier.</param>
+            <returns>Validation result.</returns>
         </member>
         <member name="M:FileCabinetApp.Validators.InputValidator.IInputValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
             <summary>
