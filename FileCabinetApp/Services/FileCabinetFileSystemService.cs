@@ -70,8 +70,8 @@ namespace FileCabinetApp.Services
             this.fileStream = fileStream ?? throw new ArgumentNullException(nameof(fileStream));
             this.binaryWriter = new BinaryWriter(this.fileStream);
 
-            this.lastRecordId = this.GetLastRecordId();
             this.UpdateDictionaries();
+            this.lastRecordId = this.GetLastRecordId();
         }
 
         /// <inheritdoc/>
@@ -927,18 +927,16 @@ namespace FileCabinetApp.Services
 
         private int GetLastRecordId()
         {
-            var maxRecordId = 1;
-            var listOfRecords = this.GetRecords();
-
-            foreach (var record in listOfRecords)
+            var maxRecordId = 0;
+            if (this.identifierDictionary.Count > 0)
             {
-                if (maxRecordId < record.Id)
-                {
-                    maxRecordId = record.Id;
-                }
+                return this.identifierDictionary.Keys.Where(key => key > maxRecordId)
+                                                     .Max(key => key);
             }
-
-            return maxRecordId;
+            else
+            {
+                return maxRecordId;
+            }
         }
 
         private void RemoveEntryFromDictionaries(FileCabinetRecord fileCabinetRecord, long offset)

@@ -10,11 +10,37 @@ namespace FileCabinetApp.Validators.InputValidator
     /// </summary>
     public class DefaultInputValidator : IInputValidator
     {
-        private const short MinimumHeight = 0;
-        private const int MinimumLengthOfFirstAndLastName = 2;
-        private const int MaximumLengthOfFirstAndLastName = 60;
-        private const decimal MinimumAmountOfMoney = 0M;
-        private static readonly DateTime MinimalDateOfBirth = new DateTime(1950, 1, 1);
+        private readonly short minimalHeight;
+        private readonly int minimalLengthOfFirstName;
+        private readonly int maximumLengthOfFirstName;
+        private readonly int minimalLengthOfLastName;
+        private readonly int maximumLengthOfLastName;
+        private readonly decimal minimalAmountOfMoney;
+        private readonly DateTime minimalDateOfBirth;
+        private readonly DateTime maximumDateOfBirth;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultInputValidator"/> class.
+        /// </summary>
+        public DefaultInputValidator()
+        {
+            var configuration = new ValidationRulesConfigurationReader("default");
+
+            (var minLenghtOfFirstName, var maxLengthOfFirstName) = configuration.ReadFirstNameValidationCriteria();
+            this.minimalLengthOfFirstName = minLenghtOfFirstName;
+            this.maximumLengthOfFirstName = maxLengthOfFirstName;
+
+            (var minLenghtOfLastName, var maxLengthOfLastName) = configuration.ReadLastNameValidationCriteria();
+            this.minimalLengthOfLastName = minLenghtOfFirstName;
+            this.maximumLengthOfLastName = maxLengthOfFirstName;
+
+            (var minDateOfBirth, var maxDateOfBirth) = configuration.ReadDateOfBirthValidationCriteria();
+            this.minimalDateOfBirth = minDateOfBirth;
+            this.maximumDateOfBirth = maxDateOfBirth;
+
+            this.minimalAmountOfMoney = configuration.ReadWalletValidationCriteria();
+            this.minimalHeight = configuration.ReadHeightValidationCriteria();
+        }
 
         /// <inheritdoc/>
         public Tuple<bool, string> IdentifierValidator(int identifier)
@@ -37,7 +63,9 @@ namespace FileCabinetApp.Validators.InputValidator
                 throw new ArgumentNullException(nameof(firstName));
             }
 
-            if (string.IsNullOrWhiteSpace(firstName) || firstName.Length < MinimumLengthOfFirstAndLastName || firstName.Length > MaximumLengthOfFirstAndLastName)
+            if (string.IsNullOrWhiteSpace(firstName) ||
+                firstName.Length < this.minimalLengthOfFirstName ||
+                firstName.Length > this.maximumLengthOfFirstName)
             {
                 return new Tuple<bool, string>(false, "first name");
             }
@@ -55,7 +83,9 @@ namespace FileCabinetApp.Validators.InputValidator
                 throw new ArgumentNullException(nameof(lastName));
             }
 
-            if (string.IsNullOrWhiteSpace(lastName) || lastName.Length < MinimumLengthOfFirstAndLastName || lastName.Length > MaximumLengthOfFirstAndLastName)
+            if (string.IsNullOrWhiteSpace(lastName) ||
+                lastName.Length < this.minimalLengthOfLastName ||
+                lastName.Length > this.maximumLengthOfLastName)
             {
                 return new Tuple<bool, string>(false, "last name");
             }
@@ -73,7 +103,7 @@ namespace FileCabinetApp.Validators.InputValidator
                 throw new ArgumentNullException(nameof(dateOfBirth), $"The date of birth cannot be null.");
             }
 
-            if (dateOfBirth < MinimalDateOfBirth || dateOfBirth > DateTime.Now)
+            if (dateOfBirth < this.minimalDateOfBirth || dateOfBirth > this.maximumDateOfBirth)
             {
                 return new Tuple<bool, string>(false, "date of birth");
             }
@@ -86,7 +116,7 @@ namespace FileCabinetApp.Validators.InputValidator
         /// <inheritdoc/>
         public Tuple<bool, string> WalletValidator(decimal wallet)
         {
-            if (wallet < MinimumAmountOfMoney)
+            if (wallet < this.minimalAmountOfMoney)
             {
                 return new Tuple<bool, string>(false, "wallet");
             }
@@ -99,7 +129,8 @@ namespace FileCabinetApp.Validators.InputValidator
         /// <inheritdoc/>
         public Tuple<bool, string> MaritalStatusValidator(char maritalStatus)
         {
-            if (maritalStatus != 'M' && maritalStatus != 'm' && maritalStatus != 'U' && maritalStatus != 'u')
+            if (maritalStatus != 'M' && maritalStatus != 'm' &&
+                maritalStatus != 'U' && maritalStatus != 'u')
             {
                 return new Tuple<bool, string>(false, "marital status");
             }
@@ -112,7 +143,7 @@ namespace FileCabinetApp.Validators.InputValidator
         /// <inheritdoc/>
         public Tuple<bool, string> HeightValidator(short height)
         {
-            if (height < MinimumHeight)
+            if (height < this.minimalHeight)
             {
                 return new Tuple<bool, string>(false, "height");
             }

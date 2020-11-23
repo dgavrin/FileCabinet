@@ -11,7 +11,7 @@ namespace FileCabinetApp.Validators.InputValidator
         /// <summary>
         /// Checks the validity of the identifier.
         /// </summary>
-        /// <param name="firstName">The FileCabinetRecord identifier.</param>
+        /// <param name="identifier">The FileCabinetRecord identifier.</param>
         /// <returns>Validation result.</returns>
         public Tuple<bool, string> IdentifierValidator(int identifier);
 

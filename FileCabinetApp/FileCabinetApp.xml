@@ -953,6 +953,11 @@
             Represents custom validator for file cabinet service.
             </summary>
         </member>
+        <member name="M:FileCabinetApp.Validators.InputValidator.CustomInputValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.InputValidator.CustomInputValidator"/> class.
+            </summary>
+        </member>
         <member name="M:FileCabinetApp.Validators.InputValidator.CustomInputValidator.IdentifierValidator(System.Int32)">
             <inheritdoc/>
         </member>
@@ -980,6 +985,11 @@
         <member name="T:FileCabinetApp.Validators.InputValidator.DefaultInputValidator">
             <summary>
             Represents defualt validator for input.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.Validators.InputValidator.DefaultInputValidator"/> class.
             </summary>
         </member>
         <member name="M:FileCabinetApp.Validators.InputValidator.DefaultInputValidator.IdentifierValidator(System.Int32)">
@@ -1015,7 +1025,7 @@
             <summary>
             Checks the validity of the identifier.
             </summary>
-            <param name="firstName">The FileCabinetRecord identifier.</param>
+            <param name="identifier">The FileCabinetRecord identifier.</param>
             <returns>Validation result.</returns>
         </member>
         <member name="M:FileCabinetApp.Validators.InputValidator.IInputValidator.ValidateParameters(FileCabinetApp.Records.FileCabinetRecord)">
