@@ -251,6 +251,7 @@ namespace FileCabinetApp.Services
 
             this.Purge(false);
 
+            var validator = this.InputValidator;
             var identifiersOfRecordsToUpdate = new List<int>();
             var recordsToUpdate = this.GetRecords().ToList<FileCabinetRecord>().FindAll(delegate(FileCabinetRecord fileCabinetRecord)
             {
@@ -348,59 +349,77 @@ namespace FileCabinetApp.Services
                                 throw new ArgumentException("Id update is not supported.");
 
                             case "FIRSTNAME":
-                                fileCabinetRecord.FirstName = newRecordParameter.Value;
+                                if (validator.FirstNameValidator(newRecordParameter.Value).Item1)
+                                {
+                                    fileCabinetRecord.FirstName = newRecordParameter.Value;
+                                }
+                                else
+                                {
+                                    throw new ArgumentException($"{invalidValueForNewRecordParameterMessage}: {newRecordParameter.Key}");
+                                }
 
                                 break;
                             case "LASTNAME":
-                                fileCabinetRecord.LastName = newRecordParameter.Value;
+                                if (validator.LastNameValidator(newRecordParameter.Value).Item1)
+                                {
+                                    fileCabinetRecord.LastName = newRecordParameter.Value;
+                                }
+                                else
+                                {
+                                    throw new ArgumentException($"{invalidValueForNewRecordParameterMessage}: {newRecordParameter.Key}");
+                                }
 
                                 break;
                             case "DATEOFBIRTH":
-                                if (DateTime.TryParse(newRecordParameter.Value, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime dateOfBirth))
+                                if (DateTime.TryParse(newRecordParameter.Value, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime dateOfBirth) &&
+                                    validator.DateOfBirthValidator(dateOfBirth).Item1)
                                 {
                                     fileCabinetRecord.DateOfBirth = dateOfBirth;
                                 }
                                 else
                                 {
-                                    throw new ArgumentException(invalidValueForNewRecordParameterMessage);
+                                    throw new ArgumentException($"{invalidValueForNewRecordParameterMessage}: {newRecordParameter.Key}");
                                 }
 
                                 break;
                             case "WALLET":
-                                if (decimal.TryParse(newRecordParameter.Value, out decimal wallet))
+                                if (decimal.TryParse(newRecordParameter.Value, out decimal wallet) &&
+                                    validator.WalletValidator(wallet).Item1)
                                 {
                                     fileCabinetRecord.Wallet = wallet;
                                 }
                                 else
                                 {
-                                    throw new ArgumentException(invalidValueForNewRecordParameterMessage);
+                                    throw new ArgumentException($"{invalidValueForNewRecordParameterMessage}: {newRecordParameter.Key}");
                                 }
 
                                 break;
                             case "MARITALSTATUS":
-                                if (char.TryParse(newRecordParameter.Value, out char maritalStatus))
+                                if (char.TryParse(newRecordParameter.Value, out char maritalStatus) &&
+                                    validator.MaritalStatusValidator(maritalStatus).Item1)
                                 {
                                     fileCabinetRecord.MaritalStatus = maritalStatus;
                                 }
                                 else
                                 {
-                                    throw new ArgumentException(invalidValueForNewRecordParameterMessage);
+                                    throw new ArgumentException($"{invalidValueForNewRecordParameterMessage}: {newRecordParameter.Key}");
                                 }
 
                                 break;
                             case "HEIGHT":
-                                if (short.TryParse(newRecordParameter.Value, out short height))
+                                if (short.TryParse(newRecordParameter.Value, out short height) &&
+                                    validator.HeightValidator(height).Item1)
                                 {
                                     fileCabinetRecord.Height = height;
                                 }
                                 else
                                 {
-                                    throw new ArgumentException(invalidValueForNewRecordParameterMessage);
+                                    throw new ArgumentException($"{invalidValueForNewRecordParameterMessage}: {newRecordParameter.Key}");
                                 }
 
                                 break;
                             default:
-                                throw new ArgumentException("Invalid key to delete the record.");
+                                throw new ArgumentException("Invalid key to update the record.");
                         }
                     });
 
