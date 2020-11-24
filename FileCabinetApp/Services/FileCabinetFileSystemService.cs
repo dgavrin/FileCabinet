@@ -822,7 +822,6 @@ namespace FileCabinetApp.Services
                 }
             });
 
-            this.Purge(false);
             this.UpdateLastRecordId();
             this.UpdateDictionaries();
 
