@@ -38,9 +38,19 @@ namespace FileCabinetApp.Services
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            var newRecordId = this.service.CreateRecord(recordParameters, useId);
+            int newRecordId;
+            try
+            {
+                newRecordId = this.service.CreateRecord(recordParameters, useId);
+            }
+            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)
+            {
+                Log($"Method {nameof(this.service.CreateRecord)} finished with exception: " +
+                    $"Message - {ex.Message}");
+                throw;
+            }
 
-            Log($"Calling {nameof(this.service.CreateRecord)}() with" +
+            Log($"Calling {nameof(this.service.CreateRecord)}() with " +
                 $"FirstName = '{recordParameters.FirstName}', " +
                 $"LastName = '{recordParameters.LastName}', " +
                 $"DateOfBirth = '{recordParameters.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}', " +
@@ -60,9 +70,19 @@ namespace FileCabinetApp.Services
                 throw new ArgumentNullException(nameof(fileCabinetRecord));
             }
 
-            var newRecordId = this.service.Insert(fileCabinetRecord);
+            int newRecordId;
+            try
+            {
+                newRecordId = this.service.Insert(fileCabinetRecord);
+            }
+            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)
+            {
+                Log($"Method {nameof(this.service.Insert)} finished with exception: " +
+                    $"Message - {ex.Message}");
+                throw;
+            }
 
-            Log($"Calling {nameof(this.service.Insert)}() with" +
+            Log($"Calling {nameof(this.service.Insert)}() with " +
                 $"FirstName = '{fileCabinetRecord.FirstName}', " +
                 $"LastName = '{fileCabinetRecord.LastName}', " +
                 $"DateOfBirth = '{fileCabinetRecord.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}', " +
@@ -82,9 +102,18 @@ namespace FileCabinetApp.Services
                 throw new ArgumentNullException(nameof(recordParameters));
             }
 
-            this.service.EditRecord(id, recordParameters);
+            try
+            {
+                this.service.EditRecord(id, recordParameters);
+            }
+            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)
+            {
+                Log($"Method {nameof(this.service.EditRecord)} finished with exception: " +
+                    $"Message - {ex.Message}");
+                throw;
+            }
 
-            Log($"Calling {nameof(this.service.EditRecord)}() with" +
+            Log($"Calling {nameof(this.service.EditRecord)}() with " +
                 $"FirstName = '{recordParameters.FirstName}', " +
                 $"LastName = '{recordParameters.LastName}', " +
                 $"DateOfBirth = '{recordParameters.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)}', " +
@@ -121,7 +150,18 @@ namespace FileCabinetApp.Services
                 throw new ArgumentNullException(nameof(searchProperties));
             }
 
-            var selectedRecords = this.service.SelectByCriteria(searchProperties);
+            IEnumerable<FileCabinetRecord> selectedRecords;
+            try
+            {
+                selectedRecords = this.service.SelectByCriteria(searchProperties);
+            }
+            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)
+            {
+                Log($"Method {nameof(this.service.SelectByCriteria)} finished with exception: " +
+                    $"Message - {ex.Message}");
+                throw;
+            }
+
             Log($"Calling {nameof(this.service.SelectByCriteria)}() returned {selectedRecords.Count()} record(s)");
 
             return selectedRecords;
@@ -161,7 +201,17 @@ namespace FileCabinetApp.Services
         /// <inheritdoc/>
         public List<int> Delete(string key, string value)
         {
-            var identifiersOfDeletedRecords = this.service.Delete(key, value);
+            List<int> identifiersOfDeletedRecords;
+            try
+            {
+                identifiersOfDeletedRecords = this.service.Delete(key, value);
+            }
+            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)
+            {
+                Log($"Method {nameof(this.service.Delete)} finished with exception: " +
+                    $"Message - {ex.Message}");
+                throw;
+            }
 
             Log($"Calling {nameof(this.service.Delete)}()");
 
@@ -176,7 +226,17 @@ namespace FileCabinetApp.Services
                 throw new ArgumentNullException(nameof(fileCabinetServiceSnapshot));
             }
 
-            var numberOfRestoredRecords = this.service.Restore(fileCabinetServiceSnapshot);
+            int numberOfRestoredRecords;
+            try
+            {
+                numberOfRestoredRecords = this.service.Restore(fileCabinetServiceSnapshot);
+            }
+            catch (Exception ex) when (ex is ArgumentNullException || ex is ArgumentException)
+            {
+                Log($"Method {nameof(this.service.Restore)} finished with exception: " +
+                    $"Message - {ex.Message}");
+                throw;
+            }
 
             Log($"Calling {nameof(this.service.Restore)}()");
             Log($"{nameof(this.service.Restore)}() returned '{numberOfRestoredRecords}'");
