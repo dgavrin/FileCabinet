@@ -63,10 +63,9 @@ namespace FileCabinetApp.Services
         /// <summary>
         /// Returns a selection of records based on the specified criteria.
         /// </summary>
-        /// <param name="searchCriteria">Search criteria.</param>
-        /// <param name="logicalOperator">Logical operator.</param>
+        /// <param name="searchProperties">Specified criteria to search.</param>
         /// <returns>Selection of records based on specified criteria.</returns>
-        public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator);
+        public IEnumerable<FileCabinetRecord> SelectByCriteria(SearchProperties searchProperties);
 
         /// <summary>
         /// Creates a snapshot of a file cabinet service.

@@ -222,13 +222,6 @@
         <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.SetNext(FileCabinetApp.CommandHandlers.ICommandHandler)">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.SelectCommandHandler.TablePrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord},System.Collections.Generic.List{System.String})">
-            <summary>
-            Prints the records with specified fields in table view.
-            </summary>
-            <param name="records">The records to be printed.</param>
-            <param name="recordFields">The fields of records to print.</param>
-        </member>
         <member name="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase">
             <summary>
             A base of command handlers that use IFileCabinetService.
@@ -245,11 +238,160 @@
             </summary>
             <param name="fileCabinetService">FileCabinetService.</param>
         </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.StringConverter">
+            <summary>
+            Gets current string converter.
+            </summary>
+            <value>
+            Current string converter.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.DateConverter">
+            <summary>
+            Gets current datetime converter.
+            </summary>
+            <value>
+            Current datetime converter.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.CharConverter">
+            <summary>
+            Gets current char converter.
+            </summary>
+            <value>
+            Current char converter.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.ShortConverter">
+            <summary>
+            Gets current short converter.
+            </summary>
+            <value>
+            Current short converter.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.IntConverter">
+            <summary>
+            Gets current int converter.
+            </summary>
+            <value>
+            Current int converter.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.DecimalConverter">
+            <summary>
+            Gets current decimal converter.
+            </summary>
+            <value>
+            Current decimal converter.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.CancellingValidator">
+            <summary>
+            Gets validator for cancelling.
+            </summary>
+            <value>Validator for cancelling.</value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.IdentifierValidator">
+            <summary>
+            Gets validator for id.
+            </summary>
+            <value>Validator for id.</value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.FirstNameValidator">
+            <summary>
+            Gets validator for firstname.
+            </summary>
+            <value>Validator for firstname.</value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.LastNameValidator">
+            <summary>
+            Gets validator for lastname.
+            </summary>
+            <value>Validator for lastname.</value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.DateValidator">
+            <summary>
+            Gets validator for date of birth.
+            </summary>
+            <value>Validator for date of birth.</value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.AgeValidator">
+            <summary>
+            Gets validator for age.
+            </summary>
+            <value>Validator for age.</value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.MaritalStatusValidator">
+            <summary>
+            Gets validator for marital status.
+            </summary>
+            <value>Validator for marital status.</value>
+        </member>
+        <member name="P:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.BudgetValidator">
+            <summary>
+            Gets validator for budget.
+            </summary>
+            <value>Validator for budget.</value>
+        </member>
         <member name="M:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase.SetInformationToRecord">
             <summary>
             Enter personal information about the person to record.
             </summary>
             <returns> RecordParameters. </returns>
+        </member>
+        <member name="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerWithSearchProperties">
+            <summary>
+            Abstract service command handler with properties.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.CommandHandlers.ServiceCommandHandlerWithSearchProperties.WhereSeparator">
+            <summary>
+            Where word.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.CommandHandlers.ServiceCommandHandlerWithSearchProperties.SignAnd">
+            <summary>
+            And.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.CommandHandlers.ServiceCommandHandlerWithSearchProperties.SignOr">
+            <summary>
+            Or.
+            </summary>
+        </member>
+        <member name="F:FileCabinetApp.CommandHandlers.ServiceCommandHandlerWithSearchProperties.SignGroupName">
+            <summary>
+            Sign group.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ServiceCommandHandlerWithSearchProperties.#ctor(FileCabinetApp.Services.IFileCabinetService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerWithSearchProperties"/> class.
+            </summary>
+            <param name="fileCabinetService">FileCabinetService.</param>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ServiceCommandHandlerWithSearchProperties.TryAddFieldToList``1(System.String,System.String,System.String,System.Collections.Generic.List{System.Tuple{System.String,System.Object}},System.Func{System.String,System.Tuple{System.Boolean,System.String,``0}},System.Func{``0,System.Tuple{System.Boolean,System.String}})">
+            <summary>
+            Returns true if actual fields added to list.
+            </summary>
+            <typeparam name="T">Type of field.</typeparam>
+            <param name="expectedFieldName">Expected field name.</param>
+            <param name="actualFieldName">Actual field name.</param>
+            <param name="value">Actual value.</param>
+            <param name="list">List for adding fields.</param>
+            <param name="converter">Convereter.</param>
+            <param name="validator">Validator.</param>
+            <returns>True if actual fields added to list.</returns>
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ServiceCommandHandlerWithSearchProperties.TryGetPropertiesAndSigns(System.String,System.Collections.Generic.List{System.Tuple{System.String,System.Object}}@,System.Collections.Generic.List{System.String}@)">
+            <summary>
+            Returns true if properties and signs fields successfully were gotten.
+            </summary>
+            <param name="propertiesString">String with properties.</param>
+            <param name="searchPropertiesList">Search properties list.</param>
+            <param name="searchPropertiesSignList">Search properties sign list.</param>
+            <returns>True if properties and signs fields successfully were gotten.</returns>
         </member>
         <member name="T:FileCabinetApp.CommandHandlers.StatCommandHandler">
             <summary>
@@ -289,6 +431,13 @@
             <summary>
             Provides methods for converting input.
             </summary>
+        </member>
+        <member name="M:FileCabinetApp.InputConverters.IntConverter(System.String)">
+            <summary>
+            Convert string to int.
+            </summary>
+            <param name="value">String to convert.</param>
+            <returns>True if it is possible to convert and resulting int.</returns>
         </member>
         <member name="M:FileCabinetApp.InputConverters.StringConverter(System.String)">
             <summary>
@@ -385,12 +534,11 @@
             Clears cached requests.
             </summary>
         </member>
-        <member name="M:FileCabinetApp.Memoizer.Select(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+        <member name="M:FileCabinetApp.Memoizer.Select(FileCabinetApp.SearchProperties)">
             <summary>
             Selects records by the specified key-value pairs.
             </summary>
-            <param name="keyValuePairs">SearchCriteria.</param>
-            <param name="logicalOperation">Logical operation.</param>
+            <param name="searchProperties">Search properties.</param>
             <returns>Enumerable collection of records.</returns>
         </member>
         <member name="T:FileCabinetApp.Program">
@@ -525,6 +673,40 @@
             <param name="maritalStatus"> The marital status. </param>
             <param name="height"> The height. </param>
         </member>
+        <member name="T:FileCabinetApp.SearchProperties">
+            <summary>
+            Properties for search command handlers.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.SearchProperties.#ctor(System.Collections.ObjectModel.ReadOnlyCollection{System.Tuple{System.String,System.Object}},System.Collections.ObjectModel.ReadOnlyCollection{System.String})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FileCabinetApp.SearchProperties"/> class.
+            </summary>
+            <param name="list">List of properties.</param>
+            <param name="signs">List of signs of properties.</param>
+        </member>
+        <member name="P:FileCabinetApp.SearchProperties.List">
+            <summary>
+            Gets list of properties.
+            </summary>
+            <value>
+            List of properties.
+            </value>
+        </member>
+        <member name="P:FileCabinetApp.SearchProperties.Signs">
+            <summary>
+            Gets list of signs of properties.
+            </summary>
+            <value>
+            List of signs of properties.
+            </value>
+        </member>
+        <member name="M:FileCabinetApp.SearchProperties.Equals(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileCabinetApp.SearchProperties.GetHashCode">
+            <inheritdoc/>
+        </member>
         <member name="T:FileCabinetApp.Services.FileCabinetFileSystemService">
             <summary>
             It is an abstract service in which records with personal information about a person in the file system are stored.
@@ -571,7 +753,7 @@
             </summary>
             <param name="isDisplayResult">Is the result dispalyed.</param>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.SelectByCriteria(FileCabinetApp.SearchProperties)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetFileSystemService.GetRecords">
@@ -648,7 +830,7 @@
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+        <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.SelectByCriteria(FileCabinetApp.SearchProperties)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.FileCabinetMemoryService.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
@@ -753,12 +935,11 @@
             <param name="searchOptions">A set of record search parameters.</param>
             <returns>The list of updated records identifiers.</returns>
         </member>
-        <member name="M:FileCabinetApp.Services.IFileCabinetService.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+        <member name="M:FileCabinetApp.Services.IFileCabinetService.SelectByCriteria(FileCabinetApp.SearchProperties)">
             <summary>
             Returns a selection of records based on the specified criteria.
             </summary>
-            <param name="searchCriteria">Search criteria.</param>
-            <param name="logicalOperator">Logical operator.</param>
+            <param name="searchProperties">Specified criteria to search.</param>
             <returns>Selection of records based on specified criteria.</returns>
         </member>
         <member name="M:FileCabinetApp.Services.IFileCabinetService.MakeSnapshot">
@@ -808,7 +989,7 @@
         <member name="M:FileCabinetApp.Services.ServiceLogger.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceLogger.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+        <member name="M:FileCabinetApp.Services.ServiceLogger.SelectByCriteria(FileCabinetApp.SearchProperties)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceLogger.GetRecords">
@@ -852,7 +1033,7 @@
         <member name="M:FileCabinetApp.Services.ServiceMeter.Update(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
             <inheritdoc/>
         </member>
-        <member name="M:FileCabinetApp.Services.ServiceMeter.SelectByCriteria(System.Collections.Generic.List{System.Collections.Generic.KeyValuePair{System.String,System.String}},System.String)">
+        <member name="M:FileCabinetApp.Services.ServiceMeter.SelectByCriteria(FileCabinetApp.SearchProperties)">
             <inheritdoc/>
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.GetRecords">
@@ -869,6 +1050,18 @@
         </member>
         <member name="M:FileCabinetApp.Services.ServiceMeter.Restore(FileCabinetApp.Services.FileCabinetServiceSnapshot)">
             <inheritdoc/>
+        </member>
+        <member name="T:FileCabinetApp.TablePrinter">
+            <summary>
+            Table of records printer.
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.TablePrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.Records.FileCabinetRecord},System.Collections.Generic.List{System.String})">
+            <summary>
+            Prints the records with specified fields in table view.
+            </summary>
+            <param name="records">The records to be printed.</param>
+            <param name="recordFields">The fields of records to print.</param>
         </member>
         <member name="T:FileCabinetApp.Validators.CompositeValidator">
             <summary>

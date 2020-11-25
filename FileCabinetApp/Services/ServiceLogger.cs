@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using FileCabinetApp.Iterators;
+using System.Linq;
 using FileCabinetApp.Records;
 using FileCabinetApp.Validators.InputValidator;
 
@@ -115,37 +114,15 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator)
+        public IEnumerable<FileCabinetRecord> SelectByCriteria(SearchProperties searchProperties)
         {
-            if (searchCriteria == null)
+            if (searchProperties == null)
             {
-                throw new ArgumentNullException(nameof(searchCriteria));
+                throw new ArgumentNullException(nameof(searchProperties));
             }
 
-            if (string.IsNullOrEmpty(logicalOperator))
-            {
-                throw new ArgumentNullException(nameof(logicalOperator));
-            }
-
-            var selectedRecords = this.service.SelectByCriteria(searchCriteria, logicalOperator);
-            var searchCriteriaString = new StringBuilder();
-
-            if (searchCriteria.Count > 0)
-            {
-                foreach (var criterion in searchCriteria)
-                {
-                    searchCriteriaString.Append($" {criterion.Key} = '{criterion.Value}' {logicalOperator}");
-                }
-
-                var numberOfInterferingCharacters = logicalOperator.Length + 1;
-                searchCriteriaString.Remove(searchCriteriaString.Length - numberOfInterferingCharacters - 1, numberOfInterferingCharacters);
-            }
-            else
-            {
-                searchCriteriaString.Append("out search criteria");
-            }
-
-            Log($"Calling {nameof(this.service.SelectByCriteria)}() with{searchCriteriaString}");
+            var selectedRecords = this.service.SelectByCriteria(searchProperties);
+            Log($"Calling {nameof(this.service.SelectByCriteria)}() returned {selectedRecords.Count()} record(s)");
 
             return selectedRecords;
         }

@@ -49,34 +49,36 @@ namespace FileCabinetApp
         /// <summary>
         /// Selects records by the specified key-value pairs.
         /// </summary>
-        /// <param name="keyValuePairs">SearchCriteria.</param>
-        /// <param name="logicalOperation">Logical operation.</param>
+        /// <param name="searchProperties">Search properties.</param>
         /// <returns>Enumerable collection of records.</returns>
-        public IEnumerable<FileCabinetRecord> Select(List<KeyValuePair<string, string>> keyValuePairs, string logicalOperation)
+        public IEnumerable<FileCabinetRecord> Select(SearchProperties searchProperties)
         {
-            var key = GenerateKey(Tuple.Create(keyValuePairs, logicalOperation));
+            if (searchProperties is null)
+            {
+                throw new ArgumentNullException(nameof(searchProperties));
+            }
+
+            var key = GenerateKey(searchProperties);
             if (!this.RequestCache.TryGetValue(key, out IEnumerable<FileCabinetRecord> records))
             {
-                records = service.SelectByCriteria(keyValuePairs, logicalOperation);
+                records = service.SelectByCriteria(searchProperties);
                 this.RequestCache.Add(key, records);
             }
 
             return records;
         }
 
-        private static string GenerateKey(Tuple<List<KeyValuePair<string, string>>, string> rawKey)
+        private static string GenerateKey(SearchProperties rawKey)
         {
             const string separator = "?";
 
             var generatedKey = new StringBuilder();
             generatedKey.Append(separator);
 
-            foreach (var keyValuePair in rawKey.Item1)
+            for (int currentPropertyIndex = 0; currentPropertyIndex < rawKey.List.Count - 1; currentPropertyIndex++)
             {
-                generatedKey.Append($"{keyValuePair.Key}{keyValuePair.Value}{separator}");
+                generatedKey.Append($"{rawKey.List[currentPropertyIndex]}={rawKey.List[currentPropertyIndex + 1]}{separator}{rawKey.Signs[currentPropertyIndex]}{separator}");
             }
-
-            generatedKey.Append($"{rawKey.Item2}{separator}");
 
             return generatedKey.ToString();
         }
