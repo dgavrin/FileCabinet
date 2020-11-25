@@ -11,6 +11,22 @@ namespace FileCabinetApp
         private static readonly CultureInfo CultureEnUS = new CultureInfo("en-US");
 
         /// <summary>
+        /// Convert string to int.
+        /// </summary>
+        /// <param name="value">String to convert.</param>
+        /// <returns>True if it is possible to convert and resulting int.</returns>
+        public static Tuple<bool, string, int> IntConverter(string value)
+        {
+            var conversionIsPossible = false;
+            if (int.TryParse(value, out int result))
+            {
+                conversionIsPossible = true;
+            }
+
+            return new Tuple<bool, string, int>(conversionIsPossible, "short", result);
+        }
+
+        /// <summary>
         /// Convert string to string.
         /// </summary>
         /// <param name="value">String to convert.</param>

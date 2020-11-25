@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using FileCabinetApp.Records;
 using FileCabinetApp.Services;
-using FileCabinetApp.Validators.InputValidator;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -25,6 +27,125 @@ namespace FileCabinetApp.CommandHandlers
         {
             this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
+
+        /// <summary>
+        /// Gets current string converter.
+        /// </summary>
+        /// <value>
+        /// Current string converter.
+        /// </value>
+        protected static Func<string, Tuple<bool, string, string>> StringConverter => InputConverters.StringConverter;
+
+        /// <summary>
+        /// Gets current datetime converter.
+        /// </summary>
+        /// <value>
+        /// Current datetime converter.
+        /// </value>
+        protected static Func<string, Tuple<bool, string, DateTime>> DateConverter => InputConverters.DateConverter;
+
+        /// <summary>
+        /// Gets current char converter.
+        /// </summary>
+        /// <value>
+        /// Current char converter.
+        /// </value>
+        protected static Func<string, Tuple<bool, string, char>> CharConverter => InputConverters.MaritalStatusConverter;
+
+        /// <summary>
+        /// Gets current short converter.
+        /// </summary>
+        /// <value>
+        /// Current short converter.
+        /// </value>
+        protected static Func<string, Tuple<bool, string, short>> ShortConverter => InputConverters.HeightConverter;
+
+        /// <summary>
+        /// Gets current int converter.
+        /// </summary>
+        /// <value>
+        /// Current int converter.
+        /// </value>
+        protected static Func<string, Tuple<bool, string, int>> IntConverter => InputConverters.IntConverter;
+
+        /// <summary>
+        /// Gets current decimal converter.
+        /// </summary>
+        /// <value>
+        /// Current decimal converter.
+        /// </value>
+        protected static Func<string, Tuple<bool, string, decimal>> DecimalConverter => InputConverters.WalletConverter;
+
+        /// <summary>
+        /// Gets validator for cancelling.
+        /// </summary>
+        /// <value>Validator for cancelling.</value>
+        protected static Func<char, Tuple<bool, string>> CancellingValidator => (char chr) =>
+        {
+            bool isValid = true;
+            string message = new string(string.Empty);
+            if (!(chr == 'y' || chr == 'Y' ||
+                chr == 'n' || chr == 'N'))
+            {
+                isValid = false;
+                message = $"Expected 'Y' or 'N'";
+            }
+
+            return new Tuple<bool, string>(isValid, message);
+        };
+
+        /// <summary>
+        /// Gets validator for id.
+        /// </summary>
+        /// <value>Validator for id.</value>
+        protected static Func<int, Tuple<bool, string>> IdentifierValidator => (int value) =>
+        {
+            bool isValid = true;
+            string message = new string(string.Empty);
+            if (value < 1)
+            {
+                isValid = false;
+                message = $"{nameof(FileCabinetRecord.Id)} can't be less than 1. Current {nameof(FileCabinetRecord.Id)} = {value}";
+            }
+
+            return new Tuple<bool, string>(isValid, message);
+        };
+
+        /// <summary>
+        /// Gets validator for firstname.
+        /// </summary>
+        /// <value>Validator for firstname.</value>
+        protected Func<string, Tuple<bool, string>> FirstNameValidator => this.fileCabinetService.InputValidator.FirstNameValidator;
+
+        /// <summary>
+        /// Gets validator for lastname.
+        /// </summary>
+        /// <value>Validator for lastname.</value>
+        protected Func<string, Tuple<bool, string>> LastNameValidator => this.fileCabinetService.InputValidator.LastNameValidator;
+
+        /// <summary>
+        /// Gets validator for date of birth.
+        /// </summary>
+        /// <value>Validator for date of birth.</value>
+        protected Func<DateTime, Tuple<bool, string>> DateValidator => this.fileCabinetService.InputValidator.DateOfBirthValidator;
+
+        /// <summary>
+        /// Gets validator for age.
+        /// </summary>
+        /// <value>Validator for age.</value>
+        protected Func<short, Tuple<bool, string>> AgeValidator => this.fileCabinetService.InputValidator.HeightValidator;
+
+        /// <summary>
+        /// Gets validator for marital status.
+        /// </summary>
+        /// <value>Validator for marital status.</value>
+        protected Func<char, Tuple<bool, string>> MaritalStatusValidator => this.fileCabinetService.InputValidator.MaritalStatusValidator;
+
+        /// <summary>
+        /// Gets validator for budget.
+        /// </summary>
+        /// <value>Validator for budget.</value>
+        protected Func<decimal, Tuple<bool, string>> BudgetValidator => this.fileCabinetService.InputValidator.WalletValidator;
 
         /// <summary>
         /// Enter personal information about the person to record.

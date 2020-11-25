@@ -20,6 +20,9 @@ namespace FileCabinetApp.Services
         /// </summary>
         protected static readonly CultureInfo CultureEnUS = new CultureInfo("en-US");
 
+        private const string SignOR = "OR";
+        private const string SignAND = "AND";
+
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
@@ -380,150 +383,21 @@ namespace FileCabinetApp.Services
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FileCabinetRecord> SelectByCriteria(List<KeyValuePair<string, string>> searchCriteria, string logicalOperator)
+        public IEnumerable<FileCabinetRecord> SelectByCriteria(SearchProperties searchProperties)
         {
-            const string invalidSearchcriteriaValueMessage = "Invalid search criterion value.";
-            const string invalidSearchcriteriaKeyMessage = "Invalid search criterion key.";
-
-            if (searchCriteria == null)
+            if (searchProperties is null)
             {
-                throw new ArgumentNullException(nameof(searchCriteria));
+                throw new ArgumentNullException(nameof(searchProperties));
             }
 
-            if (string.IsNullOrEmpty(logicalOperator))
-            {
-                throw new ArgumentNullException(nameof(logicalOperator));
-            }
-
-            List<FileCabinetRecord> selectedRecords;
-            if (logicalOperator.Equals("and", StringComparison.InvariantCultureIgnoreCase))
-            {
-                selectedRecords = new List<FileCabinetRecord>(this.list);
-                searchCriteria.ForEach(delegate(KeyValuePair<string, string> searchCriteriaPair)
-                {
-                    selectedRecords = GetRecordsBySearchCriteria(selectedRecords.Intersect, searchCriteriaPair);
-                });
-            }
-            else
-            {
-                selectedRecords = new List<FileCabinetRecord>();
-                searchCriteria.ForEach(delegate(KeyValuePair<string, string> searchCriteriaPair)
-                {
-                    selectedRecords = GetRecordsBySearchCriteria(selectedRecords.Union, searchCriteriaPair);
-                });
-            }
-
-            if (selectedRecords.Count > 0)
+            var selectedRecords = this.GetRecordsByCriteria(searchProperties);
+            if (selectedRecords.Any())
             {
                 return new MemoryIterator(selectedRecords);
             }
             else
             {
                 return new MemoryIterator(new List<FileCabinetRecord>());
-            }
-
-            List<FileCabinetRecord> GetRecordsBySearchCriteria(Func<IEnumerable<FileCabinetRecord>, IEnumerable<FileCabinetRecord>> logicalOperation, KeyValuePair<string, string> searchCriteriaPair)
-            {
-                var foundRecords = new List<FileCabinetRecord>(selectedRecords);
-
-                switch (searchCriteriaPair.Key)
-                {
-                    case "ID":
-                        throw new ArgumentException("Selection by ID is not possible.");
-
-                    case "FIRSTNAME":
-                        var foundByFirstName = new List<FileCabinetRecord>();
-                        if (this.firstNameDictionary.ContainsKey(searchCriteriaPair.Value.ToUpperInvariant()))
-                        {
-                            foundByFirstName = this.firstNameDictionary[searchCriteriaPair.Value.ToUpperInvariant()];
-                        }
-
-                        foundRecords = logicalOperation(foundByFirstName).ToList();
-
-                        break;
-                    case "LASTNAME":
-                        var foundByLastName = new List<FileCabinetRecord>();
-                        if (this.lastNameDictionary.ContainsKey(searchCriteriaPair.Value.ToUpperInvariant()))
-                        {
-                            foundByLastName = this.lastNameDictionary[searchCriteriaPair.Value.ToUpperInvariant()];
-                        }
-
-                        foundRecords = logicalOperation(foundByLastName).ToList();
-
-                        break;
-                    case "DATEOFBIRTH":
-                        if (DateTime.TryParse(searchCriteriaPair.Value, new CultureInfo("en-US"), DateTimeStyles.None, out DateTime dateOfBirth))
-                        {
-                            var foundByDateOfBirth = new List<FileCabinetRecord>();
-                            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
-                            {
-                                foundByDateOfBirth = this.dateOfBirthDictionary[dateOfBirth];
-                            }
-
-                            foundRecords = logicalOperation(foundByDateOfBirth).ToList();
-                        }
-                        else
-                        {
-                            throw new ArgumentException(invalidSearchcriteriaValueMessage);
-                        }
-
-                        break;
-                    case "WALLET":
-                        if (decimal.TryParse(searchCriteriaPair.Value, out decimal wallet))
-                        {
-                            var foundByWallet = new List<FileCabinetRecord>();
-                            if (this.walletDictionary.ContainsKey(wallet))
-                            {
-                                foundByWallet = this.walletDictionary[wallet];
-                            }
-
-                            foundRecords = logicalOperation(foundByWallet).ToList();
-                        }
-                        else
-                        {
-                            throw new ArgumentException(invalidSearchcriteriaValueMessage);
-                        }
-
-                        break;
-                    case "MARITALSTATUS":
-                        if (char.TryParse(searchCriteriaPair.Value, out char maritalStatus))
-                        {
-                            var foundByMaritalStatus = new List<FileCabinetRecord>();
-                            if (this.maritalStatusDictionary.ContainsKey(maritalStatus))
-                            {
-                                foundByMaritalStatus = this.maritalStatusDictionary[maritalStatus];
-                            }
-
-                            foundRecords = logicalOperation(foundByMaritalStatus).ToList();
-                        }
-                        else
-                        {
-                            throw new ArgumentException(invalidSearchcriteriaValueMessage);
-                        }
-
-                        break;
-                    case "HEIGHT":
-                        if (short.TryParse(searchCriteriaPair.Value, out short height))
-                        {
-                            var foundByHeight = new List<FileCabinetRecord>();
-                            if (this.heightDictionary.ContainsKey(height))
-                            {
-                                foundByHeight = this.heightDictionary[height];
-                            }
-
-                            foundRecords = logicalOperation(foundByHeight).ToList();
-                        }
-                        else
-                        {
-                            throw new ArgumentException(invalidSearchcriteriaValueMessage);
-                        }
-
-                        break;
-                    default:
-                        throw new ArgumentException(invalidSearchcriteriaKeyMessage);
-                }
-
-                return foundRecords;
             }
         }
 
@@ -667,6 +541,120 @@ namespace FileCabinetApp.Services
             {
                 throw new ArgumentException(noRecordsFoundMessage);
             }
+        }
+
+        private static void GetFinalListOfOverlap(List<string> signs, List<List<FileCabinetRecord>> selectedRecord)
+        {
+            while (selectedRecord.Count > 1)
+            {
+                if (signs.Contains(SignAND))
+                {
+                    var positionAND = signs.IndexOf(SignAND);
+                    signs.RemoveAt(positionAND);
+                    var andResult = new List<FileCabinetRecord>();
+                    foreach (var record in selectedRecord[positionAND + 1])
+                    {
+                        if (selectedRecord[positionAND].Contains(record))
+                        {
+                            andResult.Add(record);
+                        }
+                    }
+
+                    selectedRecord[positionAND + 1] = andResult;
+                    selectedRecord.RemoveAt(positionAND);
+                }
+                else
+                {
+                    var positionOR = signs.IndexOf(SignOR);
+                    signs.RemoveAt(positionOR);
+                    var orResult = selectedRecord[positionOR + 1];
+                    foreach (var record in selectedRecord[positionOR])
+                    {
+                        if (!selectedRecord[positionOR + 1].Contains(record))
+                        {
+                            orResult.Add(record);
+                        }
+                    }
+
+                    selectedRecord[positionOR + 1] = orResult;
+                    selectedRecord.RemoveAt(positionOR);
+                }
+            }
+        }
+
+        private List<FileCabinetRecord> GetRecordsByCriteria(SearchProperties searchProperties)
+        {
+            var selectedRecord = new List<List<FileCabinetRecord>>();
+            foreach (var property in searchProperties.List)
+            {
+                var fieldName = property.Item1;
+                var records = this.GetRecordsByFieldName(property, fieldName);
+                selectedRecord.Add(records);
+            }
+
+            GetFinalListOfOverlap(new List<string>(searchProperties.Signs), selectedRecord);
+            return selectedRecord[0];
+        }
+
+        private List<FileCabinetRecord> GetRecordsByFieldName(Tuple<string, object> property, string fieldName)
+        {
+            var records = new List<FileCabinetRecord>();
+            switch (true)
+            {
+                case bool isIdField when fieldName.Equals(nameof(FileCabinetRecord.Id), StringComparison.CurrentCultureIgnoreCase):
+                    records = this.list.Where(record => record.Id == ((int)property.Item2)).ToList();
+                    break;
+
+                case bool isFirstNameField when fieldName.Equals(nameof(FileCabinetRecord.FirstName), StringComparison.CurrentCultureIgnoreCase):
+                    if (this.firstNameDictionary.ContainsKey(((string)property.Item2).ToUpperInvariant()))
+                    {
+                        records = this.firstNameDictionary[((string)property.Item2).ToUpperInvariant()];
+                    }
+
+                    break;
+
+                case bool isLastNameField when fieldName.Equals(nameof(FileCabinetRecord.LastName), StringComparison.CurrentCultureIgnoreCase):
+                    if (this.lastNameDictionary.ContainsKey(((string)property.Item2).ToUpperInvariant()))
+                    {
+                        records = this.lastNameDictionary[((string)property.Item2).ToUpperInvariant()];
+                    }
+
+                    break;
+
+                case bool isDateField when fieldName.Equals(nameof(FileCabinetRecord.DateOfBirth), StringComparison.CurrentCultureIgnoreCase):
+                    if (this.dateOfBirthDictionary.ContainsKey((DateTime)property.Item2))
+                    {
+                        records = this.dateOfBirthDictionary[(DateTime)property.Item2];
+                    }
+
+                    break;
+
+                case bool isBudgetField when fieldName.Equals(nameof(FileCabinetRecord.Wallet), StringComparison.CurrentCultureIgnoreCase):
+                    if (this.walletDictionary.ContainsKey((decimal)property.Item2))
+                    {
+                        records = this.walletDictionary[(decimal)property.Item2];
+                    }
+
+                    break;
+
+                case bool isMaritalStatusField when fieldName.Equals(nameof(FileCabinetRecord.MaritalStatus), StringComparison.CurrentCultureIgnoreCase):
+                    if (this.maritalStatusDictionary.ContainsKey((char)property.Item2))
+                    {
+                        records = this.maritalStatusDictionary[(char)property.Item2];
+                    }
+
+                    break;
+
+                case bool isAgeField when fieldName.Equals(nameof(FileCabinetRecord.Height), StringComparison.CurrentCultureIgnoreCase):
+                    if (this.heightDictionary.ContainsKey((short)property.Item2))
+                    {
+                        records = this.heightDictionary[(short)property.Item2];
+                    }
+
+                    break;
+            }
+
+            return records;
         }
 
         private void RemoveEntryFromDictionaries(FileCabinetRecord fileCabinetRecord)
