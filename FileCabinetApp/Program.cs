@@ -39,21 +39,29 @@ namespace FileCabinetApp
 
             do
             {
-                Console.Write("> ");
-                var inputs = Console.ReadLine().Split(' ', 2);
-                const int commandIndex = 0;
-                const int parametersIndex = 1;
-                var command = inputs[commandIndex];
-                var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
-
-                if (string.IsNullOrEmpty(command))
+                try
                 {
-                    Console.WriteLine(Program.HintMessage);
-                    continue;
-                }
+                    Console.Write("> ");
+                    var inputs = Console.ReadLine().Split(' ', 2);
+                    const int commandIndex = 0;
+                    const int parametersIndex = 1;
+                    var command = inputs[commandIndex];
+                    var parameters = inputs.Length > 1 ? inputs[parametersIndex] : string.Empty;
 
-                var commandHandler = CreateCommandHandlers();
-                commandHandler.Handle(new AppCommandRequest(command, parameters));
+                    if (string.IsNullOrEmpty(command))
+                    {
+                        Console.WriteLine(Program.HintMessage);
+                        continue;
+                    }
+
+                    var commandHandler = CreateCommandHandlers();
+                    commandHandler.Handle(new AppCommandRequest(command, parameters));
+                }
+                catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is ArgumentNullException || ex is ArgumentException)
+                {
+                    Console.WriteLine($"An unhandled exception was thrown. Message: {ex.Message}");
+                    Console.WriteLine();
+                }
             }
             while (isRunning);
         }
